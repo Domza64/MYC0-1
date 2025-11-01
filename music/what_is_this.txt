@@ -1,0 +1,1 @@
+This '/music' is a temporarry dev folder for music, when app is deployed in prod, user will enter their own path to their music folder 
