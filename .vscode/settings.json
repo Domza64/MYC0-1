@@ -1,0 +1,9 @@
+{
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.cache": true,
+    "**/__pycache__": true,
+    "**/.venv": true
+  }
+}

@@ -1,24 +1,18 @@
 from typing import Union
-import os
-from app.lib.file_utils import read_all_files
+from app.config import MUSIC_DIR
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MUSIC_DIR = os.path.join(BASE_DIR, "music")
+from app.db.sqlite import create_db_and_tables
+from app.routes.song import router as music_router
+from app.routes.scan import router as scan_router
+from app.routes.folder import router as folder_router
 
 app = FastAPI()
 app.mount("/music", StaticFiles(directory=MUSIC_DIR), name="music")
+app.include_router(music_router)
+app.include_router(scan_router)
+app.include_router(folder_router)
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
-
-@app.post("/scan-library/")
-def scan_files():
-    read_all_files(MUSIC_DIR)
-    return
+@app.on_event("startup")
+def on_startup():
+    create_db_and_tables()
