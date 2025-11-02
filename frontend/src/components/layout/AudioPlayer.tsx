@@ -174,7 +174,7 @@ export default function AudioPlayer() {
         ref={audioRef}
         src={
           currentSong
-            ? `http://192.168.0.104:8000/${currentSong.filePath}`
+            ? `http://localhost:8000/music/${encodeURI(currentSong.file_path)}`
             : undefined
         }
         preload="metadata"
@@ -198,9 +198,9 @@ export default function AudioPlayer() {
         {/* Song Info */}
         <div className="flex items-center space-x-4 min-w-0 flex-1">
           <div className="w-12 h-12 bg-stone-700 rounded shrink-0 flex items-center justify-center">
-            {currentSong.albumArt ? (
+            {currentSong.album_art ? (
               <img
-                src={currentSong.albumArt}
+                src={currentSong.album_art}
                 alt={currentSong.album}
                 className="w-12 h-12 rounded object-cover"
               />

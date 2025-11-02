@@ -5,13 +5,13 @@ export interface Song {
   album: string;
   genre?: string;
   year?: number;
-  filePath: string;
+  file_path: string;
   duration: number; // in seconds
-  fileSize: number; // in bytes
-  fileFormat: string; // 'mp3', 'flac', 'wav', etc.
-  albumArt?: string;
-  playCount?: number;
-  lastPlayed?: string; // ISO string
+  file_size: number; // in bytes
+  file_format: string; // 'mp3', 'flac', 'wav', etc.
+  album_art?: string;
+  play_count?: number;
+  last_played?: string; // ISO string
 }
 
 export interface Album {

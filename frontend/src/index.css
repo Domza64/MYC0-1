@@ -1,12 +1,5 @@
 @import "tailwindcss";
 
-.element {
-  /* For Webkit browsers (Chrome, Safari, Edge) */
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Standard property */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+body {
+  @apply bg-stone-950 text-stone-200;
 }

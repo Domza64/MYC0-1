@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import Folders from "../pages/Folders";
 
 // Lazy load pages for better performance
 const Home = lazy(() => import("../pages/Home"));
@@ -15,6 +16,11 @@ export const routes = [
   {
     path: "/library",
     element: <Library />,
+    protected: true,
+  },
+  {
+    path: "/folders",
+    element: <Folders />,
     protected: true,
   },
   /*{
