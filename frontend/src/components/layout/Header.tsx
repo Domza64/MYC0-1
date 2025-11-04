@@ -1,10 +1,10 @@
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
-export default function Header() {
+export default function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
   return (
-    <header className="w-full max-w-7xl p-4 flex gap-4 items-center justify-between">
-      <GiHamburgerMenu className="md:hidden block" />
+    <header className="w-full max-w-7xl px-4 h-16 flex gap-4 items-center justify-between">
+      <GiHamburgerMenu className="lg:hidden block" onClick={onMenuToggle} />
       <div className="flex text-2xl">
         <MdKeyboardArrowLeft />
         <MdKeyboardArrowRight />

@@ -1,26 +1,50 @@
+import { useState } from "react";
 import AudioPlayer from "./AudioPlayer";
 import Header from "./Header";
 import SideMenu from "./SideMenu";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen w-full flex flex-col">
       {/* Main Content */}
       <div className="flex grow">
-        {/* Side Menu */}
-        <div className="hidden lg:block border-r border-stone-700 w-full max-w-xs">
-          <SideMenu />
+        <div
+          className={`
+          fixed lg:static
+          left-0 top-0
+          h-full lg:h-auto
+          z-10 lg:z-auto
+          backdrop-blur-xs lg:backdrop-blur-0
+          border-r border-stone-700
+          w-full max-w-xs
+          transition-transform lg:transform-none
+          ${isMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+        `}
+        >
+          <div className="w-full h-full bg-stone-950/80 lg:bg-transparent">
+            <SideMenu onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} />
+          </div>
         </div>
+
+        {/* Overlay for mobile */}
+        {isMenuOpen && (
+          <div
+            className="fixed inset-0 lg:hidden z-0 bg-stone-950/10 mt-16"
+            onClick={() => setIsMenuOpen(false)}
+          ></div>
+        )}
 
         {/* Current Page */}
         <div className="w-full">
-          <Header />
+          <Header onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} />
           <main className="grow overflow-x-scroll pb-24">{children}</main>
         </div>
       </div>
 
       {/* Audio Player */}
-      <div className="fixed bottom-0 left-0 right-0 bg-stone-800/40 backdrop-blur-md border-t border-stone-700 px-4 py-3">
+      <div className="fixed z-20 bottom-0 left-0 right-0 bg-stone-800/40 backdrop-blur-md border-t border-stone-700 px-4 py-3">
         <AudioPlayer />
       </div>
     </div>
