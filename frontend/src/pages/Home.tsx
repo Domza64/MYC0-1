@@ -67,6 +67,7 @@ export default function Home() {
           <PlaylistCard playlist={playlist} key={playlist.id} />
         ))}
       </VerticalScrollSection>
+      <div className="my-64"></div>
       <VerticalScrollSection title="Recently played">
         {playlists.map((playlist) => (
           <div className="w-20 h-20 bg-stone-700" key={playlist.id}>

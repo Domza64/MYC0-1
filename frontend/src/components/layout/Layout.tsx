@@ -15,8 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           fixed lg:static
           left-0 top-0
           h-full lg:h-auto
-          z-10 lg:z-auto
-          backdrop-blur-xs lg:backdrop-blur-0
+          z-20 lg:z-auto
           border-r border-stone-700
           w-full max-w-xs
           transition-transform lg:transform-none
@@ -31,7 +30,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {/* Overlay for mobile */}
         {isMenuOpen && (
           <div
-            className="fixed inset-0 lg:hidden z-0 bg-stone-950/10 mt-16"
+            className="fixed inset-0 lg:hidden backdrop-blur-sm bg-stone-950/30 z-10"
             onClick={() => setIsMenuOpen(false)}
           ></div>
         )}
@@ -44,7 +43,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Audio Player */}
-      <div className="fixed z-20 bottom-0 left-0 right-0 bg-stone-800/40 backdrop-blur-md border-t border-stone-700 px-4 py-3">
+      <div className="fixed z-30 bottom-0 left-0 right-0 bg-stone-800/40 backdrop-blur-md border-t border-stone-700 px-4 py-3">
         <AudioPlayer />
       </div>
     </div>
