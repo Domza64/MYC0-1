@@ -10,7 +10,7 @@ export default function Settings() {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:8000/api/scan-library", {
+      const response = await fetch("/api/scan-library", {
         method: "POST",
       });
 

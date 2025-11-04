@@ -173,9 +173,7 @@ export default function AudioPlayer() {
       <audio
         ref={audioRef}
         src={
-          currentSong
-            ? `http://localhost:8000/music/${encodeURI(currentSong.file_path)}`
-            : undefined
+          currentSong ? `/music/${encodeURI(currentSong.file_path)}` : undefined
         }
         preload="metadata"
       />

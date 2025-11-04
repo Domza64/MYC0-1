@@ -64,6 +64,30 @@ MYC0-1 transforms your local music folder into a personal streaming service. The
 
 ## Development
 
+### Start dev server
+
+- Install npm dependencies:
+
+  ```bash
+  cd frontend
+  npm i
+  ```
+
+- Start all services:
+  ```bash
+  docker-compose -f docker-compose.dev.yml up
+  ```
+
+**Access the application at: http://localhost:5000**
+
+> **Note:** The application runs behind nginx proxy on port 5000. You may see logs indicating services are running on ports 8000 (backend) and 5173 (frontend) - these are internal container ports and can be ignored. All external access is through port 5000.
+
+### Cleanup if build fails:
+
+```bash
+docker compose -f docker-compose.dev.yml down --volumes --remove-orphans
+```
+
 ### Project Philosophy
 
 - **Self-Contained** - Single container deployment for simplicity

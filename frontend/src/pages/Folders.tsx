@@ -14,8 +14,8 @@ export default function Folders() {
       try {
         const response = await fetch(
           currentFolder?.id
-            ? `http://localhost:8000/api/folders/${currentFolder.id}`
-            : "http://localhost:8000/api/folders"
+            ? `/api/folders/${currentFolder.id}`
+            : "/api/folders/"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch folders");
@@ -33,9 +33,7 @@ export default function Folders() {
           setSongs([]);
           return;
         }
-        const response = await fetch(
-          `http://localhost:8000/api/songs/folder/${currentFolder.id}`
-        );
+        const response = await fetch(`/api/songs/folder/${currentFolder.id}`);
         if (!response.ok) {
           throw new Error("Failed to fetch songs");
         }
