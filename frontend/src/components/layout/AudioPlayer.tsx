@@ -156,19 +156,19 @@ export default function AudioPlayer() {
 
   if (!currentSong) {
     return (
-      <div className="fixed bottom-0 left-0 right-0 bg-stone-800/40 backdrop-blur-md border-t border-stone-700 px-4 pb-3 pt-2">
+      <>
         <div className="flex items-center justify-center text-stone-400">
           <FaMusic className="w-4 h-4 mr-2" />
           <p>No song selected</p>
         </div>
-      </div>
+      </>
     );
   }
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-stone-800/40 backdrop-blur-md border-t border-stone-700 px-4 pb-3 pt-2">
+    <>
       {/* Hidden audio element */}
       <audio
         ref={audioRef}
@@ -306,6 +306,6 @@ export default function AudioPlayer() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
