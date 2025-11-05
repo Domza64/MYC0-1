@@ -220,7 +220,7 @@ export default function AudioPlayer() {
         </div>
 
         {/* Playback Controls */}
-        <div className="flex items-center space-x-4 mx-8">
+        <div className="flex items-center space-x-1 md:space-x-4 mx-1 md:mx-8">
           <button
             onClick={playPrevious}
             className="text-stone-400 hover:text-white p-2 transition-colors"
@@ -231,7 +231,7 @@ export default function AudioPlayer() {
 
           <button
             onClick={skipBackward}
-            className="text-stone-400 hover:text-white p-2 transition-colors"
+            className="text-stone-400 hover:text-white p-2 transition-colors md:block hidden"
             title="Skip backward 10s"
           >
             <FaBackward className="w-4 h-4" />
@@ -251,7 +251,7 @@ export default function AudioPlayer() {
 
           <button
             onClick={skipForward}
-            className="text-stone-400 hover:text-white p-2 transition-colors"
+            className="text-stone-400 hover:text-white p-2 transition-colors md:block hidden"
             title="Skip forward 10s"
           >
             <FaForward className="w-4 h-4" />
@@ -273,7 +273,7 @@ export default function AudioPlayer() {
           </div>
 
           {/* Volume Control */}
-          <div className="relative">
+          <div className="relative hidden md:block">
             <button
               onClick={toggleMute}
               onMouseEnter={() => setVolumeOpen(true)}

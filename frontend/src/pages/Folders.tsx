@@ -3,12 +3,43 @@ import type { Folder } from "../types/folder";
 import FolderCard from "../components/ui/FolderCard";
 import type { Song } from "../types/music";
 import SongCard from "../components/ui/SongCard";
+import { usePlayer } from "../contexts/PlayerContext";
 
 export default function Folders() {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [currentFolder, setCurrentFolder] = useState<Folder | null>(null);
   const [songs, setSongs] = useState<Song[]>([]);
+  const [breadcrumbs, setBreadcrumbs] = useState<Folder[]>([]);
 
+  const player = usePlayer();
+
+  // Update breadcrumbs when currentFolder changes
+  useEffect(() => {
+    if (!currentFolder) {
+      setBreadcrumbs([]);
+      return;
+    }
+
+    const currentIndex = breadcrumbs.findIndex(
+      (f) => f.id === currentFolder.id
+    );
+
+    if (currentIndex === -1) {
+      setBreadcrumbs((prev) => [...prev, currentFolder]);
+    } else {
+      setBreadcrumbs((prev) => prev.slice(0, currentIndex + 1));
+    }
+  }, [currentFolder]);
+
+  const handleBreadcrumbClick = (folder: Folder | null) => {
+    setCurrentFolder(folder);
+  };
+
+  const handleFolderClick = (folder: Folder) => {
+    setCurrentFolder(folder);
+  };
+
+  // Update data when currentFolder changes
   useEffect(() => {
     const fetchFolders = async () => {
       try {
@@ -50,26 +81,65 @@ export default function Folders() {
 
   return (
     <div>
-      <h1>Folders</h1>
-      <button onClick={() => setCurrentFolder(null)}>Root</button>
-      <h2>Current folder: {currentFolder?.path}</h2>
-      <ul>
+      <h1 className="text-2xl">My Folders</h1>
+
+      {/* Breadcrumbs Navigation */}
+      <div className="text-stone-300 my-2">
+        <span>/ </span>
+        <button
+          className="underline hover:cursor-grab"
+          onClick={() => handleBreadcrumbClick(null)}
+        >
+          Root
+        </button>
+
+        {breadcrumbs.length > 0 && " / "}
+
+        {breadcrumbs.map((folder, index) => (
+          <span key={folder.id}>
+            <button
+              className="underline hover:cursor-grab"
+              onClick={() => handleBreadcrumbClick(folder)}
+            >
+              {folder.name}
+            </button>
+            {index < breadcrumbs.length - 1 && " / "}
+          </span>
+        ))}
+      </div>
+
+      <ul className="flex gap-4 flex-wrap">
         {folders.map((folder) => (
           <FolderCard
             folder={folder}
             key={folder.id}
-            onClick={() => setCurrentFolder(folder)}
+            onClick={() => handleFolderClick(folder)}
           />
         ))}
       </ul>
-      <div>
-        <h2>Songs:</h2>
-        <ul>
-          {songs.map((song) => (
-            <SongCard key={song.id} song={song} />
-          ))}
-        </ul>
-      </div>
+
+      {songs.length > 0 && (
+        <div className="mt-4">
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-xl">Songs:</h2>
+            <button
+              className="bg-rose-700 rounded px-2 py-1 font-bold hover:cursor-grab"
+              onClick={() => {
+                player.dispatch({ type: "CLEAR_QUEUE" });
+                player.dispatch({ type: "ADD_TO_QUEUE", payload: songs });
+                player.dispatch({ type: "PLAY_SONG", payload: songs[0] });
+              }}
+            >
+              Play all
+            </button>
+          </div>
+          <ul>
+            {songs.map((song) => (
+              <SongCard key={song.id} song={song} />
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

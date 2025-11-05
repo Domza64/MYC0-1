@@ -1,22 +1,8 @@
-import { FaMusic } from "react-icons/fa6";
 import type { Playlist } from "../types/music";
 import VerticalScrollSection from "../components/layout/VerticalScrollSection";
 import PlaylistCard from "../components/ui/PlaylistCard";
 
 export default function Home() {
-  /*
-    id: string;
-    name: string;
-    description?: string;
-    songs: Song[];
-    songCount: number;
-    totalDuration: number;
-    isPublic: boolean;
-    ownerId: string;
-    createdAt: string;
-    updatedAt: string;
-    coverArt?: string;
-  */
   const playlists: Playlist[] = [
     {
       id: "1",
@@ -56,7 +42,7 @@ export default function Home() {
     },
   ];
   return (
-    <div className="flex flex-col p-4 gap-8">
+    <div className="flex flex-col gap-8">
       <section>
         <h1 className="text-2xl">
           Hello <span className="font-semibold">Domza</span>

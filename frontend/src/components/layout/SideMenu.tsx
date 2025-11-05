@@ -49,11 +49,11 @@ export default function SideMenu({
       </div>
 
       <nav className="p-4 sticky top-16">
-        <ul className="space-y-1">
+        <ul className="space-y-0 md:space-y-1">
           {menuItems.map((item, index) => {
             if (item.type === "divider") {
               return (
-                <li key={`divider-${index}`} className="my-3">
+                <li key={`divider-${index}`} className="my-2 md:my-3">
                   <div className="h-px bg-stone-700"></div>
                 </li>
               );
