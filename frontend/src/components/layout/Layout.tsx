@@ -38,7 +38,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {/* Current Page */}
         <div className="w-full">
           <Header onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} />
-          <main className="grow overflow-x-scroll p-4 pb-24">{children}</main>
+          <main className="grow p-4 pb-24">{children}</main>
         </div>
       </div>
 

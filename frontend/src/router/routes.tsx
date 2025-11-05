@@ -11,40 +11,33 @@ export const routes = [
   {
     path: "/",
     element: <Home />,
-    protected: true,
   },
   {
     path: "/library",
     element: <Library />,
-    protected: true,
   },
   {
     path: "/folders",
     element: <Folders />,
-    protected: true,
   },
   /*{
     path: "/playlists/:id",
     element: lazy(
       () => import("../pages/Playlists/PlaylistDetail/PlaylistDetail")
     ),
-    protected: true,
   },*/
   /*{
     path: "/playlists/create",
     element: lazy(
       () => import("../pages/Playlists/CreatePlaylist/CreatePlaylist")
     ),
-    protected: true,
   },*/
   {
     path: "/settings",
     element: <Settings />,
-    protected: true,
   },
   {
     path: "*",
     element: <NotFound />,
-    protected: false,
   },
 ];

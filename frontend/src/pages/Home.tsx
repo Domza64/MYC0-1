@@ -1,8 +1,11 @@
 import type { Playlist } from "../types/music";
 import VerticalScrollSection from "../components/layout/VerticalScrollSection";
 import PlaylistCard from "../components/ui/PlaylistCard";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Home() {
+  const { auth } = useAuth();
+
   const playlists: Playlist[] = [
     {
       id: "1",
@@ -45,7 +48,7 @@ export default function Home() {
     <div className="flex flex-col gap-8">
       <section>
         <h1 className="text-2xl">
-          Hello <span className="font-semibold">Domza</span>
+          Hello <span className="font-semibold">{auth.username}</span>
         </h1>
       </section>
       <VerticalScrollSection title="My playlists">

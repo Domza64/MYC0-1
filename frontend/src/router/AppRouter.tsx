@@ -3,10 +3,13 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { routes } from "./routes";
 import Layout from "../components/layout/Layout";
 import { usePlayer } from "../contexts/PlayerContext";
-// import ProtectedRoute from "../components/auth/ProtectedRoute/ProtectedRoute";
+import Login from "../pages/Login";
+import { useAuth } from "../contexts/AuthContext";
+import Loading from "../components/layout/Loading";
 
 export default function AppRouter() {
   const player = usePlayer();
+  const { auth, loading } = useAuth();
 
   useEffect(() => {
     // Set page title to song title if song is playing
@@ -15,21 +18,19 @@ export default function AppRouter() {
     }
   }, [player.state.currentSong]);
 
+  if (loading) return <></>; // Put app logo here in the future
+  if (!auth.username) return <Login />;
+
   return (
     <BrowserRouter>
       <Layout>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loading />}>
           <Routes>
             {routes.map((route) => (
               <Route
                 key={route.path}
                 path={route.path}
-                element={
-                  route.protected
-                    ? /*<ProtectedRoute>{route.element}</ProtectedRoute>*/
-                      route.element
-                    : route.element
-                }
+                element={route.element}
               />
             ))}
           </Routes>

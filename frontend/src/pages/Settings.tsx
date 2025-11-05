@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Settings() {
+  const { logout } = useAuth();
   const [isScanning, setIsScanning] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +28,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="p-4">
+    <div className="flex flex-col">
       <h1 className="text-xl font-bold mb-4">Settings</h1>
 
       <button
@@ -53,6 +55,10 @@ export default function Settings() {
           </div>
         </div>
       )}
+
+      <button onClick={logout} className="mt-4 py-2 w-32 bg-rose-500 rounded">
+        Logout
+      </button>
     </div>
   );
 }
