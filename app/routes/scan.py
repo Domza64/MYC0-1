@@ -6,14 +6,17 @@ from app.lib.file_utils import read_all_audio_files
 from app.model.song import Song
 from app.db.sqlite import get_session
 from app.lib.db_utils import create_song
+from app.session.cookie import cookie
+from app.session.session_verifier import verifier
+from app.session.session_data import SessionData
 
 
 router = APIRouter(prefix="/api")
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
-@router.post("/scan-library")
-def scan_files(session: Session = Depends(get_session)):
+@router.post("/scan-library", dependencies=[Depends(cookie)])
+def scan_files(session: Session = Depends(get_session), session_data: SessionData = Depends(verifier)):
     # Read all songs currently in filesystem
     scanned_songs = read_all_audio_files(MUSIC_DIR)
 

@@ -1,16 +1,27 @@
 export default function Button({
-  text,
+  children,
   onClick,
+  disabled = false,
+  className = "",
+  type = "button",
 }: {
-  text: string;
-  onClick: () => void;
+  children: React.ReactNode;
+  disabled?: boolean;
+  onClick?: () => void;
+  className?: string;
+  type?: "button" | "submit";
 }) {
   return (
     <button
-      onClick={onClick}
-      className="bg-rose-600 py-1 px-3 rounded text-stone-100 font-medium hover:bg-rose-700 transition-all duration-300 cursor-grab"
+      onClick={() => onClick?.()}
+      disabled={disabled}
+      type={type}
+      className={
+        "bg-stone-300 disabled:bg-stone-600 py-0.5 px-2 rounded text-stone-950 font-semibold hover:bg-stone-400 transition-all duration-300 cursor-grab " +
+        className
+      }
     >
-      {text}
+      {children}
     </button>
   );
 }

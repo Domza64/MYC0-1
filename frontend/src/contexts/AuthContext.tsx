@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface AuthState {
   username: string | null;
+  role: string | null;
 }
 
 interface AuthContextType {
@@ -16,6 +17,7 @@ interface AuthContextType {
 
 const initialState: AuthState = {
   username: null,
+  role: null,
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -52,7 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (response.ok) {
         const data = await response.json();
-        setAuth({ username: data.username });
+        setAuth({ username: data.username, role: data.role });
         setError(null);
       } else {
         const errorData = await response
@@ -76,18 +78,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const response = await fetch("/api/auth/whoami");
       if (response.ok) {
         const data = await response.json();
-        setAuth({ username: data.username });
+        setAuth({ username: data.username, role: data.role });
       } else {
-        setAuth({ username: null });
+        setAuth({ username: null, role: null });
       }
     } catch (error) {
       console.error("Error fetching user info:", error);
-      setAuth({ username: null });
+      setAuth({ username: null, role: null });
     }
   };
 
   const logout = (): void => {
-    setAuth({ username: null });
+    setAuth({ username: null, role: null });
     try {
       fetch("/api/auth/logout", { method: "POST" });
     } catch (error) {

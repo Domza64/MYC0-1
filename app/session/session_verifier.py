@@ -1,5 +1,5 @@
 from fastapi_sessions.session_verifier import SessionVerifier
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends, status
 from fastapi_sessions.backends.implementations import InMemoryBackend
 from uuid import UUID
 from app.session.session_data import SessionData
@@ -46,3 +46,16 @@ verifier = BasicVerifier(
     backend=backend,
     auth_http_exception=HTTPException(status_code=403, detail="invalid session"),
 )
+
+async def require_admin(
+    session_data: SessionData = Depends(verifier)
+) -> SessionData:
+    """
+    Dependency that requires admin role
+    """
+    if session_data.role != "ADMIN":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin privileges required"
+        )
+    return session_data

@@ -1,17 +1,19 @@
 from typing import Annotated
-from app.config import MUSIC_DIR
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from app.model.song import Song
 from app.db.sqlite import get_session
+from app.session.cookie import cookie
+from app.session.session_verifier import verifier
+from app.session.session_data import SessionData
 
 
 router = APIRouter(prefix="/api/songs")
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
-@router.get("", response_model=list[Song])
-def get_all_songs(session: SessionDep, offset: int = 0, limit: int = 10) -> list[Song]:
+@router.get("", response_model=list[Song], dependencies=[Depends(cookie)])
+def get_all_songs(session: SessionDep, offset: int = 0, limit: int = 10, session_data: SessionData = Depends(verifier)) -> list[Song]:
     """
     Get all songs.
     """
@@ -19,8 +21,8 @@ def get_all_songs(session: SessionDep, offset: int = 0, limit: int = 10) -> list
     return songs
 
 
-@router.get("/{song_id}", response_model=Song)
-def read_song(song_id: int, session: SessionDep) -> Song:
+@router.get("/{song_id}", response_model=Song, dependencies=[Depends(cookie)])
+def read_song(song_id: int, session: SessionDep, session_data: SessionData = Depends(verifier)) -> Song:
     """
     Get a song by its ID.
     """
@@ -30,10 +32,11 @@ def read_song(song_id: int, session: SessionDep) -> Song:
     return song
 
 
-@router.get("/folder/{folder_id}", response_model=list[Song])
+@router.get("/folder/{folder_id}", response_model=list[Song], dependencies=[Depends(cookie)])
 def get_songs_in_folder(
     folder_id: int,
     session: Session = Depends(get_session),
+    session_data: SessionData = Depends(verifier)
 ) -> list[Song]:
     """
     Return all songs that belong directly to the given folder.

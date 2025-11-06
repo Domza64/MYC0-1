@@ -1,58 +1,43 @@
 import { useState } from "react";
+import Library from "../components/settings-tabs/Library";
+import Members from "../components/settings-tabs/Members";
+
+const TABS = [
+  { id: "library", title: "Library", component: Library },
+  { id: "members", title: "Members", component: Members },
+];
 
 export default function Settings() {
-  const [isScanning, setIsScanning] = useState(false);
-  const [result, setResult] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("library");
 
-  const scanLibrary = async () => {
-    setIsScanning(true);
-    setError(null);
-
-    try {
-      const response = await fetch("/api/scan-library", {
-        method: "POST",
-      });
-
-      if (!response.ok) throw new Error("Scan failed");
-
-      const data = await response.json();
-      setResult(data);
-    } catch (err) {
-      setError("Failed to scan library");
-    } finally {
-      setIsScanning(false);
-    }
-  };
+  // Find the active tab component
+  const ActiveComponent = TABS.find((tab) => tab.id === activeTab)?.component;
 
   return (
     <div className="flex flex-col">
-      <h1>Settings</h1>
+      <div className="flex items-center shadow-[0_12px_16px_-1px_rgba(68,64,60,0.2),0_6px_12px_-2px_rgba(68,64,60,0.2)]">
+        <h1 className="pb-2 mr-20">Settings</h1>
+        <ul className="flex gap-8">
+          {TABS.map((tab) => (
+            <li
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`cursor-pointer font-medium ${
+                activeTab === tab.id
+                  ? "border-b-3 px-0.5 pb-1 border-rose-600 font-semibold"
+                  : ""
+              }`}
+            >
+              {tab.title}
+            </li>
+          ))}
+        </ul>
+      </div>
 
-      <button
-        onClick={scanLibrary}
-        disabled={isScanning}
-        className="py-2 w-32 bg-rose-500 rounded disabled:bg-stone-600"
-      >
-        {isScanning ? "Scanning..." : "Scan Library"}
-      </button>
-
-      {error && (
-        <div className="mt-4 p-2 bg-rose-950/50 text-rose-500 rounded">
-          {error}
-        </div>
-      )}
-
-      {result && (
-        <div className="mt-4 p-3 bg-stone-800 rounded">
-          <p className="font-medium">{result.message}</p>
-          <div className="mt-2 text-sm">
-            <p>Added: {result.added}</p>
-            <p>Removed: {result.removed}</p>
-            <p>Total: {result.total}</p>
-          </div>
-        </div>
-      )}
+      {/* Display the active component */}
+      <div className="mt-6">
+        {ActiveComponent ? <ActiveComponent /> : <div>No component found</div>}
+      </div>
     </div>
   );
 }

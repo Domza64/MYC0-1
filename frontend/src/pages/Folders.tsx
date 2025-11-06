@@ -5,6 +5,8 @@ import type { Song } from "../types/music";
 import SongCard from "../components/ui/SongCard";
 import { usePlayer } from "../contexts/PlayerContext";
 import Button from "../components/ui/buttons/Button";
+import { FaPlay } from "react-icons/fa6";
+import { MdOutlineQueueMusic } from "react-icons/md";
 
 export default function Folders() {
   const [folders, setFolders] = useState<Folder[]>([]);
@@ -53,6 +55,7 @@ export default function Folders() {
           throw new Error("Failed to fetch folders");
         }
         const data: Folder[] = await response.json();
+        data.sort((a, b) => a.name.localeCompare(b.name));
         setFolders(data);
       } catch (error) {
         console.error("Error fetching folders:", error);
@@ -125,22 +128,28 @@ export default function Folders() {
             <h2 className="text-xl">Songs:</h2>
             <div className="flex gap-2">
               <Button
-                text="Play all"
+                className="flex items-center gap-2"
                 onClick={() => {
                   player.dispatch({ type: "CLEAR_QUEUE" });
                   player.dispatch({ type: "ADD_TO_QUEUE", payload: songs });
                   player.dispatch({ type: "PLAY_SONG", payload: songs[0] });
                 }}
-              />
+              >
+                <FaPlay />
+                <span>Play</span>
+              </Button>
               <Button
-                text="Add all to queue"
+                className="flex items-center gap-2"
                 onClick={() => {
                   player.dispatch({ type: "ADD_TO_QUEUE", payload: songs });
                   if (player.state.queue.length === 0) {
                     player.dispatch({ type: "PLAY_SONG", payload: songs[0] });
                   }
                 }}
-              />
+              >
+                <MdOutlineQueueMusic />
+                <span>Add</span>
+              </Button>
             </div>
           </div>
           <ul>

@@ -1,4 +1,6 @@
 from typing import Annotated
+from app.lib.passwd import verify_password
+from app.model.user import User
 from app.session.session_data import SessionData
 from fastapi import APIRouter, Depends
 from fastapi.responses import Response, JSONResponse
@@ -8,6 +10,7 @@ from app.db.sqlite import get_session
 from app.session.backend import backend
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
+from sqlmodel import Session, select
 from uuid import UUID, uuid4
 
 class LoginRequest(BaseModel):
@@ -20,18 +23,20 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 
 @router.post("/login")
-async def create_session(login_data: LoginRequest, response: Response):
+async def create_session(login_data: LoginRequest, response: Response, session: SessionDep):
     username = login_data.username
     password = login_data.password
 
-    if password != "123456":
+    user = session.exec(select(User).where(User.username == username)).first()
+    
+    if not user or verify_password(password, user.password) == False:
         return JSONResponse(status_code=401, content={"message": "Invalid credentials"})
 
-    session = uuid4()
-    data = SessionData(username=username)
+    auth_session = uuid4()
+    data = SessionData(username=user.username, role=user.role)
 
-    await backend.create(session, data)
-    cookie.attach_to_response(response, session)
+    await backend.create(auth_session, data)
+    cookie.attach_to_response(response, auth_session)
 
     return data
 

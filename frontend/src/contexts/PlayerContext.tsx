@@ -1,21 +1,7 @@
 import React, { createContext, useContext, useEffect, useReducer } from "react";
 import type { Song } from "../types/music";
 import toast from "react-hot-toast";
-
-interface PlayerState {
-  currentSong: Song | null;
-  isPlaying: boolean;
-  volume: number;
-  currentTime: number;
-  duration: number;
-  queue: Song[];
-  currentIndex: number;
-  message: string | null;
-  // TODO - Implement shuffle queue so that shuffle doesn't go to random song
-  // but actually goes song by song through the randomly generated queue
-  shuffle: boolean;
-  repeat: boolean;
-}
+import type { PlayerState } from "../types/player";
 
 type PlayerAction =
   | { type: "PLAY_SONG"; payload: Song }

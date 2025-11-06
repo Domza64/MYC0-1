@@ -39,17 +39,3 @@ export interface Playlist {
   updatedAt: string;
   coverArt?: string;
 }
-
-export interface PlayerState {
-  currentSong: Song | null;
-  currentPlaylist: Playlist | null;
-  queue: Song[];
-  currentIndex: number;
-  isPlaying: boolean;
-  isShuffled: boolean;
-  repeatMode: "none" | "one" | "all";
-  volume: number; // 0.0 to 1.0
-  currentTime: number; // in seconds
-  duration: number; // in seconds
-  playbackRate: number; // 0.5, 1.0, 1.5, 2.0
-}
