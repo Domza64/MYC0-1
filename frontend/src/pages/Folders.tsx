@@ -4,6 +4,7 @@ import FolderCard from "../components/ui/FolderCard";
 import type { Song } from "../types/music";
 import SongCard from "../components/ui/SongCard";
 import { usePlayer } from "../contexts/PlayerContext";
+import Button from "../components/ui/Button";
 
 export default function Folders() {
   const [folders, setFolders] = useState<Folder[]>([]);
@@ -81,7 +82,7 @@ export default function Folders() {
 
   return (
     <div>
-      <h1 className="text-2xl">My Folders</h1>
+      <h1>My Folders</h1>
 
       {/* Breadcrumbs Navigation */}
       <div className="text-stone-300 my-2">
@@ -122,20 +123,34 @@ export default function Folders() {
         <div className="mt-4">
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-xl">Songs:</h2>
-            <button
-              className="bg-rose-700 rounded px-2 py-1 font-bold hover:cursor-grab"
-              onClick={() => {
-                player.dispatch({ type: "CLEAR_QUEUE" });
-                player.dispatch({ type: "ADD_TO_QUEUE", payload: songs });
-                player.dispatch({ type: "PLAY_SONG", payload: songs[0] });
-              }}
-            >
-              Play all
-            </button>
+            <div className="flex gap-2">
+              <Button
+                text="Play all"
+                onClick={() => {
+                  player.dispatch({ type: "CLEAR_QUEUE" });
+                  player.dispatch({ type: "ADD_TO_QUEUE", payload: songs });
+                  player.dispatch({ type: "PLAY_SONG", payload: songs[0] });
+                }}
+              />
+              <Button
+                text="Add all to queue"
+                onClick={() => {
+                  player.dispatch({ type: "ADD_TO_QUEUE", payload: songs });
+                }}
+              />
+            </div>
           </div>
           <ul>
             {songs.map((song) => (
-              <SongCard key={song.id} song={song} />
+              <SongCard
+                key={song.id}
+                song={song}
+                onClick={() => {
+                  player.dispatch({ type: "CLEAR_QUEUE" });
+                  player.dispatch({ type: "ADD_TO_QUEUE", payload: [song] });
+                  player.dispatch({ type: "PLAY_SONG", payload: song });
+                }}
+              />
             ))}
           </ul>
         </div>

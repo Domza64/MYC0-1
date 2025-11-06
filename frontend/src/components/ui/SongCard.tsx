@@ -1,19 +1,43 @@
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import { usePlayer } from "../../contexts/PlayerContext";
 import type { Song } from "../../types/music";
+import { usePlayer } from "../../contexts/PlayerContext";
+import { FaItunesNote } from "react-icons/fa6";
 
-export default function SongCard({ song }: { song: Song }) {
+export default function SongCard({
+  song,
+  onClick,
+}: {
+  song: Song;
+  onClick?: () => void;
+}) {
   const player = usePlayer();
+
+  const active = player.state.currentSong?.id === song.id;
   return (
     <li
-      onClick={() => {
-        player.dispatch({ type: "PLAY_SONG", payload: song });
-        player.dispatch({ type: "ADD_TO_QUEUE", payload: [song] });
-      }}
-      className="p-2 my-2 flex justify-between items-center select-none cursor-grab bg-stone-800 rounded-md"
+      className={`${
+        active ? "bg-rose-700" : "bg-stone-900"
+      } my-2 flex justify-between items-center select-none cursor-grab overflow-hidden rounded-md`}
     >
-      <span className="text-stone-300">{song.title}</span>
-      <HiOutlineDotsVertical />
+      <div className="bg-stone-800 h-10 w-10 flex justify-center items-center text-stone-400">
+        {song.album_art ? (
+          <img src={song.album_art} alt="img" />
+        ) : (
+          <FaItunesNote />
+        )}
+      </div>
+      <span
+        onClick={onClick}
+        className={`${
+          active ? "font-semibold" : ""
+        } text-stone-300 w-full p-2 `}
+      >
+        {song.title}
+      </span>
+      <HiOutlineDotsVertical
+        onClick={() => alert("Not implemented yet.")}
+        className="mx-2"
+      />
     </li>
   );
 }

@@ -11,3 +11,7 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+h1 {
+  @apply text-2xl;
+}

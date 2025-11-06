@@ -27,7 +27,7 @@ export default function Settings() {
 
   return (
     <div className="flex flex-col">
-      <h1 className="text-xl font-bold mb-4">Settings</h1>
+      <h1>Settings</h1>
 
       <button
         onClick={scanLibrary}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AudioPlayer from "./AudioPlayer";
+import AudioPlayer from "./audio-player/AudioPlayer";
 import Header from "./Header";
 import SideMenu from "./SideMenu";
 

@@ -47,7 +47,7 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-8">
       <section>
-        <h1 className="text-2xl">
+        <h1>
           Hello <span className="font-semibold">{auth.username}</span>
         </h1>
       </section>

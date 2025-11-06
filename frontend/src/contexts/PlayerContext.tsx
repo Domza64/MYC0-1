@@ -20,6 +20,7 @@ type PlayerAction =
   | { type: "NEXT_SONG" }
   | { type: "PREVIOUS_SONG" }
   | { type: "ADD_TO_QUEUE"; payload: Song[] }
+  | { type: "SET_CURRENT_INDEX"; payload: number }
   | { type: "CLEAR_QUEUE" };
 
 const PlayerContext = createContext<{
@@ -77,15 +78,34 @@ const playerReducer = (
           }
         : state;
     case "ADD_TO_QUEUE":
+      const newSongs = action.payload.filter(
+        (newSong) =>
+          !state.queue.some((existingSong) => existingSong.id === newSong.id)
+      );
       return {
         ...state,
-        queue: [...state.queue, ...action.payload],
+        queue: [...state.queue, ...newSongs],
       };
     case "CLEAR_QUEUE":
       return {
         ...state,
         queue: [],
         currentIndex: 0,
+      };
+    case "SET_CURRENT_INDEX":
+      var newIndex;
+      if (action.payload < 0) {
+        newIndex = 0;
+      } else if (action.payload >= state.queue.length) {
+        newIndex = state.queue.length - 1;
+      } else {
+        newIndex = action.payload;
+      }
+
+      return {
+        ...state,
+        currentIndex: newIndex,
+        currentSong: state.queue[newIndex],
       };
     default:
       return state;
