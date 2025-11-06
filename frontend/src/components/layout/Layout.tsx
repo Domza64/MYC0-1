@@ -38,12 +38,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {/* Current Page */}
         <div className="w-full">
           <Header onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} />
-          <main className="grow p-4 pb-24">{children}</main>
+          <main className="grow p-4 pb-32">{children}</main>
         </div>
       </div>
 
       {/* Audio Player */}
-      <div className="fixed z-40 bottom-0 left-0 right-0 bg-stone-800/40 backdrop-blur-md border-t border-stone-700 px-4 py-3">
+      <div className="fixed z-40 bottom-0 left-0 right-0 flex justify-center items-center bg-stone-800/40 backdrop-blur-md border-t border-stone-700 px-4 py-3 h-24">
         <AudioPlayer />
       </div>
     </div>

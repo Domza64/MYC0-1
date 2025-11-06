@@ -125,7 +125,9 @@ const playerReducer = (
           !state.queue.some((existingSong) => existingSong.id === newSong.id)
       );
       var message = "No new song(s) added to queue";
-      if (newSongs.length > 0) {
+      if (state.queue.length === 0 && newSongs.length < 2) {
+        message = "Playing: " + newSongs[0].title;
+      } else if (newSongs.length > 0) {
         message = `${newSongs.length} song(s) added to queue`;
       }
       return {

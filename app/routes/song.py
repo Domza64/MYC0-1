@@ -4,11 +4,19 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from app.model.song import Song
 from app.db.sqlite import get_session
-from app.model.folder import Folder
 
 
 router = APIRouter(prefix="/api/songs")
 SessionDep = Annotated[Session, Depends(get_session)]
+
+
+@router.get("", response_model=list[Song])
+def get_all_songs(session: SessionDep, offset: int = 0, limit: int = 10) -> list[Song]:
+    """
+    Get all songs.
+    """
+    songs = session.exec(select(Song).offset(offset).limit(limit)).all()
+    return songs
 
 
 @router.get("/{song_id}", response_model=Song)

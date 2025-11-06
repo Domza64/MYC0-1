@@ -7,9 +7,9 @@ export default function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
   const { auth } = useAuth();
 
   return (
-    <header className="w-full max-w-7xl px-4 h-16 flex gap-4 items-center justify-between sticky top-0 bg-stone-950/80 backdrop-blur-md z-10">
+    <header className="w-full max-w-7xl px-4 h-16 flex gap-4 items-center justify-between sticky top-0 bg-stone-950/60 backdrop-blur-md z-10">
       <RiMenu2Fill
-        className="lg:hidden block text-5xl"
+        className="lg:hidden block text-2xl"
         onClick={onMenuToggle}
       />
       <div className="flex text-2xl">

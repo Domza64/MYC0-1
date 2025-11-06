@@ -102,7 +102,7 @@ export default function AudioPlayer() {
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-2 w-full">
       <audio
         ref={audioRef}
         src={
@@ -126,6 +126,6 @@ export default function AudioPlayer() {
           <VolumeControll />
         </div>
       </div>
-    </>
+    </div>
   );
 }

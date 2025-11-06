@@ -5,7 +5,7 @@ export default function Profile() {
   return (
     <div>
       <h1>My Profile</h1>
-      <button onClick={logout} className="mt-4 py-2 w-32 bg-rose-500 rounded">
+      <button onClick={logout} className="py-2 w-32 bg-rose-500 rounded">
         Logout
       </button>
     </div>
