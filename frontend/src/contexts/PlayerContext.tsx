@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import type { Song } from "../types/music";
 import toast from "react-hot-toast";
 
@@ -17,6 +11,10 @@ interface PlayerState {
   queue: Song[];
   currentIndex: number;
   message: string | null;
+  // TODO - Implement shuffle queue so that shuffle doesn't go to random song
+  // but actually goes song by song through the randomly generated queue
+  shuffle: boolean;
+  repeat: boolean;
 }
 
 type PlayerAction =
@@ -27,9 +25,10 @@ type PlayerAction =
   | { type: "SET_DURATION"; payload: number }
   | { type: "NEXT_SONG" }
   | { type: "PREVIOUS_SONG" }
+  | { type: "TOGGLE_SHUFFLE" }
+  | { type: "TOGGLE_REPEAT" }
   | { type: "ADD_TO_QUEUE"; payload: Song[] }
   | { type: "SET_CURRENT_INDEX"; payload: number }
-  | { type: "RESET_STATE" }
   | { type: "RESET_MESSAGE" }
   | { type: "CLEAR_QUEUE" };
 
@@ -54,6 +53,16 @@ const playerReducer = (
         ...state,
         isPlaying: action.payload,
       };
+    case "TOGGLE_SHUFFLE":
+      return {
+        ...state,
+        shuffle: !state.shuffle,
+      };
+    case "TOGGLE_REPEAT":
+      return {
+        ...state,
+        repeat: !state.repeat,
+      };
     case "SET_VOLUME":
       return {
         ...state,
@@ -70,14 +79,32 @@ const playerReducer = (
         duration: action.payload,
       };
     case "NEXT_SONG":
+      if (state.shuffle) {
+        const nextIndex = Math.floor(Math.random() * state.queue.length);
+        return {
+          ...state,
+          currentIndex: nextIndex,
+          currentSong: state.queue[nextIndex],
+          isPlaying: true,
+        };
+      }
+
       const nextIndex = state.currentIndex + 1;
       return nextIndex < state.queue.length
         ? {
             ...state,
             currentIndex: nextIndex,
             currentSong: state.queue[nextIndex],
+            isPlaying: true,
           }
-        : state;
+        : {
+            ...state,
+            currentSong: state.queue[0],
+            currentIndex: 0,
+            isPlaying: state.repeat,
+            currentTime: 0,
+            duration: 0,
+          };
     case "PREVIOUS_SONG":
       const prevIndex = state.currentIndex - 1;
       return prevIndex >= 0
@@ -112,15 +139,6 @@ const playerReducer = (
         queue: [],
         currentIndex: 0,
       };
-    case "RESET_STATE":
-      return {
-        ...state,
-        currentSong: state.queue[0],
-        currentIndex: 0,
-        isPlaying: false,
-        currentTime: 0,
-        duration: 0,
-      };
     case "SET_CURRENT_INDEX":
       var newIndex;
       if (action.payload < 0) {
@@ -149,6 +167,8 @@ const initialState: PlayerState = {
   queue: [],
   currentIndex: 0,
   message: null,
+  shuffle: false,
+  repeat: false,
 };
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {

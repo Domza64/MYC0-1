@@ -14,11 +14,7 @@ export default function SongCard({
 
   const active = player.state.currentSong?.id === song.id;
   return (
-    <li
-      className={`${
-        active ? "bg-rose-700" : "bg-stone-900"
-      } my-2 flex justify-between items-center select-none cursor-grab overflow-hidden rounded-md`}
-    >
+    <li className="bg-stone-900 my-2 flex justify-between items-center select-none cursor-grab overflow-hidden rounded-md">
       <div className="bg-stone-800 h-10 w-10 flex justify-center items-center text-stone-400">
         {song.album_art ? (
           <img src={song.album_art} alt="img" />
@@ -29,8 +25,8 @@ export default function SongCard({
       <span
         onClick={onClick}
         className={`${
-          active ? "font-semibold" : ""
-        } text-stone-300 w-full p-2 `}
+          active ? "font-semibold text-rose-500" : "text-stone-300"
+        } w-full p-2 `}
       >
         {song.title}
       </span>

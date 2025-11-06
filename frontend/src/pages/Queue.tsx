@@ -1,4 +1,4 @@
-import Button from "../components/ui/Button";
+import Button from "../components/ui/buttons/Button";
 import SongCard from "../components/ui/SongCard";
 import { usePlayer } from "../contexts/PlayerContext";
 import type { Song } from "../types/music";

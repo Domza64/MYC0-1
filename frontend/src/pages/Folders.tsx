@@ -4,7 +4,7 @@ import FolderCard from "../components/ui/FolderCard";
 import type { Song } from "../types/music";
 import SongCard from "../components/ui/SongCard";
 import { usePlayer } from "../contexts/PlayerContext";
-import Button from "../components/ui/Button";
+import Button from "../components/ui/buttons/Button";
 
 export default function Folders() {
   const [folders, setFolders] = useState<Folder[]>([]);

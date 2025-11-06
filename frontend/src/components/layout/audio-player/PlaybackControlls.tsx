@@ -10,15 +10,13 @@ export default function PlaybackControlls({
   skipForward: () => void;
 }) {
   const { state, dispatch } = usePlayer();
-  const { isPlaying } = state;
+  const { isPlaying, shuffle, repeat } = state;
 
   const hasNext = state.queue.length > state.currentIndex + 1;
   const hasPrevious = state.currentIndex > 0;
 
   const playNext = () => {
-    if (hasNext) {
-      dispatch({ type: "NEXT_SONG" });
-    }
+    dispatch({ type: "NEXT_SONG" });
   };
 
   const playPrevious = () => {
@@ -32,12 +30,11 @@ export default function PlaybackControlls({
   };
 
   return (
-    <div className="flex items-center space-x-1 md:space-x-4 mx-1 md:mx-8">
+    <div className="flex items-center space-x-1 md:space-x-2 mx-1 md:mx-8">
       <button
         onClick={playPrevious}
-        className={`${
-          hasPrevious ? "hover:text-white text-stone-400" : "text-stone-600"
-        } p-2`}
+        className="text-stone-400 hover:text-white p-2 disabled:text-stone-600 cursor-grab"
+        disabled={!hasPrevious}
       >
         <FaStepBackward className="w-4 h-4" />
       </button>
@@ -69,9 +66,8 @@ export default function PlaybackControlls({
 
       <button
         onClick={playNext}
-        className={`${
-          hasNext ? "hover:text-white text-stone-400" : "text-stone-600"
-        } p-2`}
+        className="text-stone-400 hover:text-white p-2 disabled:text-stone-600 cursor-grab"
+        disabled={!hasNext && !shuffle && !repeat}
       >
         <FaStepForward className="w-4 h-4" />
       </button>

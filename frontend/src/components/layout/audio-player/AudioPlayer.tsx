@@ -1,11 +1,13 @@
 import { useRef, useEffect } from "react";
 import { usePlayer } from "../../../contexts/PlayerContext";
 import { FaMusic } from "react-icons/fa";
-import VolumeControll from "./VolumeControll";
+import VolumeControll from "./VolumeControlls";
 import SongInfo from "./SongInfo";
 import PlaybackControlls from "./PlaybackControlls";
 import Time from "./Time";
 import ProgressBar from "./ProgressBar";
+import ShuffleButton from "../../ui/buttons/ShuffleButton";
+import RepeatButton from "../../ui/buttons/RepeatButton";
 
 export default function AudioPlayer() {
   const { state, dispatch } = usePlayer();
@@ -23,13 +25,12 @@ export default function AudioPlayer() {
     };
 
     const handleEnded = () => {
-      // Auto-play next song if available or reset player state
-      if (state.queue.length > state.currentIndex + 1) {
-        dispatch({ type: "NEXT_SONG" });
+      dispatch({ type: "NEXT_SONG" });
+
+      /*const isLastSong = state.currentIndex === state.queue.length - 1;
+      if (!isLastSong || state.shuffle || state.repeat) {
         dispatch({ type: "SET_PLAYBACK", payload: true });
-      } else {
-        dispatch({ type: "RESET_STATE" });
-      }
+      }*/
     };
 
     const handlePlay = () => {
@@ -119,6 +120,8 @@ export default function AudioPlayer() {
           skipForward={skipForward}
         />
         <div className="flex items-center space-x-4 min-w-0 flex-1 justify-end">
+          <ShuffleButton />
+          <RepeatButton />
           <Time />
           <VolumeControll />
         </div>
