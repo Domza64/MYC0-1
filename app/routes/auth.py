@@ -1,29 +1,39 @@
 from typing import Annotated
 from app.session.session_data import SessionData
 from fastapi import APIRouter, Depends
-from fastapi.responses import Response
+from fastapi.responses import Response, JSONResponse
 from sqlmodel import Session
+from pydantic import BaseModel
 from app.db.sqlite import get_session
 from app.session.backend import backend
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from uuid import UUID, uuid4
 
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
 
 router = APIRouter(prefix="/api/auth")
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
-@router.post("/login/{name}")
-async def create_session(name: str, response: Response):
+@router.post("/login")
+async def create_session(login_data: LoginRequest, response: Response):
+    username = login_data.username
+    password = login_data.password
+
+    if password != "123456":
+        return JSONResponse(status_code=401, content={"message": "Invalid credentials"})
 
     session = uuid4()
-    data = SessionData(username=name)
+    data = SessionData(username=username)
 
     await backend.create(session, data)
     cookie.attach_to_response(response, session)
 
-    return SessionData(username=name)
+    return data
 
 
 @router.get("/whoami", dependencies=[Depends(cookie)])

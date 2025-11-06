@@ -1,6 +1,7 @@
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { RiMenu2Fill } from "react-icons/ri";
 import { useAuth } from "../../contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 export default function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
   const { auth } = useAuth();
@@ -20,10 +21,15 @@ export default function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
         placeholder="Search your music"
         className="bg-stone-800 px-2 py-1 rounded-lg w-full max-w-3xl"
       />
-      <div className="flex items-center gap-4">
+      <Link
+        to={"profile"}
+        className="flex items-center gap-3 select-none hover:cursor-pointer"
+      >
         <span className="hidden lg:block font-semibold">{auth.username}</span>
-        <div className="w-8 h-8 rounded-full bg-rose-800"></div>
-      </div>
+        <div className="rounded-full bg-rose-600 w-8 h-8 flex justify-center items-center font-semibold">
+          <img src="pfp.png" alt={auth?.username?.charAt(0) || "?"} />
+        </div>
+      </Link>
     </header>
   );
 }

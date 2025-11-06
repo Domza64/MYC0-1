@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import Folders from "../pages/Folders";
+import Profile from "../pages/Profile";
 
 // Lazy load pages for better performance
 const Home = lazy(() => import("../pages/Home"));
@@ -20,18 +21,10 @@ export const routes = [
     path: "/folders",
     element: <Folders />,
   },
-  /*{
-    path: "/playlists/:id",
-    element: lazy(
-      () => import("../pages/Playlists/PlaylistDetail/PlaylistDetail")
-    ),
-  },*/
-  /*{
-    path: "/playlists/create",
-    element: lazy(
-      () => import("../pages/Playlists/CreatePlaylist/CreatePlaylist")
-    ),
-  },*/
+  {
+    path: "/profile",
+    element: <Profile />,
+  },
   {
     path: "/settings",
     element: <Settings />,

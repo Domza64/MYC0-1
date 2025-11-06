@@ -22,15 +22,15 @@ export default function SideMenu({
 
   const menuItems = [
     { path: "/", label: "Home", icon: FiHome },
-    { label: "My Playlists", icon: FiMusic },
-    { label: "My Library", icon: FiBook },
+    { path: "/playlists", label: "My Playlists", icon: FiMusic },
+    { path: "library", label: "My Library", icon: FiBook },
     { path: "/folders", label: "My Folders", icon: FiFolder },
     { type: "divider" },
-    { label: "Smart Playlists", icon: FiStar },
-    { label: "Current Queue", icon: MdOutlineQueueMusic },
+    { path: "/smart-playlists", label: "Smart Playlists", icon: FiStar },
+    { path: "/queue", label: "Current Queue", icon: MdOutlineQueueMusic },
     { type: "divider" },
-    { label: "Artists", icon: FiUsers },
-    { label: "Albums", icon: FiDisc },
+    { path: "/artists", label: "Artists", icon: FiUsers },
+    { path: "/albums", label: "Albums", icon: FiDisc },
     { type: "divider" },
     { path: "/settings", label: "Settings", icon: FiSettings },
   ];
