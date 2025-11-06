@@ -1,5 +1,12 @@
-import React, { createContext, useContext, useReducer } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import type { Song } from "../types/music";
+import toast from "react-hot-toast";
 
 interface PlayerState {
   currentSong: Song | null;
@@ -9,6 +16,7 @@ interface PlayerState {
   duration: number;
   queue: Song[];
   currentIndex: number;
+  message: string | null;
 }
 
 type PlayerAction =
@@ -22,6 +30,7 @@ type PlayerAction =
   | { type: "ADD_TO_QUEUE"; payload: Song[] }
   | { type: "SET_CURRENT_INDEX"; payload: number }
   | { type: "RESET_STATE" }
+  | { type: "RESET_MESSAGE" }
   | { type: "CLEAR_QUEUE" };
 
 const PlayerContext = createContext<{
@@ -78,14 +87,24 @@ const playerReducer = (
             currentSong: state.queue[prevIndex],
           }
         : state;
+    case "RESET_MESSAGE":
+      return {
+        ...state,
+        message: null,
+      };
     case "ADD_TO_QUEUE":
       const newSongs = action.payload.filter(
         (newSong) =>
           !state.queue.some((existingSong) => existingSong.id === newSong.id)
       );
+      var message = "No new song(s) added to queue";
+      if (newSongs.length > 0) {
+        message = `${newSongs.length} song(s) added to queue`;
+      }
       return {
         ...state,
         queue: [...state.queue, ...newSongs],
+        message: message,
       };
     case "CLEAR_QUEUE":
       return {
@@ -129,10 +148,18 @@ const initialState: PlayerState = {
   duration: 0,
   queue: [],
   currentIndex: 0,
+  message: null,
 };
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(playerReducer, initialState);
+
+  useEffect(() => {
+    if (state.message) {
+      toast(state.message);
+      dispatch({ type: "RESET_MESSAGE" });
+    }
+  }, [state.message]);
 
   return (
     <PlayerContext.Provider value={{ state, dispatch }}>
