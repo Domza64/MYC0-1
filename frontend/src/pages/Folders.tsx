@@ -136,6 +136,9 @@ export default function Folders() {
                 text="Add all to queue"
                 onClick={() => {
                   player.dispatch({ type: "ADD_TO_QUEUE", payload: songs });
+                  if (player.state.queue.length === 0) {
+                    player.dispatch({ type: "PLAY_SONG", payload: songs[0] });
+                  }
                 }}
               />
             </div>

@@ -13,7 +13,7 @@ interface PlayerState {
 
 type PlayerAction =
   | { type: "PLAY_SONG"; payload: Song }
-  | { type: "TOGGLE_PLAYBACK" }
+  | { type: "SET_PLAYBACK"; payload: boolean }
   | { type: "SET_VOLUME"; payload: number }
   | { type: "SET_CURRENT_TIME"; payload: number }
   | { type: "SET_DURATION"; payload: number }
@@ -21,6 +21,7 @@ type PlayerAction =
   | { type: "PREVIOUS_SONG" }
   | { type: "ADD_TO_QUEUE"; payload: Song[] }
   | { type: "SET_CURRENT_INDEX"; payload: number }
+  | { type: "RESET_STATE" }
   | { type: "CLEAR_QUEUE" };
 
 const PlayerContext = createContext<{
@@ -39,10 +40,10 @@ const playerReducer = (
         currentSong: action.payload,
         isPlaying: true,
       };
-    case "TOGGLE_PLAYBACK":
+    case "SET_PLAYBACK":
       return {
         ...state,
-        isPlaying: !state.isPlaying,
+        isPlaying: action.payload,
       };
     case "SET_VOLUME":
       return {
@@ -92,6 +93,15 @@ const playerReducer = (
         queue: [],
         currentIndex: 0,
       };
+    case "RESET_STATE":
+      return {
+        ...state,
+        currentSong: state.queue[0],
+        currentIndex: 0,
+        isPlaying: false,
+        currentTime: 0,
+        duration: 0,
+      };
     case "SET_CURRENT_INDEX":
       var newIndex;
       if (action.payload < 0) {
@@ -101,7 +111,6 @@ const playerReducer = (
       } else {
         newIndex = action.payload;
       }
-
       return {
         ...state,
         currentIndex: newIndex,
