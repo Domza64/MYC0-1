@@ -13,7 +13,7 @@ body {
 }
 
 h1 {
-  @apply text-2xl m-0;
+  @apply text-2xl;
 }
 
 h2 {

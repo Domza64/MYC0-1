@@ -15,7 +15,7 @@ export default function Settings() {
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center shadow-[0_12px_16px_-1px_rgba(68,64,60,0.2),0_6px_12px_-2px_rgba(68,64,60,0.2)]">
+      <div className="flex items-center border-b-2 border-stone-800">
         <h1 className="pb-2 mr-20">Settings</h1>
         <ul className="flex gap-8">
           {TABS.map((tab) => (

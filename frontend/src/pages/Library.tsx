@@ -4,7 +4,7 @@ import SongCard from "../components/ui/SongCard";
 import { usePlayer } from "../contexts/PlayerContext";
 import { useInView } from "react-intersection-observer";
 
-const LIMIT = 25;
+const LIMIT = 30;
 
 export default function Library() {
   const [songs, setSongs] = useState<Song[]>([]);
@@ -18,7 +18,6 @@ export default function Library() {
 
   const fetchSongs = async () => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
     try {
       const response = await fetch(
         "api/songs?offset=" + offset + "&limit=" + LIMIT

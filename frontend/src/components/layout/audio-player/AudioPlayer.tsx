@@ -74,17 +74,6 @@ export default function AudioPlayer() {
     }
   }, [volume]);
 
-  if (!currentSong) {
-    return (
-      <>
-        <div className="flex items-center justify-center text-stone-400">
-          <FaMusic className="w-4 h-4 mr-2" />
-          <p>No song selected</p>
-        </div>
-      </>
-    );
-  }
-
   const skipForward = () => {
     if (audioRef.current) {
       const newTime = Math.min(currentTime + 10, duration);
@@ -100,6 +89,47 @@ export default function AudioPlayer() {
       dispatch({ type: "SET_CURRENT_TIME", payload: newTime });
     }
   };
+
+  // Media Session API for Android/Desktop notifications
+  // TODO - Implemnent everything needed for media session
+  useEffect(() => {
+    if (!currentSong || !("mediaSession" in navigator)) return;
+
+    const mediaSession = navigator.mediaSession;
+
+    // Set metadata for the currently playing song
+    mediaSession.metadata = new MediaMetadata({
+      title: currentSong.title,
+      artist: currentSong.artist || "Unknown Artist",
+      album: currentSong.album || "Unknown Album",
+      artwork: [
+        { src: "/album_cover.png", sizes: "96x96", type: "image/jpeg" },
+      ],
+    });
+
+    mediaSession.setActionHandler("nexttrack", () => {
+      dispatch({ type: "NEXT_SONG" });
+    });
+
+    // Update playback state in media session
+    mediaSession.playbackState = isPlaying ? "playing" : "paused";
+
+    // Cleanup: remove action handlers when component unmounts or song changes
+    return () => {
+      mediaSession.setActionHandler("nexttrack", null);
+    };
+  }, [currentSong, isPlaying, dispatch]);
+
+  if (!currentSong) {
+    return (
+      <>
+        <div className="flex items-center justify-center text-stone-400">
+          <FaMusic className="w-4 h-4 mr-2" />
+          <p>No song selected</p>
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-2 w-full">

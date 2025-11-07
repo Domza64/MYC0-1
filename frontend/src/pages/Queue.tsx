@@ -20,10 +20,12 @@ export default function Queue() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1>{player.state.queue.length > 0 ? "Currently playing" : "Queue"}</h1>
-        <Button onClick={handleClearQueue}>
-          <span>Clear Queue</span>
-        </Button>
+        <h1>{player.state.queue.length > 0 ? "Queue" : "Queue empty"}</h1>
+        {player.state.queue.length > 0 && (
+          <Button onClick={handleClearQueue}>
+            <span>Clear Queue</span>
+          </Button>
+        )}
       </div>
       <ul>
         {player.state.queue.map((song) => (
