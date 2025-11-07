@@ -42,7 +42,6 @@ MYC0-1 transforms your local music folder into a personal streaming service. The
 1. **Update paths in `docker-compose.yml`:**
 
    - Set your music folder path
-   - Set path to a folder where the app can store it's data
 
 2. **Run:**
 
