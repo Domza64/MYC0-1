@@ -1,14 +1,11 @@
 version: "3.8"
-
 services:
   music-app:
-    image: ghcr.io/domza64/myc0-1:master
+    image: "ghcr.io/domza64/myc0-1:master"
     ports:
       - "5000:5000"
     volumes:
       - </path/to/your/music/folder>:/app/music # This is folder with your music
-      - data_volume:/app/data
+      - </path/to/your/data/folder>:/app/data:rw # This is folder where the app will store it's data
     restart: unless-stopped
-
-volumes:
-  data_volume:
+    user: "1000:1000"
