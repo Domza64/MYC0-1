@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  music-app:
+    image: ghcr.io/your-username/your-repo-name:master
+    ports:
+      - "5000:5000"
+    volumes:
+      - </path/to/your/music/folder>:/app/music # This is folder with your music
+      - </path/to/your/data/folder>:/app/data # This is folder where the app will store it's data
+  restart: unless-stopped

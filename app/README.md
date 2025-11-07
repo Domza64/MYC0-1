@@ -1,4 +1,6 @@
-# HARP-1 FastAPI backend
+# MYC0-1 FastAPI backend
+
+> This is probably depricated, use docker-compose.dev.yml
 
 Development:
 Create virtual env

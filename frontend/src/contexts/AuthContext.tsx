@@ -60,14 +60,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const errorData = await response
           .json()
           .catch(() => ({ message: "Login failed" }));
-        throw new Error(errorData.message || "Failed to create session");
+        throw new Error(
+          errorData.error || errorData.message || "Failed to create session"
+        );
       }
     } catch (error) {
       console.error("Error creating session:", error);
       const errorMessage =
         error instanceof Error ? error.message : "Login failed";
       setError(errorMessage);
-      throw error;
     } finally {
       setLoading(false);
     }

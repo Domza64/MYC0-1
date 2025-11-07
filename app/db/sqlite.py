@@ -1,7 +1,7 @@
 from sqlmodel import SQLModel, create_engine, Session, select
 from app.lib.passwd import hash_password
 
-sqlite_file_name = "dev.db"
+sqlite_file_name = "data/myc0-1.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
 connect_args = {"check_same_thread": False}

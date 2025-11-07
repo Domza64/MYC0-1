@@ -55,6 +55,7 @@ export default function Members() {
     }
   };
 
+  // @ts-ignore
   const handleEdit = (user: User) => {
     // TODO: Implement edit functionality
     toast("Soon!");

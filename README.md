@@ -36,7 +36,21 @@ MYC0-1 transforms your local music folder into a personal streaming service. The
 
 ### Quick Start
 
-1. **Soon...** still in early development
+> **⚠️ Early Development Notice**
+> This app is currently in active development and not yet production ready. Expect frequent breaking changes and do not rely on data persistence between updates. Security has not been thoroughly audited - use behind a firewall and avoid exposing to the internet for now.
+
+1. **Update paths in `docker-compose.yml`:**
+
+   - Set your music folder path
+   - Set path to a folder where the app can store it's data
+
+2. **Run:**
+
+```bash
+docker-compose up -d
+```
+
+3. **Access:** `http://localhost:5000`
 
 ---
 

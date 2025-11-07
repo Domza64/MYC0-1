@@ -12,6 +12,8 @@ from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from sqlmodel import Session, select
 from uuid import UUID, uuid4
+from app.limiter import limiter
+from starlette.requests import Request
 
 class LoginRequest(BaseModel):
     username: str
@@ -23,7 +25,8 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 
 @router.post("/login")
-async def create_session(login_data: LoginRequest, response: Response, session: SessionDep):
+@limiter.limit("20/minute")
+async def create_session(login_data: LoginRequest, response: Response, session: SessionDep, request: Request):
     username = login_data.username
     password = login_data.password
 

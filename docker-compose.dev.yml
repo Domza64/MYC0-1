@@ -20,6 +20,7 @@ services:
     volumes:
       - ./app:/app
       - ./music:/music
+      - ./app/data:/data
     networks:
       - app-network
 
