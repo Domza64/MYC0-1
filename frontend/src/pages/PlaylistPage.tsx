@@ -3,48 +3,30 @@ import type { Playlist, Song } from "../types/music";
 import SongCard from "../components/ui/SongCard";
 import { useParams } from "react-router-dom";
 import { usePlayer } from "../contexts/PlayerContext";
-import toast from "react-hot-toast";
+import { playlistsApi } from "../lib/api/playlists";
 
 export default function PlaylistsPage() {
   const [playlist, setPlaylist] = useState<Playlist>();
-  const [loading, setLoading] = useState(true);
   const [songs, setSongs] = useState<Song[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const { dispatch } = usePlayer();
   const { id } = useParams();
 
-  const fetchPlaylistData = async () => {
-    try {
-      const response = await fetch(`/api/playlists/${id}`);
-      const data = await response.json();
-      if (response.ok) {
-        setPlaylist(data);
-      }
-    } catch (error) {
-      console.error("Error fetching playlist data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    if (!id) return;
+    playlistsApi
+      .get(Number(id))
+      .then(setPlaylist)
+      .finally(() => setLoading(false));
+  }, [id]);
 
-  const fetchSongs = async () => {
+  useEffect(() => {
     if (!playlist) return;
-    try {
-      const response = await fetch(`/api/playlists/songs/${id}`);
-      const data = await response.json();
-      setSongs(data);
-    } catch (error) {
-      console.error("Error fetching songs:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchPlaylistData();
-  }, []);
-
-  useEffect(() => {
-    fetchSongs();
+    playlistsApi.getSongs(Number(id)).then(setSongs);
   }, [playlist]);
 
+  // TODO: move this to some utils file
   const handleSongClick = (song: Song) => {
     dispatch({ type: "CLEAR_QUEUE" });
     dispatch({ type: "ADD_TO_QUEUE", payload: songs });
@@ -52,15 +34,9 @@ export default function PlaylistsPage() {
   };
 
   const removeFromPlaylist = (song: Song) => {
-    try {
-      fetch(`/api/playlists/${id}/${song.id}`, {
-        method: "DELETE",
-      });
-      setSongs((prevSongs) => prevSongs.filter((s) => s.id !== song.id));
-    } catch (error) {
-      toast.error("Failed to remove song from playlist");
-      console.error("Error removing song from playlist:", error);
-    }
+    playlistsApi.removeSong(Number(id), song.id).then(() => {
+      setSongs((prev) => prev.filter((s) => s.id !== song.id));
+    });
   };
 
   if (loading) {

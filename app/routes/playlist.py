@@ -1,5 +1,5 @@
 from typing import Annotated, Optional
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel
 from sqlmodel import Session, select
 from app.model.playlist import Playlist
@@ -94,7 +94,7 @@ def remove_song_from_playlist(playlist_id: int, song_id: int, session: SessionDe
     
     session.delete(playlist_songs)
     session.commit()
-    return {"message": "Song removed from playlist successfully"}
+    return Response(status_code=200)
 
 class AddSongsRequest(BaseModel):
     song_ids: list[int]
@@ -133,4 +133,4 @@ def add_songs_to_playlist(playlist_id: int, data: AddSongsRequest, session: Sess
         added_count += 1
 
     session.commit()
-    return {"message": f"{added_count} song(s) added to playlist successfully"}
+    return {"added_count": added_count}

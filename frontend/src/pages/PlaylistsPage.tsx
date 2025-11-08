@@ -1,22 +1,17 @@
 import { useEffect, useState } from "react";
 import PlaylistCard from "../components/ui/PlaylistCard";
 import type { Playlist } from "../types/music";
+import { playlistsApi } from "../lib/api/playlists";
+import toast from "react-hot-toast";
 
 export default function PlaylistsPage() {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
 
-  const fetchPlaylists = async () => {
-    try {
-      const response = await fetch("/api/playlists");
-      const data = await response.json();
-      setPlaylists(data);
-    } catch (error) {
-      console.error("Error fetching playlists:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchPlaylists();
+    playlistsApi
+      .getAll()
+      .then(setPlaylists)
+      .catch(() => toast.error("Failed to load playlists"));
   }, []);
 
   return (

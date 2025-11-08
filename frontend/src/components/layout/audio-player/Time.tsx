@@ -1,5 +1,5 @@
 import { usePlayer } from "../../../contexts/PlayerContext";
-import { formatDuration } from "../../../utils/formatters";
+import { formatDuration } from "../../../lib/formatters";
 
 export default function Time() {
   const { state } = usePlayer();
