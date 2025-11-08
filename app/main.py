@@ -10,6 +10,7 @@ from app.routes.scan import router as scan_router
 from app.routes.folder import router as folder_router
 from app.routes.auth import router as auth_router
 from app.routes.user import router as user_router
+from app.routes.playlist import router as playlist_router
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
@@ -39,6 +40,7 @@ app.include_router(folder_router)
 # TODO - Rate limiting
 app.include_router(auth_router)
 app.include_router(user_router)
+app.include_router(playlist_router)
 
 @app.on_event("startup")
 def on_startup():

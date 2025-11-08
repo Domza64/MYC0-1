@@ -36,7 +36,7 @@ async def create_session(login_data: LoginRequest, response: Response, session: 
         return JSONResponse(status_code=401, content={"message": "Invalid credentials"})
 
     auth_session = uuid4()
-    data = SessionData(username=user.username, role=user.role)
+    data = SessionData(user_id=user.id, username=user.username, role=user.role)
 
     await backend.create(auth_session, data)
     cookie.attach_to_response(response, auth_session)
