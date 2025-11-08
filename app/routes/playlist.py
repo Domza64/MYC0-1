@@ -41,7 +41,7 @@ def create_playlist(playlist_data: PlaylistData, session: SessionDep, session_da
     session.refresh(new_playlist)
     return new_playlist
 
-@router.get("/{playlist_id}", response_model=list[Song], dependencies=[Depends(cookie)])
+@router.get("/songs/{playlist_id}", response_model=list[Song], dependencies=[Depends(cookie)])
 def get_playlist_songs(playlist_id: int, session: SessionDep, session_data: SessionData = Depends(verifier)) -> list[Song]:
     """
     Get all songs in a playlist.
@@ -61,8 +61,46 @@ def get_playlist_songs(playlist_id: int, session: SessionDep, session_data: Sess
     ).all()
     return songs
 
-@router.post("/{playlist_id}/songs", dependencies=[Depends(cookie)])
-def add_songs_to_playlist(playlist_id: int, song_ids: list[int], session: SessionDep, session_data: SessionData = Depends(verifier)):
+@router.get("/{playlist_id}", response_model=Playlist, dependencies=[Depends(cookie)])
+def read_playlist(playlist_id: int, session: SessionDep, session_data: SessionData = Depends(verifier)) -> Playlist:
+    """
+    Get a playlist by its ID.
+    """
+    playlist = session.get(Playlist, playlist_id)
+    if not playlist:
+        raise HTTPException(status_code=404, detail="Playlist not found")
+    
+    if playlist.user_id != session_data.user_id and not playlist.shared:
+        raise HTTPException(status_code=403, detail="You do not have permission to access this playlist")
+    return playlist
+
+@router.delete("/{playlist_id}/{song_id}", dependencies=[Depends(cookie)])
+def remove_song_from_playlist(playlist_id: int, song_id: int, session: SessionDep, session_data: SessionData = Depends(verifier)):
+    """
+    Remove a song from a playlist.
+    """
+    playlist = session.get(Playlist, playlist_id)
+    if not playlist:
+        raise HTTPException(status_code=404, detail="Playlist not found")
+    
+    if playlist.user_id != session_data.user_id and not playlist.shared:
+        raise HTTPException(status_code=403, detail="You do not have permission to access this playlist")
+    
+
+    # This is not multiple songs, it's playlist_songs object thing that represents one song in one playlist in playlist_songs table
+    playlist_songs = session.get(PlaylistSongs, (song_id, playlist_id))
+    if not playlist_songs:
+        raise HTTPException(status_code=404, detail="Song not found in playlist")
+    
+    session.delete(playlist_songs)
+    session.commit()
+    return {"message": "Song removed from playlist successfully"}
+
+class AddSongsRequest(BaseModel):
+    song_ids: list[int]
+
+@router.post("/songs/{playlist_id}", dependencies=[Depends(cookie)])
+def add_songs_to_playlist(playlist_id: int, data: AddSongsRequest, session: SessionDep, session_data: SessionData = Depends(verifier)):
     """
     Add songs to a playlist.
     """
@@ -73,13 +111,26 @@ def add_songs_to_playlist(playlist_id: int, song_ids: list[int], session: Sessio
     if playlist.user_id != session_data.user_id and not playlist.shared:
         raise HTTPException(status_code=403, detail="You do not have permission to access this playlist")
     
-    songs = []
-    for song_id in song_ids:
-        song = session.get(Song, song_id)
-        songs.append(song)
-        
-    for song in songs:
-        playlist_songs = PlaylistSongs(playlist_id=playlist_id, song_id=song_id, position=0)
-        session.add(playlist_songs)
-        session.commit()
-    return {"message": f"{len(songs)} song(s) added to playlist successfully"}
+    added_count = 0
+    for song_id in data.song_ids:
+        # Skip if song already exists in playlist
+        if session.get(PlaylistSongs, (song_id, playlist_id)):
+            continue
+
+        # Determine next position
+        max_pos = session.exec(
+            select(PlaylistSongs.position)
+            .where(PlaylistSongs.playlist_id == playlist_id)
+            .order_by(PlaylistSongs.position.desc())
+        ).first() or 0
+
+        playlist_song = PlaylistSongs(
+            playlist_id=playlist_id,
+            song_id=song_id,
+            position=max_pos + 1
+        )
+        session.add(playlist_song)
+        added_count += 1
+
+    session.commit()
+    return {"message": f"{added_count} song(s) added to playlist successfully"}

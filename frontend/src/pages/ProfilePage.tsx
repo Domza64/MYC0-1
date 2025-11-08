@@ -1,6 +1,6 @@
 import { useAuth } from "../contexts/AuthContext";
 
-export default function Profile() {
+export default function ProfilePage() {
   const { logout } = useAuth();
   return (
     <div>

@@ -7,7 +7,7 @@ const TABS = [
   { id: "members", title: "Members", component: Members },
 ];
 
-export default function Settings() {
+export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("library");
 
   // Find the active tab component

@@ -3,47 +3,11 @@ import VerticalScrollSection from "../components/layout/VerticalScrollSection";
 import PlaylistCard from "../components/ui/PlaylistCard";
 import { useAuth } from "../contexts/AuthContext";
 
-export default function Home() {
+export default function HomePage() {
   const { auth } = useAuth();
 
-  const playlists: Playlist[] = [
-    {
-      id: "1",
-      name: "My playlist",
-      description: "My playlist description",
-      songs: [],
-      songCount: 0,
-      totalDuration: 0,
-      isPublic: true,
-      ownerId: "1",
-      createdAt: "2021-01-01",
-      updatedAt: "2021-01-01",
-    },
-    {
-      id: "2",
-      name: "Chill vibes",
-      description: "Relaxing and chill music",
-      songs: [],
-      songCount: 0,
-      totalDuration: 0,
-      isPublic: false,
-      ownerId: "1",
-      createdAt: "2021-02-01",
-      updatedAt: "2021-02-01",
-    },
-    {
-      id: "3",
-      name: "Workout",
-      description: "Workout music",
-      songs: [],
-      songCount: 0,
-      totalDuration: 0,
-      isPublic: true,
-      ownerId: "1",
-      createdAt: "2021-03-01",
-      updatedAt: "2021-03-01",
-    },
-  ];
+  const playlists: Playlist[] = [];
+
   return (
     <div className="flex flex-col">
       <section>

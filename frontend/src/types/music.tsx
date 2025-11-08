@@ -30,12 +30,7 @@ export interface Playlist {
   id: string;
   name: string;
   description?: string;
-  songs: Song[];
-  songCount: number;
-  totalDuration: number;
-  isPublic: boolean;
-  ownerId: string;
-  createdAt: string;
-  updatedAt: string;
+  shared: boolean;
+  user_id: string;
   coverArt?: string;
 }

@@ -3,7 +3,7 @@ import SongCard from "../components/ui/SongCard";
 import { usePlayer } from "../contexts/PlayerContext";
 import type { Song } from "../types/music";
 
-export default function Queue() {
+export default function QueuePage() {
   const player = usePlayer();
 
   const handleClearQueue = (): void => {

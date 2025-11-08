@@ -8,7 +8,7 @@ import Button from "../components/ui/buttons/Button";
 import { FaPlay } from "react-icons/fa6";
 import { MdOutlineQueueMusic } from "react-icons/md";
 
-export default function Folders() {
+export default function FoldersPage() {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [currentFolder, setCurrentFolder] = useState<Folder | null>(null);
   const [songs, setSongs] = useState<Song[]>([]);

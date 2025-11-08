@@ -3,12 +3,19 @@ import type { Song } from "../../types/music";
 import { usePlayer } from "../../contexts/PlayerContext";
 import { FaItunesNote } from "react-icons/fa6";
 
+interface MenuAction {
+  onClick: () => void;
+  text: string;
+}
+
 export default function SongCard({
   song,
   onClick,
+  menuActions,
 }: {
   song: Song;
   onClick?: () => void;
+  menuActions?: MenuAction[];
 }) {
   const player = usePlayer();
 
@@ -31,7 +38,13 @@ export default function SongCard({
         {song.title}
       </span>
       <HiOutlineDotsVertical
-        onClick={() => alert("Not implemented yet.")}
+        onClick={() => {
+          // TODO: Three dots open menu with multiple options
+          const remove = confirm(menuActions?.at(0)?.text);
+          if (remove) {
+            menuActions?.at(0)?.onClick();
+          }
+        }}
         className="mx-2"
       />
     </li>

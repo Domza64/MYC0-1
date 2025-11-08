@@ -3,7 +3,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { routes } from "./routes";
 import Layout from "../components/layout/Layout";
 import { usePlayer } from "../contexts/PlayerContext";
-import Login from "../pages/Login";
+import Login from "../pages/LoginPage";
 import { useAuth } from "../contexts/AuthContext";
 import Loading from "../components/layout/Loading";
 

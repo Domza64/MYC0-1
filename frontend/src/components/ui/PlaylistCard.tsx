@@ -1,8 +1,10 @@
+import { Link } from "react-router-dom";
 import type { Playlist } from "../../types/music";
 
 export default function PlaylistCard({ playlist }: { playlist: Playlist }) {
   return (
-    <div
+    <Link
+      to={`/playlists/${playlist.id}`}
       key={playlist.id}
       className="group flex flex-col items-center backdrop-blur-md transition-all duration-300"
     >
@@ -16,6 +18,6 @@ export default function PlaylistCard({ playlist }: { playlist: Playlist }) {
         />
       </div>
       <p className="pt-2 w-full">{playlist.name}</p>
-    </div>
+    </Link>
   );
 }

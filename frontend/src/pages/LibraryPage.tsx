@@ -3,10 +3,11 @@ import type { Song } from "../types/music";
 import SongCard from "../components/ui/SongCard";
 import { usePlayer } from "../contexts/PlayerContext";
 import { useInView } from "react-intersection-observer";
+import toast from "react-hot-toast";
 
 const LIMIT = 30;
 
-export default function Library() {
+export default function LibraryPage() {
   const [songs, setSongs] = useState<Song[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadedAll, setLoadedAll] = useState(false);
@@ -58,6 +59,26 @@ export default function Library() {
     dispatch({ type: "PLAY_SONG", payload: song });
   };
 
+  const handleAddToPlaylst = async (song: Song) => {
+    try {
+      const response = await fetch(`/api/playlists/songs/${2}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ song_ids: [song.id] }),
+      });
+
+      if (response.ok) {
+        toast.success("Song(s) added to playlist");
+      } else {
+        throw new Error("Failed to add song to playlist");
+      }
+    } catch (error) {
+      console.error("Error adding song to playlist:", error);
+    }
+  };
+
   return (
     <div>
       <h1>My Library</h1>
@@ -67,7 +88,16 @@ export default function Library() {
 
           return (
             <div key={song.id} ref={isLastSong ? ref : null}>
-              <SongCard song={song} onClick={() => handleSongClick(song)} />
+              <SongCard
+                song={song}
+                onClick={() => handleSongClick(song)}
+                menuActions={[
+                  {
+                    onClick: () => handleAddToPlaylst(song),
+                    text: "Add to playlist",
+                  },
+                ]}
+              />
             </div>
           );
         })}
