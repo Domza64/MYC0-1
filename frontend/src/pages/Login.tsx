@@ -45,7 +45,7 @@ export default function Login() {
       {/* Login form */}
       <div className="relative bg-stone-900/10 border border-stone-700/50 rounded-xl mx-4 px-4 py-8 w-full max-w-md">
         <div className="flex justify-center mb-8">
-          <img src="MYC0-1_logo.svg" alt="MYC0-1 Logo" />
+          <img src="/static/MYC0-1-rose-500.svg" alt="MYC0-1" width={220} />
         </div>
 
         {/* Error Message */}
@@ -76,7 +76,7 @@ export default function Login() {
           <button
             onClick={handleLogin}
             disabled={loading}
-            className="w-full hover:cursor-grab bg-rose-500 hover:bg-rose-600 disabled:bg-stone-600 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 focus:ring-offset-stone-900"
+            className="w-full hover:cursor-grab bg-rose-500 hover:bg-rose-600 disabled:bg-stone-600 text-lg disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 focus:ring-offset-stone-900"
           >
             {loading ? "Logging in..." : "Login"}
           </button>

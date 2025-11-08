@@ -4,3 +4,6 @@
 
 Install deps:
 `npm i`
+
+Fond used for logo:
+https://www.dafont.com/basica-2.font

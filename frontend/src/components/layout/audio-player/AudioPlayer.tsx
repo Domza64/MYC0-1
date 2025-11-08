@@ -103,7 +103,7 @@ export default function AudioPlayer() {
       artist: currentSong.artist || "Unknown Artist",
       album: currentSong.album || "Unknown Album",
       artwork: [
-        { src: "/album_cover.png", sizes: "96x96", type: "image/jpeg" },
+        { src: "/static/album_cover.png", sizes: "96x96", type: "image/jpeg" },
       ],
     });
 

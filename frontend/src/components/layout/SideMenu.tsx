@@ -43,7 +43,14 @@ export default function SideMenu({
     <aside className="h-full border-r border-stone-800">
       <div className="h-16 flex items-center px-6 sticky top-0">
         <div className="flex w-full items-center justify-between">
-          <h2 className="text-xl font-bold">MYC0-1</h2>
+          <h2 className="text-xl font-bold">
+            <img
+              src="/static/MYC0-1-rose-500.svg"
+              className="opacity-90"
+              alt="MYC0-1"
+              width={120}
+            />
+          </h2>
           <span className="text-xs text-stone-400">v0.0.0-dev</span>
         </div>
       </div>
