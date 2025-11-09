@@ -30,7 +30,10 @@ export default function PlaybackControlls({
   };
 
   return (
-    <div className="flex items-center space-x-1 md:space-x-2 mx-1 md:mx-8">
+    <div
+      onClick={(e) => e.stopPropagation()}
+      className="flex items-center space-x-1 md:space-x-2 md:mx-8"
+    >
       <button
         onClick={playPrevious}
         className="text-stone-400 hover:text-white p-2 disabled:text-stone-600 cursor-grab"
@@ -48,13 +51,9 @@ export default function PlaybackControlls({
 
       <button
         onClick={togglePlayback}
-        className="bg-white text-stone-900 rounded-full p-3 hover:scale-105 transition-transform"
+        className="bg-white text-stone-900 rounded-full p-2 text-lg hover:scale-105 transition-transform"
       >
-        {isPlaying ? (
-          <FaPause className="w-4 h-4" />
-        ) : (
-          <FaPlay className="w-4 h-4 pl-0.5" />
-        )}
+        {isPlaying ? <FaPause /> : <FaPlay className="pl-0.5" />}
       </button>
 
       <button

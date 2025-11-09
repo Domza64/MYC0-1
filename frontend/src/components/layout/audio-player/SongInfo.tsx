@@ -9,7 +9,7 @@ export default function SongInfo() {
   if (!currentSong) return <span>No song playing</span>;
 
   return (
-    <div className="flex items-center space-x-4 min-w-0 flex-1">
+    <div className="flex items-center space-x-4 min-w-0 flex-1 mr-8">
       <div className="w-12 h-12 bg-stone-700 rounded shrink-0 flex items-center justify-center">
         {currentSong.album_art ? (
           <img

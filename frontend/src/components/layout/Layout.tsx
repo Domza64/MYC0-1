@@ -5,24 +5,23 @@ import SideMenu from "./SideMenu";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isPlayerOpen, setIsPlayerOpen] = useState(false);
 
   return (
     <div className="min-h-screen w-full flex flex-col">
       {/* Main Content */}
       <div className="flex grow">
+        {/* Side Menu */}
         <div
           className={`
           fixed lg:static
-          left-0 top-0
-          h-full lg:h-auto
-          z-30 lg:z-auto
-          border-r border-stone-700
-          w-full max-w-xs
-          transition-transform lg:transform-none
+          left-0 top-0 h-full lg:h-auto
+          z-30 lg:z-auto border-r border-stone-700
+          min-w-xs transition-transform lg:transform-none
           ${isMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
         >
-          <div className="w-full h-full bg-stone-950/80 lg:bg-transparent">
+          <div className="w-full h-full bg-stone-950/80">
             <SideMenu onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} />
           </div>
         </div>
@@ -36,15 +35,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         )}
 
         {/* Current Page */}
-        <div className="w-full">
+        <div className="w-full overflow-x-hidden">
           <Header onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} />
-          <main className="grow p-4 pb-32">{children}</main>
+          <main className="md:p-4 p-2 md:pb-26 pb-20">{children}</main>
         </div>
       </div>
 
       {/* Audio Player */}
-      <div className="fixed z-40 bottom-0 left-0 right-0 flex justify-center items-center bg-stone-800/40 backdrop-blur-md border-t border-stone-700 px-4 py-3 h-24">
-        <AudioPlayer />
+      <div
+        className={`${
+          isPlayerOpen ? "h-screen max-h-2/3" : "md:h-24"
+        } fixed z-40 bottom-0 left-0 right-0 flex justify-center bg-stone-800/40 backdrop-blur-md border-t border-stone-700 px-4 py-3`}
+        onClick={() => setIsPlayerOpen((isOpen) => !isOpen)}
+      >
+        <AudioPlayer playerOpen={isPlayerOpen} />
       </div>
     </div>
   );

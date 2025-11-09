@@ -29,7 +29,7 @@ export default function PlaylistsPage() {
       <div className="flex items-center justify-between mb-6">
         <h1>My Playlists</h1>
       </div>
-      <ul className="flex gap-4">
+      <ul className="flex flex-wrap gap-4">
         {playlists.map((playlist) => (
           <PlaylistCard key={playlist.id} playlist={playlist} />
         ))}

@@ -9,7 +9,7 @@ import ProgressBar from "./ProgressBar";
 import ShuffleButton from "../../ui/buttons/ShuffleButton";
 import RepeatButton from "../../ui/buttons/RepeatButton";
 
-export default function AudioPlayer() {
+export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
   const { state, dispatch } = usePlayer();
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -122,14 +122,62 @@ export default function AudioPlayer() {
 
   if (!currentSong) {
     return (
-      <>
-        <div className="flex items-center justify-center text-stone-400">
-          <FaMusic className="w-4 h-4 mr-2" />
-          <p>No song selected</p>
-        </div>
-      </>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="flex items-center justify-center text-stone-400"
+      >
+        <FaMusic className="w-4 h-4 mr-2" />
+        <p>No song selected</p>
+      </div>
     );
   }
+
+  // TODO: finish
+  const fullscreenAudioDisplay = (
+    <div
+      className="flex flex-col gap-4 w-full"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <SongInfo />
+      <ProgressBar audioRef={audioRef} />
+      <div className="flex items-center gap-4 shrink-0 select-none">
+        <ShuffleButton />
+        <RepeatButton />
+        <Time />
+        <VolumeControll />
+      </div>
+      <div className="flex items-center justify-between w-full gap-4">
+        <PlaybackControlls
+          skipBackward={skipBackward}
+          skipForward={skipForward}
+        />
+      </div>
+    </div>
+  );
+
+  const bottomAudioDisplay = (
+    <>
+      <div className="hidden md:block">
+        <ProgressBar audioRef={audioRef} />
+      </div>
+      <div className="flex items-center justify-between">
+        <SongInfo />
+        <PlaybackControlls
+          skipBackward={skipBackward}
+          skipForward={skipForward}
+        />
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="hidden md:flex items-center space-x-4 min-w-0 flex-1 justify-end select-none"
+        >
+          <ShuffleButton />
+          <RepeatButton />
+          <Time />
+          <VolumeControll />
+        </div>
+      </div>
+    </>
+  );
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -141,21 +189,7 @@ export default function AudioPlayer() {
         preload="metadata"
       />
 
-      <ProgressBar audioRef={audioRef} />
-
-      <div className="flex items-center justify-between">
-        <SongInfo />
-        <PlaybackControlls
-          skipBackward={skipBackward}
-          skipForward={skipForward}
-        />
-        <div className="flex items-center space-x-4 min-w-0 flex-1 justify-end">
-          <ShuffleButton />
-          <RepeatButton />
-          <Time />
-          <VolumeControll />
-        </div>
-      </div>
+      {playerOpen ? fullscreenAudioDisplay : bottomAudioDisplay}
     </div>
   );
 }

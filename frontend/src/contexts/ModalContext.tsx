@@ -27,7 +27,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
           onClick={handleBackdropClick}
           className="fixed inset-0 backdrop-blur flex items-center justify-center z-50 text-stone-300"
         >
-          <div className="w-full max-w-md bg-stone-900/50 border border-stone-800 shadow-xl shadow-stone-900 rounded-xl flex justify-center items-center min-h-32 m-4">
+          <div className="w-full max-w-md bg-stone-950/70 border border-stone-800 shadow-xl shadow-stone-900 rounded-xl flex justify-center items-center min-h-32 md:m-4 m-2">
             {modalContent}
           </div>
         </div>

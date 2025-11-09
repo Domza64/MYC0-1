@@ -72,7 +72,7 @@ export default function SongCard({
         onClick={onClick}
         className={`${
           active ? "font-semibold text-rose-500" : "text-stone-300"
-        } w-full p-2 `}
+        } w-full p-2 truncate`}
       >
         {song.title}
       </span>

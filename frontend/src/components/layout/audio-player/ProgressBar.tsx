@@ -64,7 +64,7 @@ export default function ProgressBar({
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div>
+    <div onClick={(e) => e.stopPropagation()}>
       <div
         className="h-2 bg-stone-600 cursor-pointer mb-3 rounded-full overflow-hidden"
         onClick={handleSeek}
