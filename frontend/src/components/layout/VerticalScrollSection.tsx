@@ -1,9 +1,10 @@
 "use client";
 
+import React from "react";
 import { useRef, useEffect, type ReactNode } from "react";
 
 interface VerticalScrollSectionProps {
-  children: ReactNode[];
+  children: ReactNode[] | ReactNode;
   title?: string;
 }
 
@@ -71,7 +72,7 @@ export default function VerticalScrollSection({
           ref={sliderRef}
           className="flex gap-6 overflow-x-auto cursor-grab scrollbar-hide select-none"
         >
-          {children.map((child, index) => (
+          {React.Children.toArray(children).map((child, index) => (
             <li key={index}>{child}</li>
           ))}
         </ul>

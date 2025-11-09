@@ -8,6 +8,21 @@ type RequestOptions = RequestInit & {
   onSuccess?: (data: any) => void;
 };
 
+/**
+ * Makes an HTTP request to the backend API with JSON handling, credentials,
+ * error handling, and optional toast notifications.
+ *
+ * @template T - The expected type of the response data.
+ * @param {string} endpoint - The API endpoint relative to API_BASE (e.g., "/playlists").
+ * @param {RequestOptions} [options] - Optional request configuration.
+ * @param {boolean} [options.showToastError=true] - Whether to show a toast on errors.
+ * @param {string} [options.toastSuccessMessage] - Optional success toast message.
+ * @param {(data: any) => void} [options.onSuccess] - Callback executed after a successful request.
+ * @returns {Promise<T>} - Resolves with the parsed JSON data.
+ *
+ * @example
+ * const playlists = await apiRequest<Playlist[]>('/playlists');
+ */
 export async function apiRequest<T>(
   endpoint: string,
   options: RequestOptions = {}

@@ -1,0 +1,130 @@
+import { useEffect, useState } from "react";
+import Button from "../buttons/Button";
+import type { Playlist, Song } from "../../../types/music";
+import { playlistsApi } from "../../../lib/api/playlists";
+
+interface AddToPlaylistFormProps {
+  songs: Song[];
+  onSuccess?: () => void;
+  onCancel?: () => void;
+}
+
+export default function AddToPlaylistForm({
+  songs,
+  onSuccess,
+  onCancel,
+}: AddToPlaylistFormProps) {
+  const [selectedPlaylist, setSelectedPlaylist] = useState<number | undefined>(
+    undefined
+  );
+  const [playlists, setPlaylists] = useState<Playlist[] | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    playlistsApi
+      .getAll()
+      .then((playlists) => {
+        setPlaylists(playlists);
+        setSelectedPlaylist(Number(playlists[0]?.id));
+      })
+      .catch(() => {
+        setError("Failed to load playlists");
+      });
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (selectedPlaylist == null) {
+      setError("Please select a playlist");
+      return;
+    }
+
+    setSubmitting(true);
+    setError("");
+
+    playlistsApi
+      .addSongs(
+        selectedPlaylist,
+        songs.map((s) => s.id)
+      )
+      .then((data) => {
+        if (data.added_count === 0) {
+          setError("Song already in playlist");
+        } else {
+          onSuccess?.();
+        }
+      })
+      .catch((err) => {
+        setError(err.message || "Failed to add songs to playlist");
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
+  };
+
+  const title =
+    songs.length === 1
+      ? `Add "${songs[0].title}" to playlist`
+      : `Add ${songs.length} songs to playlist`;
+
+  return (
+    <form onSubmit={handleSubmit} className="w-full p-6 space-y-4">
+      <h3 className="text-lg font-semibold">{title}</h3>
+
+      {error && (
+        <div className="p-3 bg-rose-500/20 border border-rose-500/50 rounded-lg text-rose-300 text-sm">
+          {error}
+        </div>
+      )}
+
+      <div className="space-y-3">
+        {playlists != null ? (
+          <div>
+            <label
+              htmlFor="playlist"
+              className="block text-sm font-medium mb-1"
+            >
+              Select Playlist
+            </label>
+            <select
+              id="playlist"
+              name="playlist"
+              value={selectedPlaylist}
+              onChange={(e) =>
+                setSelectedPlaylist(Number(e.target.value) || undefined)
+              }
+              required
+              className="w-full px-3 py-2 bg-stone-800/50 border border-stone-700 rounded-lg focus:outline-none focus:border-stone-500"
+            >
+              {playlists.map((playlist: Playlist) => (
+                <option key={playlist.id} value={playlist.id}>
+                  {playlist.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : (
+          !error && <p>Loading playlists...</p>
+        )}
+      </div>
+
+      <div className="flex gap-3 pt-2">
+        {onCancel && (
+          <Button
+            type="button"
+            onClick={onCancel}
+            className="w-full"
+            disabled={submitting}
+          >
+            Cancel
+          </Button>
+        )}
+        <Button type="submit" className="w-full" disabled={submitting}>
+          {submitting ? "Adding..." : "Add"}
+        </Button>
+      </div>
+    </form>
+  );
+}

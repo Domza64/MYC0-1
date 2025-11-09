@@ -1,10 +1,13 @@
 import Button from "../components/ui/buttons/Button";
-import SongCard from "../components/ui/SongCard";
+import SongCard from "../components/ui/cards/SongCard";
+import AddToPlaylistForm from "../components/ui/forms/AddToPlaylistForm";
+import { useModal } from "../contexts/ModalContext";
 import { usePlayer } from "../contexts/PlayerContext";
 import type { Song } from "../types/music";
 
 export default function QueuePage() {
   const player = usePlayer();
+  const { showModal, hideModal } = useModal();
 
   const handleClearQueue = (): void => {
     player.dispatch({ type: "CLEAR_QUEUE" });
@@ -34,6 +37,23 @@ export default function QueuePage() {
             onClick={() => {
               handleClick(song);
             }}
+            menuActions={[
+              {
+                text: "Remove",
+                onClick: () => {
+                  // Remove from queue
+                  alert("Remove from queue");
+                },
+              },
+              {
+                text: "Add to playlist",
+                onClick: () => {
+                  showModal(
+                    <AddToPlaylistForm songs={[song]} onSuccess={hideModal} />
+                  );
+                },
+              },
+            ]}
             key={song.id}
           />
         ))}

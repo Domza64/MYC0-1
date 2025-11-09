@@ -2,17 +2,18 @@ import { useEffect, useState } from "react";
 import Button from "../ui/buttons/Button";
 import { TiPlus } from "react-icons/ti";
 import type { User } from "../../types/user";
-import Modal from "../layout/Modal";
 import CreateUserForm from "../ui/forms/CreateUserForm";
 import toast from "react-hot-toast";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { useAuth } from "../../contexts/AuthContext";
+import { useModal } from "../../contexts/ModalContext";
 
 export default function Members() {
-  const { auth } = useAuth();
   const [members, setMembers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const [addUserModal, setAddUserModal] = useState(false);
+
+  const { auth } = useAuth();
+  const { showModal, hideModal } = useModal();
 
   const fetchMembers = async () => {
     setLoading(true);
@@ -63,23 +64,22 @@ export default function Members() {
 
   return (
     <div>
-      {addUserModal && (
-        <Modal onClose={() => setAddUserModal(false)}>
-          <CreateUserForm
-            onCancel={() => setAddUserModal(false)}
-            onSuccess={() => {
-              setAddUserModal(false);
-              toast("User created successfully");
-              fetchMembers();
-            }}
-          />
-        </Modal>
-      )}
       <div className="flex justify-between items-center max-w-400 space-y-4 mb-4">
         <h2>Member List</h2>
         <Button
           className="flex items-center space-x-1"
-          onClick={() => setAddUserModal(true)}
+          onClick={() =>
+            showModal(
+              <CreateUserForm
+                onCancel={hideModal}
+                onSuccess={() => {
+                  hideModal();
+                  toast("User created successfully");
+                  fetchMembers();
+                }}
+              />
+            )
+          }
         >
           <TiPlus />
           <span>Create</span>

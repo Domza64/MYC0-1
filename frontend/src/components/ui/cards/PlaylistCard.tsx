@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { Playlist } from "../../types/music";
+import type { Playlist } from "../../../types/music";
 
 export default function PlaylistCard({ playlist }: { playlist: Playlist }) {
   return (

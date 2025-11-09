@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import type { Song } from "../types/music";
-import SongCard from "../components/ui/SongCard";
+import SongCard from "../components/ui/cards/SongCard";
 import { usePlayer } from "../contexts/PlayerContext";
 import { useInView } from "react-intersection-observer";
 import { playlistsApi } from "../lib/api/playlists";
+import { useModal } from "../contexts/ModalContext";
+import AddToPlaylistForm from "../components/ui/forms/AddToPlaylistForm";
 
 const LIMIT = 30;
 
@@ -12,10 +14,12 @@ export default function LibraryPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [loadedAll, setLoadedAll] = useState(false);
   const [offset, setOffset] = useState(0);
+
   const hasFetchedInitial = useRef(false);
   const { ref, inView } = useInView();
 
   const { dispatch } = usePlayer();
+  const { showModal, hideModal } = useModal();
 
   const fetchSongs = async () => {
     setIsLoading(true);
@@ -54,14 +58,8 @@ export default function LibraryPage() {
   }, [inView]);
 
   const handleSongClick = (song: Song) => {
-    dispatch({ type: "CLEAR_QUEUE" });
-    dispatch({ type: "ADD_TO_QUEUE", payload: [song] });
+    dispatch({ type: "ADD_TO_QUEUE", payload: [song], replace: true });
     dispatch({ type: "PLAY_SONG", payload: song });
-  };
-
-  const handleAddToPlaylst = async (song: Song) => {
-    // TODO: temp hardcode playlist id
-    playlistsApi.addSongs(2, [song.id]);
   };
 
   return (
@@ -78,7 +76,13 @@ export default function LibraryPage() {
                 onClick={() => handleSongClick(song)}
                 menuActions={[
                   {
-                    onClick: () => handleAddToPlaylst(song),
+                    onClick: () =>
+                      showModal(
+                        <AddToPlaylistForm
+                          songs={[song]}
+                          onSuccess={hideModal}
+                        />
+                      ),
                     text: "Add to playlist",
                   },
                 ]}

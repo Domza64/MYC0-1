@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import type { Playlist, Song } from "../types/music";
-import SongCard from "../components/ui/SongCard";
+import SongCard from "../components/ui/cards/SongCard";
 import { useParams } from "react-router-dom";
 import { usePlayer } from "../contexts/PlayerContext";
 import { playlistsApi } from "../lib/api/playlists";
+import Button from "../components/ui/buttons/Button";
+import { FaPlay } from "react-icons/fa6";
+import { MdOutlineQueueMusic } from "react-icons/md";
 
 export default function PlaylistsPage() {
   const [playlist, setPlaylist] = useState<Playlist>();
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const { dispatch } = usePlayer();
+  const player = usePlayer();
   const { id } = useParams();
 
   useEffect(() => {
@@ -28,9 +31,8 @@ export default function PlaylistsPage() {
 
   // TODO: move this to some utils file
   const handleSongClick = (song: Song) => {
-    dispatch({ type: "CLEAR_QUEUE" });
-    dispatch({ type: "ADD_TO_QUEUE", payload: songs });
-    dispatch({ type: "PLAY_SONG", payload: song });
+    player.dispatch({ type: "ADD_TO_QUEUE", payload: songs, replace: true });
+    player.dispatch({ type: "PLAY_SONG", payload: song });
   };
 
   const removeFromPlaylist = (song: Song) => {
@@ -49,8 +51,40 @@ export default function PlaylistsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1>{playlist.name}</h1>
+      <div className="flex justify-between items-center mb-2">
+        <h1 className="text-xl">{playlist.name}</h1>
+        <div className="flex gap-2">
+          <Button
+            className="flex items-center gap-2"
+            onClick={() => {
+              player.dispatch({
+                type: "ADD_TO_QUEUE",
+                payload: songs,
+                replace: true,
+              });
+              player.dispatch({ type: "PLAY_SONG", payload: songs[0] });
+            }}
+          >
+            <FaPlay />
+            <span>Play</span>
+          </Button>
+          <Button
+            className="flex items-center gap-2"
+            onClick={() => {
+              player.dispatch({
+                type: "ADD_TO_QUEUE",
+                payload: songs,
+                showMessage: true,
+              });
+              if (player.state.queue.length === 0) {
+                player.dispatch({ type: "PLAY_SONG", payload: songs[0] });
+              }
+            }}
+          >
+            <MdOutlineQueueMusic />
+            <span>Add</span>
+          </Button>
+        </div>
       </div>
       <ul className="flex flex-col">
         {songs.map((song) => (
@@ -60,8 +94,16 @@ export default function PlaylistsPage() {
             onClick={() => handleSongClick(song)}
             menuActions={[
               {
-                onClick: () => removeFromPlaylist(song),
-                text: "Playlist",
+                onClick: () => {
+                  if (
+                    !confirm(
+                      "Are you sure you want to remove this song from the playlist?"
+                    )
+                  )
+                    return;
+                  removeFromPlaylist(song);
+                },
+                text: "Remove from playlist",
               },
             ]}
           />

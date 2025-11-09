@@ -3,6 +3,8 @@ import type { Song } from "../types/music";
 import toast from "react-hot-toast";
 import type { PlayerState } from "../types/player";
 
+const STORAGE_KEY = "player_state";
+
 type PlayerAction =
   | { type: "PLAY_SONG"; payload: Song }
   | { type: "SET_PLAYBACK"; payload: boolean }
@@ -13,7 +15,12 @@ type PlayerAction =
   | { type: "PREVIOUS_SONG" }
   | { type: "TOGGLE_SHUFFLE" }
   | { type: "TOGGLE_REPEAT" }
-  | { type: "ADD_TO_QUEUE"; payload: Song[] }
+  | {
+      type: "ADD_TO_QUEUE";
+      payload: Song[];
+      replace?: boolean;
+      showMessage?: boolean;
+    }
   | { type: "SET_CURRENT_INDEX"; payload: number }
   | { type: "RESET_MESSAGE" }
   | { type: "CLEAR_QUEUE" };
@@ -29,9 +36,17 @@ const playerReducer = (
 ): PlayerState => {
   switch (action.type) {
     case "PLAY_SONG":
+      const songIndex = state.queue.findIndex(
+        (song) => song.id === action.payload.id
+      );
+      if (songIndex === -1) {
+        toast.error("Song not in queue found");
+        return state;
+      }
       return {
         ...state,
         currentSong: action.payload,
+        currentIndex: songIndex,
         isPlaying: true,
       };
     case "SET_PLAYBACK":
@@ -106,20 +121,32 @@ const playerReducer = (
         message: null,
       };
     case "ADD_TO_QUEUE":
-      const newSongs = action.payload.filter(
-        (newSong) =>
-          !state.queue.some((existingSong) => existingSong.id === newSong.id)
-      );
-      var message = "No new song(s) added to queue";
-      if (state.queue.length === 0 && newSongs.length < 2) {
-        message = "Playing: " + newSongs[0].title;
-      } else if (newSongs.length > 0) {
-        message = `${newSongs.length} song(s) added to queue`;
+      let newSongs: Song[] = [];
+      let message: string | null = null;
+
+      if (action.replace) {
+        newSongs = action.payload;
+        if (newSongs.length > 0) {
+          message = `${newSongs.length} song(s) added to queue`;
+        }
+      } else {
+        newSongs = action.payload.filter(
+          (newSong) =>
+            !state.queue.some((existingSong) => existingSong.id === newSong.id)
+        );
+        // Display message
+        if (newSongs.length > 0) {
+          message = `${newSongs.length} song(s) added to queue`;
+        } else {
+          message = "Song(s) are already in the queue";
+        }
+        newSongs = [...state.queue, ...newSongs];
       }
+
       return {
         ...state,
-        queue: [...state.queue, ...newSongs],
-        message: message,
+        queue: newSongs,
+        message: action.showMessage ? message : null,
       };
     case "CLEAR_QUEUE":
       return {
@@ -160,8 +187,28 @@ const initialState: PlayerState = {
 };
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(playerReducer, initialState);
+  const [state, dispatch] = useReducer(playerReducer, initialState, (init) => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? { ...init, ...JSON.parse(stored) } : init;
+    } catch {
+      return init;
+    }
+  });
 
+  // Save player state to local storage
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ ...state, isPlaying: false, currentTime: 0 })
+      );
+    } catch (e) {
+      console.warn("Failed to save player state:", e);
+    }
+  }, [state]);
+
+  // Display message eg. "Song added to queue"
   useEffect(() => {
     if (state.message) {
       toast(state.message);

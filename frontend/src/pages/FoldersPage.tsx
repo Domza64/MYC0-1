@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import type { Folder } from "../types/folder";
-import FolderCard from "../components/ui/FolderCard";
+import FolderCard from "../components/ui/cards/FolderCard";
 import type { Song } from "../types/music";
-import SongCard from "../components/ui/SongCard";
+import SongCard from "../components/ui/cards/SongCard";
 import { usePlayer } from "../contexts/PlayerContext";
 import Button from "../components/ui/buttons/Button";
 import { FaPlay } from "react-icons/fa6";
 import { MdOutlineQueueMusic } from "react-icons/md";
+import AddToPlaylistForm from "../components/ui/forms/AddToPlaylistForm";
+import { useModal } from "../contexts/ModalContext";
 
 export default function FoldersPage() {
   const [folders, setFolders] = useState<Folder[]>([]);
@@ -15,6 +17,7 @@ export default function FoldersPage() {
   const [breadcrumbs, setBreadcrumbs] = useState<Folder[]>([]);
 
   const player = usePlayer();
+  const { showModal, hideModal } = useModal();
 
   // Update breadcrumbs when currentFolder changes
   useEffect(() => {
@@ -130,8 +133,11 @@ export default function FoldersPage() {
               <Button
                 className="flex items-center gap-2"
                 onClick={() => {
-                  player.dispatch({ type: "CLEAR_QUEUE" });
-                  player.dispatch({ type: "ADD_TO_QUEUE", payload: songs });
+                  player.dispatch({
+                    type: "ADD_TO_QUEUE",
+                    payload: songs,
+                    replace: true,
+                  });
                   player.dispatch({ type: "PLAY_SONG", payload: songs[0] });
                 }}
               >
@@ -141,7 +147,11 @@ export default function FoldersPage() {
               <Button
                 className="flex items-center gap-2"
                 onClick={() => {
-                  player.dispatch({ type: "ADD_TO_QUEUE", payload: songs });
+                  player.dispatch({
+                    type: "ADD_TO_QUEUE",
+                    payload: songs,
+                    showMessage: true,
+                  });
                   if (player.state.queue.length === 0) {
                     player.dispatch({ type: "PLAY_SONG", payload: songs[0] });
                   }
@@ -158,10 +168,36 @@ export default function FoldersPage() {
                 key={song.id}
                 song={song}
                 onClick={() => {
-                  player.dispatch({ type: "CLEAR_QUEUE" });
-                  player.dispatch({ type: "ADD_TO_QUEUE", payload: [song] });
+                  player.dispatch({
+                    type: "ADD_TO_QUEUE",
+                    payload: songs,
+                    replace: true,
+                  });
                   player.dispatch({ type: "PLAY_SONG", payload: song });
                 }}
+                menuActions={[
+                  {
+                    text: "Add to Playlist",
+                    onClick() {
+                      showModal(
+                        <AddToPlaylistForm
+                          songs={[song]}
+                          onSuccess={hideModal}
+                        />
+                      );
+                    },
+                  },
+                  {
+                    text: "Add to Queue",
+                    onClick() {
+                      player.dispatch({
+                        type: "ADD_TO_QUEUE",
+                        payload: [song],
+                        showMessage: true,
+                      });
+                    },
+                  },
+                ]}
               />
             ))}
           </ul>
