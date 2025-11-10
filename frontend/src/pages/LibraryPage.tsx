@@ -3,7 +3,6 @@ import type { Song } from "../types/music";
 import SongCard from "../components/ui/cards/SongCard";
 import { usePlayer } from "../contexts/PlayerContext";
 import { useInView } from "react-intersection-observer";
-import { playlistsApi } from "../lib/api/playlists";
 import { useModal } from "../contexts/ModalContext";
 import AddToPlaylistForm from "../components/ui/forms/AddToPlaylistForm";
 
