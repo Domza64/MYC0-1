@@ -28,7 +28,7 @@ export default function VolumeControll() {
   };
 
   return (
-    <div className="relative hidden md:block">
+    <div className="relative">
       <button
         onClick={toggleMute}
         onMouseEnter={() => setVolumeOpen(true)}

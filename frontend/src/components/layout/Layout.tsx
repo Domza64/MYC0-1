@@ -44,7 +44,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* Audio Player */}
       <div
         className={`${
-          isPlayerOpen ? "h-screen max-h-2/3" : "md:h-24"
+          isPlayerOpen ? "h-screen" : "md:h-24"
         } fixed z-40 bottom-0 left-0 right-0 flex justify-center bg-stone-800/40 backdrop-blur-md border-t border-stone-700 px-4 py-3`}
         onClick={() => setIsPlayerOpen((isOpen) => !isOpen)}
       >

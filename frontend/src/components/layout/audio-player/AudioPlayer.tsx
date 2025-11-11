@@ -26,11 +26,6 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
 
     const handleEnded = () => {
       dispatch({ type: "NEXT_SONG" });
-
-      /*const isLastSong = state.currentIndex === state.queue.length - 1;
-      if (!isLastSong || state.shuffle || state.repeat) {
-        dispatch({ type: "SET_PLAYBACK", payload: true });
-      }*/
     };
 
     const handlePlay = () => {
@@ -132,26 +127,27 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
     );
   }
 
-  // TODO: finish
   const fullscreenAudioDisplay = (
-    <div
-      className="flex flex-col gap-4 w-full"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <SongInfo />
-      <ProgressBar audioRef={audioRef} />
-      <div className="flex items-center gap-4 shrink-0 select-none">
-        <ShuffleButton />
-        <RepeatButton />
-        <Time />
-        <VolumeControll />
+    <div className="flex flex-col justify-between h-full">
+      <div className="max-w-2xl w-full m-auto">
+        <div className="space-y-6">
+          <SongInfo playerOpen={playerOpen} />
+          <ProgressBar audioRef={audioRef} />
+        </div>
+        <div className="flex items-center justify-between select-none">
+          <div className="flex items-center gap-4">
+            <ShuffleButton />
+            <RepeatButton />
+            <VolumeControll />
+          </div>
+          <Time />
+        </div>
       </div>
-      <div className="flex items-center justify-between w-full gap-4">
-        <PlaybackControlls
-          skipBackward={skipBackward}
-          skipForward={skipForward}
-        />
-      </div>
+      <PlaybackControlls
+        skipBackward={skipBackward}
+        skipForward={skipForward}
+        playerOpen={playerOpen}
+      />
     </div>
   );
 
@@ -166,10 +162,7 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
           skipBackward={skipBackward}
           skipForward={skipForward}
         />
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="hidden md:flex items-center space-x-4 min-w-0 flex-1 justify-end select-none"
-        >
+        <div className="hidden md:flex items-center space-x-4 min-w-0 flex-1 justify-end select-none">
           <ShuffleButton />
           <RepeatButton />
           <Time />

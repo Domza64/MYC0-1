@@ -4,8 +4,9 @@ import { usePlayer } from "../../../contexts/PlayerContext";
 export default function ShuffleButton() {
   const { state, dispatch } = usePlayer();
 
-  const handleToggleShuffle = () => {
+  const handleToggleShuffle = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
     dispatch({ type: "TOGGLE_SHUFFLE" });
+    e.stopPropagation();
   };
 
   return (

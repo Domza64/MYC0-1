@@ -4,8 +4,9 @@ import { usePlayer } from "../../../contexts/PlayerContext";
 export default function RepeatButton() {
   const { state, dispatch } = usePlayer();
 
-  const handleToggleRepeat = () => {
+  const handleToggleRepeat = (e: React.MouseEvent<SVGElement, MouseEvent>) => {
     dispatch({ type: "TOGGLE_REPEAT" });
+    e.stopPropagation();
   };
 
   return (

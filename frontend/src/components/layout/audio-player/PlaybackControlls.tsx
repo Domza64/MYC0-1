@@ -5,9 +5,11 @@ import { FaForward, FaPause, FaPlay } from "react-icons/fa6";
 export default function PlaybackControlls({
   skipBackward,
   skipForward,
+  playerOpen = false,
 }: {
   skipBackward: () => void;
   skipForward: () => void;
+  playerOpen?: boolean;
 }) {
   const { state, dispatch } = usePlayer();
   const { isPlaying, shuffle, repeat } = state;
@@ -29,46 +31,59 @@ export default function PlaybackControlls({
     dispatch({ type: "SET_PLAYBACK", payload: !isPlaying });
   };
 
+  const iconSize = playerOpen ? "w-6 h-6" : "w-4 h-4";
+  const padding = playerOpen ? "p-3" : "p-2";
+
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className="flex items-center space-x-1 md:space-x-2 md:mx-8"
+      className={`flex items-center mx-auto justify-center md:gap-x-4 ${
+        playerOpen ? "mb-4" : ""
+      }`}
     >
       <button
         onClick={playPrevious}
-        className="text-stone-400 hover:text-white p-2 disabled:text-stone-600 cursor-grab"
+        className={`text-stone-400 hover:text-white ${padding} disabled:text-stone-600 cursor-grab`}
         disabled={!hasPrevious}
       >
-        <FaStepBackward className="w-4 h-4" />
+        <FaStepBackward className={iconSize} />
       </button>
 
       <button
         onClick={skipBackward}
-        className="text-stone-400 hover:text-white p-2 md:block hidden"
+        className={`text-stone-400 hover:text-white ${padding} ${
+          playerOpen ? "" : "md:block hidden"
+        }`}
       >
-        <FaBackward className="w-4 h-4" />
+        <FaBackward className={iconSize} />
       </button>
 
       <button
         onClick={togglePlayback}
-        className="bg-white text-stone-900 rounded-full p-2 text-lg hover:scale-105 transition-transform"
+        className={`bg-white text-stone-900 rounded-full ${padding} mx-1 text-lg`}
       >
-        {isPlaying ? <FaPause /> : <FaPlay className="pl-0.5" />}
+        {isPlaying ? (
+          <FaPause className={iconSize} />
+        ) : (
+          <FaPlay className={`${iconSize} pl-0.5`} />
+        )}
       </button>
 
       <button
         onClick={skipForward}
-        className="text-stone-400 hover:text-white p-2 md:block hidden"
+        className={`text-stone-400 hover:text-white ${padding} ${
+          playerOpen ? "" : "md:block hidden"
+        }`}
       >
-        <FaForward className="w-4 h-4" />
+        <FaForward className={iconSize} />
       </button>
 
       <button
         onClick={playNext}
-        className="text-stone-400 hover:text-white p-2 disabled:text-stone-600 cursor-grab"
+        className={`text-stone-400 hover:text-white ${padding} disabled:text-stone-600 cursor-grab`}
         disabled={!hasNext && !shuffle && !repeat}
       >
-        <FaStepForward className="w-4 h-4" />
+        <FaStepForward className={iconSize} />
       </button>
     </div>
   );
