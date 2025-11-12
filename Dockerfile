@@ -20,7 +20,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app/ .
 
-COPY --from=builder /build/dist /app/static
+COPY --from=builder /build/dist/ /app/static/
+COPY --from=builder /build/dist/static/ /app/static/
+RUN rm -rf /app/static/static
 
 RUN chown -R appuser:appuser /app
 
