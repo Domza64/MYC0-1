@@ -2,7 +2,7 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import type { Song } from "../../../types/music";
 import { usePlayer } from "../../../contexts/PlayerContext";
 import { FaItunesNote } from "react-icons/fa6";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * Represents a single action in a song card's dropdown menu.
@@ -56,11 +56,23 @@ export default function SongCard({
   const [showMenu, setShowMenu] = useState(false);
   const player = usePlayer();
 
-  // TODO: This is temporary test dropdown menu for actions, it needs much improvement
+  useEffect(() => {
+    const onClick = (event: Event) => {
+      if (event.target !== document.getElementById(song.id.toString())) {
+        setShowMenu(false);
+      }
+    };
+
+    window.addEventListener("click", onClick);
+
+    return () => {
+      window.removeEventListener("click", onClick);
+    };
+  }, []);
 
   const active = player.state.currentSong?.id === song.id;
   return (
-    <li className="bg-stone-900 my-2 flex justify-between items-center select-none cursor-grab overflow-hidden rounded-md relative">
+    <li className="bg-stone-900 my-2 flex justify-between items-center select-none rounded-md relative">
       <div className="bg-stone-800 h-10 w-10 flex justify-center items-center text-stone-400">
         {song.album_art ? (
           <img src={song.album_art} alt="img" />
@@ -77,17 +89,20 @@ export default function SongCard({
         {song.title}
       </span>
       <HiOutlineDotsVertical
-        onClick={() => setShowMenu((prev) => !prev)}
-        className="mx-2"
+        id={song.id.toString()}
+        onClick={() => {
+          setShowMenu((prev) => !prev);
+        }}
+        className="w-4 cursor-pointer"
       />
       {showMenu && (
-        <div className="absolute right-8 top-0 bg-stone-800">
-          <ul className="flex gap-2">
+        <div className="absolute right-8 top-0 bg-stone-800 rounded mt-1 z-10">
+          <ul>
             {menuActions?.map((action) => (
               <li
                 key={action.text}
                 onClick={action.onClick}
-                className="px-2 py-1 bg-stone-950 hover:bg-stone-700 cursor-pointer"
+                className="cursor-pointer hover:bg-stone-900 px-3 py-1"
               >
                 {action.text}
               </li>
