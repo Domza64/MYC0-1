@@ -1,5 +1,5 @@
+from app.config import IMAGES_DIR
 from app.model.song import Song
-# import os
 import eyed3
 
 def create_song(file_path: str, relative_path: str) -> Song:
@@ -18,15 +18,13 @@ def create_song(file_path: str, relative_path: str) -> Song:
     audio_file = eyed3.load(file_path)
     image = None
 
-#    try:
-#        image_file = audio_file.tag.images[0]
-#        image_path = os.path.join("images", f"{file_path.stem}.jpg")
-#        with open(image_path, "wb") as image_file:
-#            image_file.write(image.image_data)
-#        image = image_path.name
-#    except:
-#        print("No album art found for:", file_path)
-
+    try:
+        image_file = audio_file.tag.images[0]
+        with open(IMAGES_DIR + f"/{file_path.stem}.jpg", "wb") as temp:
+            temp.write(image_file.image_data)
+        image = file_path.stem + ".jpg"
+    except:
+        print("No album art found for:", file_path)
 
     song = Song(
         title=audio_file.tag.title,

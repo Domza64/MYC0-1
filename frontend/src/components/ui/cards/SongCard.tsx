@@ -77,10 +77,7 @@ export default function SongCard({
         {song.album_art ? (
           <img src={"images/" + song.album_art} alt="img" />
         ) : (
-          <>
-            {song.album_art}
-            <FaItunesNote />
-          </>
+          <FaItunesNote />
         )}
       </div>
       <span

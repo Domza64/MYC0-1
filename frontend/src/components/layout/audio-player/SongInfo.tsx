@@ -34,8 +34,8 @@ export default function SongInfo({
       <div className={imageWrapperClasses}>
         {currentSong.album_art ? (
           <img
-            src={currentSong.album_art}
-            alt={currentSong.album}
+            src={"images/" + currentSong.album_art}
+            alt={currentSong.album || "Unknown"}
             className={imageClasses}
           />
         ) : (

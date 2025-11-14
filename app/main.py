@@ -1,5 +1,5 @@
 from app.limiter import limiter
-from app.config import MUSIC_DIR
+from app.config import IMAGES_DIR, MUSIC_DIR
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -24,6 +24,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Music directory
 app.mount("/music", StaticFiles(directory=MUSIC_DIR), name="music")
+app.mount("/images", StaticFiles(directory=IMAGES_DIR), name="images")
 
 # Static files for frontend in production
 STATIC_DIR = Path("/app/static")
