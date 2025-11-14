@@ -5,14 +5,15 @@ from app.model.folder import Folder
 
 class Song(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    title: str = Field(index=True)
-    artist: str = Field(index=True)
-    album: str = Field(index=True)
+    title: Optional[str] = Field(default=None, index=True)
+    artist: Optional[str] = Field(default=None, index=True)
+    album: Optional[str] = Field(default=None, index=True)
     genre: Optional[str] = Field(default=None, index=True)
     year: Optional[int] = Field(default=None, index=True)
     file_path: str = Field(index=True)
+    file_name: str = Field(index=True)
     folder_id: Optional[int] = Field(default=None, foreign_key="folder.id", index=True)
-    duration: int = Field(index=True)  # in seconds
+    duration: Optional[int] = Field(default=None, index=True)  # in seconds
     file_size: int = Field(index=True)  # in bytes
     file_format: str = Field(index=True)  # 'mp3', 'flac', etc.
     album_art: Optional[str] = Field(default=None, index=True)

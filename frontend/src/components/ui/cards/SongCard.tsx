@@ -75,9 +75,12 @@ export default function SongCard({
     <li className="bg-stone-900 my-2 flex justify-between items-center select-none rounded-md relative">
       <div className="bg-stone-800 h-10 w-10 flex justify-center items-center text-stone-400">
         {song.album_art ? (
-          <img src={song.album_art} alt="img" />
+          <img src={"images/" + song.album_art} alt="img" />
         ) : (
-          <FaItunesNote />
+          <>
+            {song.album_art}
+            <FaItunesNote />
+          </>
         )}
       </div>
       <span
@@ -86,14 +89,14 @@ export default function SongCard({
           active ? "font-semibold text-rose-500" : "text-stone-300"
         } w-full p-2 truncate`}
       >
-        {song.title}
+        {song.title || song.file_name}
       </span>
       <HiOutlineDotsVertical
         id={song.id.toString()}
         onClick={() => {
           setShowMenu((prev) => !prev);
         }}
-        className="w-4 cursor-pointer"
+        className="w-4 mr-2 cursor-pointer"
       />
       {showMenu && (
         <div className="absolute right-8 top-0 bg-stone-800 rounded mt-1 z-10">

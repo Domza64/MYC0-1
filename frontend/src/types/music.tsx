@@ -1,17 +1,19 @@
 export interface Song {
   id: number;
-  title: string;
-  artist: string;
-  album: string;
-  genre?: string;
-  year?: number;
+  title: string | null;
+  artist: string | null;
+  album: string | null;
+  genre?: string | null;
+  year?: number | null;
   file_path: string;
-  duration: number; // in seconds
+  file_name: string;
+  folder_id?: number | null;
+  duration?: number | null; // in seconds
   file_size: number; // in bytes
   file_format: string; // 'mp3', 'flac', 'wav', etc.
-  album_art?: string;
+  album_art?: string | null;
   play_count?: number;
-  last_played?: string; // ISO string
+  last_played?: string | null; // ISO string
 }
 
 export interface Album {
