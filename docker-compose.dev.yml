@@ -17,7 +17,7 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile.dev
-    user: "${UID:-1000}:${GID:-1000}"
+    user: "1000:1000"
     volumes:
       - ./app:/app
       - ./music:/music
@@ -29,7 +29,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
-    user: "${UID:-1000}:${GID:-1000}"
+    user: "1000:1000"
     volumes:
       - ./frontend:/app
     environment:

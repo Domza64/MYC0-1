@@ -5,3 +5,4 @@ Dockerfile.dev
 .dockerignore
 .gitignore
 README.md
+data/
