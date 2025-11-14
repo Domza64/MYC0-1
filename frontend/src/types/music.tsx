@@ -1,10 +1,10 @@
 export interface Song {
   id: number;
-  title: string | "Unknown";
-  artist: string | "Unknown";
-  album: string | "Unknown";
-  genre?: string | "Unknown";
-  year?: number | -1;
+  title: string | null;
+  artist: string | null;
+  album: string | null;
+  genre?: string | null;
+  year?: number | null;
   file_path: string;
   file_name: string;
   folder_id?: number | null;

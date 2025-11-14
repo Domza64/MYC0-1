@@ -13,7 +13,7 @@ export default function AppRouter() {
 
   useEffect(() => {
     // Set page title to song title if song is playing
-    if (player.state.currentSong) {
+    if (player.state.currentSong?.title) {
       document.title = player.state.currentSong.title;
     }
   }, [player.state.currentSong]);
