@@ -1,0 +1,14 @@
+# Ignore Python virtual environments
+app/.venv/
+# Ignore cache
+app/__pycache__/
+# Ignore Docker and git metadata
+app/Dockerfile.dev
+app/.dockerignore
+app/.gitignore
+# Ignore directories with large data
+app/data/
+app/music/
+# Optional: ignore logs or temp files
+*.log
+*.tmp

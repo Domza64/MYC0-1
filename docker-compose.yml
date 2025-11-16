@@ -1,11 +1,14 @@
 version: "3.8"
 services:
-  music-app:
+  MYC0-1-app:
     image: "ghcr.io/domza64/myc0-1:master"
     ports:
       - "5000:5000"
     volumes:
-      - </path/to/your/music/folder>:/music:ro # This is folder with your music
-      - </path/to/your/data/folder>:/data:rw # This is folder where the app will store it's data
+      - </path/to/your/music/folder>:/app/music # Your local music folder
+      - data:/app/data
     restart: unless-stopped
-    user: "1000:1000"
+
+volumes:
+  data:
+    name: MYC0-1-app-data

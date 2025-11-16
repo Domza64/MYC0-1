@@ -1,1 +1,1 @@
-This '/data' is a temporarry dev folder for data, when app is deployed in prod, user will enter their own path to their data folder 
+This is a temporarry dev folder for app data

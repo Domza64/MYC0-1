@@ -1,8 +1,8 @@
 .venv/
 __pycache__/
-dev.db
 Dockerfile.dev
 .dockerignore
 .gitignore
 README.md
 data/
+music/

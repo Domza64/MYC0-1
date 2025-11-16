@@ -46,7 +46,9 @@ export default function SongInfo({
       </div>
 
       <div className="min-w-0 w-full max-w-[80vw] mx-auto">
-        <h4 className="text-white font-medium truncate">{currentSong.title}</h4>
+        <h4 className="text-white font-medium truncate">
+          {currentSong.title || currentSong.file_name}
+        </h4>
         <p className="text-stone-400 text-sm truncate">
           {currentSong.artist} • {currentSong.album}
         </p>

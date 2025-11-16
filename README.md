@@ -47,10 +47,6 @@ MYC0-1 transforms your local music folder into a personal streaming service. The
 2. **Run:**
 
 ```bash
-sudo chown -R 1000:1000 /path/to/your/music
-```
-
-```bash
 docker-compose up -d
 ```
 
@@ -71,7 +67,7 @@ docker-compose up -d
 
 - Start all services:
   ```bash
-  docker-compose -f docker-compose.dev.yml up
+  docker compose -f docker-compose.dev.yml up
   ```
 
 **Access the application at: http://localhost:5000**

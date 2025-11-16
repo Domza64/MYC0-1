@@ -14,7 +14,7 @@ def read_all_audio_files(folder_path: str):
 
     for file_path in folder.rglob('*'):
         if file_path.is_file() and file_path.suffix.lower() in AUDIO_EXTENSIONS:
-            relative_path = str(file_path.relative_to(folder))
+            relative_path = file_path.relative_to(folder)
             song = create_song(file_path, relative_path)
             songs.append(song)
 

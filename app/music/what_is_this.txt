@@ -1,0 +1,1 @@
+This is a temporarry dev folder for music, when app is actually deployed, user will set a path to his/her music folder

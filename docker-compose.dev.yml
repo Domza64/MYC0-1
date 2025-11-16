@@ -20,8 +20,8 @@ services:
     user: "1000:1000"
     volumes:
       - ./app:/app
-      - ./music:/music
-      - ./app/data:/data:rw
+      - ./app/music:/app/music
+      - ./app/data:/app/data:rw
     networks:
       - app-network
 

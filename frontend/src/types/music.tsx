@@ -1,3 +1,4 @@
+// TODO: Song should be a class and return "Unknown" for null values
 export interface Song {
   id: number;
   title: string | null;

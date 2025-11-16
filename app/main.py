@@ -38,7 +38,6 @@ if STATIC_DIR.exists():
 app.include_router(music_router)
 app.include_router(scan_router)
 app.include_router(folder_router)
-# TODO - Rate limiting
 app.include_router(auth_router)
 app.include_router(user_router)
 app.include_router(playlist_router)
