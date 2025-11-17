@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import type { Playlist, Song } from "../types/music";
 import SongCard from "../components/ui/cards/SongCard";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { usePlayer } from "../contexts/PlayerContext";
 import { playlistsApi } from "../lib/api/playlists";
 import Button from "../components/ui/buttons/Button";
 import { FaPlay } from "react-icons/fa6";
 import { MdOutlineQueueMusic } from "react-icons/md";
+import { IoChevronBack } from "react-icons/io5";
 
 export default function PlaylistsPage() {
   const [playlist, setPlaylist] = useState<Playlist>();
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
   const player = usePlayer();
   const { id } = useParams();
 
@@ -52,7 +53,13 @@ export default function PlaylistsPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
-        <h1 className="text-xl">{playlist.name}</h1>
+        <div className="flex items-center gap-2">
+          <IoChevronBack
+            className="text-2xl cursor-pointer"
+            onClick={() => navigate(-1)}
+          />
+          <h1 className="text-xl">{playlist.name}</h1>
+        </div>
         <div className="flex gap-2">
           <Button
             className="flex items-center gap-2"
@@ -87,27 +94,31 @@ export default function PlaylistsPage() {
         </div>
       </div>
       <ul className="flex flex-col">
-        {songs.map((song) => (
-          <SongCard
-            key={song.id}
-            song={song}
-            onClick={() => handleSongClick(song)}
-            menuActions={[
-              {
-                onClick: () => {
-                  if (
-                    !confirm(
-                      "Are you sure you want to remove this song from the playlist?"
+        {songs.length == 0 ? (
+          <div>No songs in playlist</div>
+        ) : (
+          songs.map((song) => (
+            <SongCard
+              key={song.id}
+              song={song}
+              onClick={() => handleSongClick(song)}
+              menuActions={[
+                {
+                  onClick: () => {
+                    if (
+                      !confirm(
+                        "Are you sure you want to remove this song from the playlist?"
+                      )
                     )
-                  )
-                    return;
-                  removeFromPlaylist(song);
+                      return;
+                    removeFromPlaylist(song);
+                  },
+                  text: "Remove from playlist",
                 },
-                text: "Remove from playlist",
-              },
-            ]}
-          />
-        ))}
+              ]}
+            />
+          ))
+        )}
       </ul>
     </div>
   );

@@ -15,12 +15,18 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-10">
       <section>
         <h1>
           Hello <span className="font-semibold">{auth.username}</span>
         </h1>
       </section>
+      <VerticalScrollSection title="Recently played">
+        <span>Empty...</span>
+      </VerticalScrollSection>
+      <VerticalScrollSection title="Recommended for today">
+        <span>Empty...</span>
+      </VerticalScrollSection>
       <VerticalScrollSection title="My playlists">
         {playlists ? (
           playlists.map((playlist) => (
@@ -29,6 +35,9 @@ export default function HomePage() {
         ) : (
           <span>Loading...</span>
         )}
+      </VerticalScrollSection>
+      <VerticalScrollSection title="Top...">
+        <span>Empty...</span>
       </VerticalScrollSection>
     </div>
   );

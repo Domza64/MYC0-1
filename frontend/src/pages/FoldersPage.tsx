@@ -89,7 +89,6 @@ export default function FoldersPage() {
   return (
     <div>
       <h1>My Folders</h1>
-
       {/* Breadcrumbs Navigation */}
       <div className="text-stone-300 my-2">
         <span>/ </span>
@@ -127,8 +126,10 @@ export default function FoldersPage() {
 
       {songs.length > 0 && (
         <div className="mt-4">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-xl">Songs:</h2>
+          <div className="flex justify-between items-center">
+            <h2>
+              <span className="font-medium">{songs.length}</span> Songs
+            </h2>
             <div className="flex gap-2">
               <Button
                 className="flex items-center gap-2"
