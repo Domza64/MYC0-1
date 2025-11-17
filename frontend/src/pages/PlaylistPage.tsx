@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import type { Playlist, Song } from "../types/music";
+import type { Playlist } from "../types/music";
 import SongCard from "../components/ui/cards/SongCard";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { usePlayer } from "../contexts/PlayerContext";
 import { playlistsApi } from "../lib/api/playlists";
 import Button from "../components/ui/buttons/Button";
 import { FaPlay } from "react-icons/fa6";
 import { MdOutlineQueueMusic } from "react-icons/md";
 import { IoChevronBack } from "react-icons/io5";
+import type { Song } from "../types/Song";
 
 export default function PlaylistsPage() {
   const [playlist, setPlaylist] = useState<Playlist>();

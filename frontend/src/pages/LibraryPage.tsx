@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import type { Song } from "../types/music";
 import SongCard from "../components/ui/cards/SongCard";
 import { usePlayer } from "../contexts/PlayerContext";
 import { useInView } from "react-intersection-observer";
 import { useModal } from "../contexts/ModalContext";
 import AddToPlaylistForm from "../components/ui/forms/AddToPlaylistForm";
+import { Song } from "../types/Song";
 
 const LIMIT = 30;
 
@@ -29,12 +29,13 @@ export default function LibraryPage() {
       if (!response.ok) {
         throw new Error("Failed to fetch songs");
       }
-      const data: Song[] = await response.json();
-      if (data.length === 0) {
+      const data = await response.json();
+      const songs = data.map((item: any) => new Song(item));
+      if (songs.length === 0) {
         setLoadedAll(true);
         return;
       }
-      setSongs((prevSongs) => [...prevSongs, ...data]);
+      setSongs((prevSongs) => [...prevSongs, ...songs]);
       setOffset((prevOffset) => prevOffset + LIMIT);
     } catch (error) {
       console.error("Error fetching songs:", error);

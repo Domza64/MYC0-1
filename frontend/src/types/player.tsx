@@ -1,4 +1,4 @@
-import type { Song } from "./music";
+import type { Song } from "./Song";
 
 export interface PlayerState {
   currentSong: Song | null;

@@ -18,11 +18,11 @@ export default function SongInfo({
     : "flex items-center space-x-4 min-w-0 flex-1 mr-8";
 
   const imageWrapperClasses = isExpanded
-    ? "bg-stone-800 border border-stone-950 rounded-xl flex justify-center items-center mb-4 mx-auto overflow-hidden w-[80vw] h-[80vw] max-w-[350px] max-h-[350px]"
+    ? "bg-stone-800 border-2 rounded-2xl border-stone-950 flex justify-center items-center mb-4 mx-auto overflow-hidden w-[80vw] h-[80vw] max-w-[350px] max-h-[350px]"
     : "w-12 h-12 bg-stone-700 rounded shrink-0 flex items-center justify-center overflow-hidden";
 
   const imageClasses = isExpanded
-    ? "w-full aspect-square object-cover border-stone-950 border"
+    ? "w-full aspect-square object-cover"
     : "w-12 h-12 object-cover";
 
   const fallbackIconClasses = isExpanded

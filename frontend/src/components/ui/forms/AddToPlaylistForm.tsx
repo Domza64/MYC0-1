@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import Button from "../buttons/Button";
-import type { Playlist, Song } from "../../../types/music";
+import type { Playlist } from "../../../types/music";
 import { playlistsApi } from "../../../lib/api/playlists";
+import type { Song } from "../../../types/Song";
 
 interface AddToPlaylistFormProps {
   songs: Song[];

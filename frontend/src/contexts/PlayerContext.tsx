@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useReducer } from "react";
-import type { Song } from "../types/music";
 import toast from "react-hot-toast";
 import type { PlayerState } from "../types/player";
+import { Song } from "../types/Song";
 
 const STORAGE_KEY = "player_state";
 
@@ -190,7 +190,25 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(playerReducer, initialState, (init) => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? { ...init, ...JSON.parse(stored) } : init;
+      if (stored) {
+        const parsed = JSON.parse(stored);
+
+        // Convert stored plain objects back to Song instances
+        const queue = parsed.queue?.map((item: any) => new Song(item)) || [];
+        const currentSong = parsed.currentSong
+          ? new Song(parsed.currentSong)
+          : null;
+
+        return {
+          ...init,
+          ...parsed,
+          queue,
+          currentSong,
+          isPlaying: false,
+          currentTime: 0,
+        };
+      }
+      return init;
     } catch {
       return init;
     }
@@ -199,10 +217,19 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   // Save player state to local storage
   useEffect(() => {
     try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({ ...state, isPlaying: false, currentTime: 0 })
-      );
+      const stateToStore = {
+        ...state,
+        // Convert Song instances to plain objects
+        queue: state.queue.map((song) => (song.toJSON ? song.toJSON() : song)),
+        currentSong: state.currentSong?.toJSON
+          ? state.currentSong.toJSON()
+          : state.currentSong,
+        isPlaying: false,
+        currentTime: 0,
+        message: null,
+      };
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToStore));
     } catch (e) {
       console.warn("Failed to save player state:", e);
     }

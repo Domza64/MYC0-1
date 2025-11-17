@@ -1,8 +1,8 @@
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import type { Song } from "../../../types/music";
 import { usePlayer } from "../../../contexts/PlayerContext";
 import { FaItunesNote } from "react-icons/fa6";
 import { useEffect, useState } from "react";
+import { Song } from "../../../types/Song";
 
 /**
  * Represents a single action in a song card's dropdown menu.
@@ -86,7 +86,7 @@ export default function SongCard({
           active ? "font-semibold text-rose-500" : "text-stone-300"
         } w-full p-2 truncate`}
       >
-        {song.title || song.file_name}
+        {song.displayName}
       </span>
       <HiOutlineDotsVertical
         id={song.id.toString()}

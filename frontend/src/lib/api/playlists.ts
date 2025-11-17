@@ -1,6 +1,7 @@
 import toast from "react-hot-toast";
-import type { Playlist, Song } from "../../types/music";
+import type { Playlist } from "../../types/music";
 import { apiRequest } from "./client";
+import { Song } from "../../types/Song";
 
 export const playlistsApi = {
   /**
@@ -29,7 +30,9 @@ export const playlistsApi = {
    * const songs = await playlistsApi.getSongs(1);
    */
   getSongs: (id: number): Promise<Song[]> =>
-    apiRequest<Song[]>(`/playlists/songs/${id}`),
+    apiRequest<Song[]>(`/playlists/songs/${id}`, {
+      converter: (data) => data.map((item) => new Song(item)),
+    }),
 
   /**
    * Create a new playlist.

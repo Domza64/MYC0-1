@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Folder } from "../types/folder";
 import FolderCard from "../components/ui/cards/FolderCard";
-import type { Song } from "../types/music";
 import SongCard from "../components/ui/cards/SongCard";
 import { usePlayer } from "../contexts/PlayerContext";
 import Button from "../components/ui/buttons/Button";
@@ -9,6 +8,7 @@ import { FaPlay } from "react-icons/fa6";
 import { MdOutlineQueueMusic } from "react-icons/md";
 import AddToPlaylistForm from "../components/ui/forms/AddToPlaylistForm";
 import { useModal } from "../contexts/ModalContext";
+import { Song } from "../types/Song";
 
 export default function FoldersPage() {
   const [folders, setFolders] = useState<Folder[]>([]);
@@ -75,8 +75,9 @@ export default function FoldersPage() {
         if (!response.ok) {
           throw new Error("Failed to fetch songs");
         }
-        const data: Song[] = await response.json();
-        setSongs(data);
+        const data = await response.json();
+        const songs = data.map((item: any) => new Song(item));
+        setSongs(songs);
       } catch (error) {
         console.error("Error fetching songs:", error);
       }

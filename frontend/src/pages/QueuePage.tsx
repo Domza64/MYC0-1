@@ -3,7 +3,7 @@ import SongCard from "../components/ui/cards/SongCard";
 import AddToPlaylistForm from "../components/ui/forms/AddToPlaylistForm";
 import { useModal } from "../contexts/ModalContext";
 import { usePlayer } from "../contexts/PlayerContext";
-import type { Song } from "../types/music";
+import type { Song } from "../types/Song";
 
 export default function QueuePage() {
   const player = usePlayer();
