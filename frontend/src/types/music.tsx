@@ -17,23 +17,11 @@ export interface Song {
   last_played?: string | null; // ISO string
 }
 
-export interface Album {
-  id: string;
-  title: string;
-  artist: string;
-  genre?: string;
-  year?: number;
-  coverArt?: string;
-  songs: Song[];
-  songCount: number;
-  totalDuration: number;
-}
-
 export interface Playlist {
   id: string;
   name: string;
   description?: string;
   shared: boolean;
   user_id: string;
-  coverArt?: string;
+  playlist_image?: string;
 }

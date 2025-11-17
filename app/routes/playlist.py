@@ -112,6 +112,7 @@ def add_songs_to_playlist(playlist_id: int, data: AddSongsRequest, session: Sess
         raise HTTPException(status_code=403, detail="You do not have permission to access this playlist")
     
     added_count = 0
+    last_playlist_image = None
     for song_id in data.song_ids:
         # Skip if song already exists in playlist
         if session.get(PlaylistSongs, (song_id, playlist_id)):
@@ -131,6 +132,14 @@ def add_songs_to_playlist(playlist_id: int, data: AddSongsRequest, session: Sess
         )
         session.add(playlist_song)
         added_count += 1
+
+        # Get playlist image
+        song = session.get(Song, song_id)
+        if song and song.album_art:
+            last_playlist_image = song.album_art
+
+    if last_playlist_image:
+        playlist.playlist_image = last_playlist_image
 
     session.commit()
     return {"added_count": added_count}

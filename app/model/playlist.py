@@ -7,3 +7,4 @@ class Playlist(SQLModel, table=True):
     description: Optional[str] = Field(default=None, index=True)
     shared: bool = Field(default=False, index=True)
     user_id: int = Field(foreign_key="user.id", index=True)
+    playlist_image: Optional[str] = Field(default=None)
