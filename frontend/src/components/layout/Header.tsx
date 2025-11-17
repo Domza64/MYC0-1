@@ -7,10 +7,10 @@ export default function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
   const { auth } = useAuth();
 
   return (
-    <header className="w-full md:px-4 px-2 h-16 sticky flex items-center top-0 bg-stone-950/60 backdrop-blur-md z-10">
+    <header className="w-full sticky top-0 md:px-4 px-3 h-16 flex items-center backdrop-blur-md z-10">
       <div className="max-w-400 flex w-full gap-4 items-center justify-between">
         <RiMenu2Fill
-          className="lg:hidden block text-2xl min-w-max"
+          className="lg:hidden block text-3xl min-w-max"
           onClick={onMenuToggle}
         />
         <div className="relative w-full max-w-3xl">
@@ -19,7 +19,7 @@ export default function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
             <input
               type="text"
               placeholder="Search music..."
-              className="w-full bg-stone-900 rounded-full pl-10 py-2 text-stone-300 placeholder-stone-500 focus:border-2 focus:outline-none focus:border-rose-500 focus:bg-stone-800 transition-colors"
+              className="w-full bg-stone-950 shadow shadow-stone-950 border-stone-700 rounded-full pl-10 py-1.5 text-stone-300 placeholder-stone-500 border focus:border-2 focus:outline-none focus:border-rose-500 focus:bg-stone-800 transition-colors"
             />
           </div>
         </div>

@@ -128,12 +128,18 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
   }
 
   const fullscreenAudioDisplay = (
-    <div className="flex flex-col justify-between h-full">
-      <div className="max-w-2xl w-full m-auto">
-        <div className="space-y-6">
-          <SongInfo playerOpen={playerOpen} />
-          <ProgressBar audioRef={audioRef} />
-        </div>
+    <div className="flex flex-col justify-between h-full max-w-2xl w-full mx-auto">
+      <div className=" m-auto">
+        <SongInfo playerOpen={playerOpen} />
+      </div>
+
+      <PlaybackControlls
+        skipBackward={skipBackward}
+        skipForward={skipForward}
+        playerOpen={playerOpen}
+      />
+      <div className="mt-4">
+        <ProgressBar audioRef={audioRef} />
         <div className="flex items-center justify-between select-none">
           <div className="flex items-center gap-4">
             <ShuffleButton />
@@ -143,11 +149,6 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
           <Time />
         </div>
       </div>
-      <PlaybackControlls
-        skipBackward={skipBackward}
-        skipForward={skipForward}
-        playerOpen={playerOpen}
-      />
     </div>
   );
 

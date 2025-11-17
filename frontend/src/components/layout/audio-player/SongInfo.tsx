@@ -22,7 +22,7 @@ export default function SongInfo({
     : "w-12 h-12 bg-stone-700 rounded shrink-0 flex items-center justify-center overflow-hidden";
 
   const imageClasses = isExpanded
-    ? "w-full aspect-square object-cover"
+    ? "w-full aspect-square object-cover border-stone-950 border"
     : "w-12 h-12 object-cover";
 
   const fallbackIconClasses = isExpanded

@@ -2,6 +2,7 @@ import { useState } from "react";
 import AudioPlayer from "./audio-player/AudioPlayer";
 import Header from "./Header";
 import SideMenu from "./SideMenu";
+import ImageBackground from "./ImageBackground";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,6 +10,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen w-full flex flex-col">
+      {/* Image background */}
+      <ImageBackground />
       {/* Main Content */}
       <div className="flex grow">
         {/* Side Menu */}
@@ -16,12 +19,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           className={`
           fixed lg:static
           left-0 top-0 h-full lg:h-auto
-          z-30 lg:z-auto border-r border-stone-700
+          z-30 lg:z-auto border-r border-stone-800
           min-w-xs transition-transform lg:transform-none
           ${isMenuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
         >
-          <div className="w-full h-full bg-stone-950/80">
+          <div
+            className={`w-full h-full bg-stone-950/${isMenuOpen ? "60" : "15"}`}
+          >
             <SideMenu onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} />
           </div>
         </div>
@@ -35,7 +40,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         )}
 
         {/* Current Page */}
-        <div className="w-full overflow-x-hidden">
+        <div className="w-full">
           <Header onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} />
           <main className="md:p-4 p-2 md:pb-26 pb-20">{children}</main>
         </div>
