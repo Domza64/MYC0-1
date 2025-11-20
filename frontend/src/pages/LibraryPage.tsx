@@ -85,6 +85,16 @@ export default function LibraryPage() {
                       ),
                     text: "Add to playlist",
                   },
+                  {
+                    onClick: () => {
+                      dispatch({
+                        type: "ADD_TO_QUEUE",
+                        payload: [song],
+                        showMessage: true,
+                      });
+                    },
+                    text: "Add to queue",
+                  },
                 ]}
               />
             </div>

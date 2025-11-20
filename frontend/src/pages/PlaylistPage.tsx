@@ -53,14 +53,17 @@ export default function PlaylistsPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-2">
-        <div className="flex items-center gap-2">
-          <IoChevronBack
-            className="text-2xl cursor-pointer"
-            onClick={() => navigate(-1)}
-          />
-          <h1 className="text-xl">{playlist.name}</h1>
-        </div>
+      <div className="flex items-center gap-2 mb-4">
+        <IoChevronBack
+          className="text-2xl cursor-pointer"
+          onClick={() => navigate(-1)}
+        />
+        <h1 className="text-xl">{playlist.name}</h1>
+      </div>
+      <div className="flex gap-2 w-full items-center justify-between">
+        <h2>
+          <span className="font-medium">{songs.length}</span> Songs
+        </h2>
         <div className="flex gap-2">
           <Button
             className="flex items-center gap-2"
@@ -94,6 +97,7 @@ export default function PlaylistsPage() {
           </Button>
         </div>
       </div>
+
       <ul className="flex flex-col">
         {songs.length == 0 ? (
           <div>No songs in playlist</div>

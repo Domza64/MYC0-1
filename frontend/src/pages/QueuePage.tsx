@@ -22,13 +22,19 @@ export default function QueuePage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div>
         <h1>{player.state.queue.length > 0 ? "Queue" : "Queue empty"}</h1>
-        {player.state.queue.length > 0 && (
-          <Button onClick={handleClearQueue}>
-            <span>Clear Queue</span>
-          </Button>
-        )}
+        <div className="flex w-full justify-between mt-4">
+          <h2>
+            <span className="font-medium">{player.state.queue.length}</span>{" "}
+            Songs
+          </h2>
+          {player.state.queue.length > 0 && (
+            <Button onClick={handleClearQueue}>
+              <span>Clear Queue</span>
+            </Button>
+          )}
+        </div>
       </div>
       <ul>
         {player.state.queue.map((song) => (
