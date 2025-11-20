@@ -29,7 +29,7 @@ export default function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
         >
           <span className="hidden lg:block font-semibold">{auth.username}</span>
           <div className="rounded-full bg-rose-600 w-8 h-8 flex justify-center items-center font-semibold">
-            <img src="pfp.png" alt={auth?.username?.charAt(0) || "?"} />
+            <img src="pfp.png" alt={auth?.username?.charAt(0)} />
           </div>
         </Link>
       </div>

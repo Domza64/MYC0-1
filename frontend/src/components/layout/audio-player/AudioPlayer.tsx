@@ -85,8 +85,7 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
     }
   };
 
-  // Media Session API for Android/Desktop notifications
-  // TODO - Implemnent everything needed for media session
+  // Media Session API for Mobile/Desktop notifications
   useEffect(() => {
     if (!currentSong || !("mediaSession" in navigator)) return;
 
@@ -94,16 +93,20 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
 
     // Set metadata for the currently playing song
     mediaSession.metadata = new MediaMetadata({
-      title: currentSong.title || currentSong.file_name,
-      artist: currentSong.artist || "Unknown Artist",
-      album: currentSong.album || "Unknown Album",
+      title: currentSong.title,
+      artist: currentSong.artist,
+      album: currentSong.album,
       artwork: [
-        { src: "/static/album_cover.png", sizes: "96x96", type: "image/jpeg" },
+        { src: "images/" + currentSong.album_art || "/static/album_cover.png" },
       ],
     });
 
     mediaSession.setActionHandler("nexttrack", () => {
       dispatch({ type: "NEXT_SONG" });
+    });
+
+    mediaSession.setActionHandler("previoustrack", () => {
+      dispatch({ type: "PREVIOUS_SONG" });
     });
 
     // Update playback state in media session
@@ -112,6 +115,7 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
     // Cleanup: remove action handlers when component unmounts or song changes
     return () => {
       mediaSession.setActionHandler("nexttrack", null);
+      mediaSession.setActionHandler("previoustrack", null);
     };
   }, [currentSong, isPlaying, dispatch]);
 
@@ -127,8 +131,16 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
     );
   }
 
+  // Months are 0-indexed in JavaScript Date
+  const isAprilFools =
+    new Date().getDate() === 1 && new Date().getMonth() === 3;
+
   const fullscreenAudioDisplay = (
-    <div className="flex flex-col justify-between h-full max-w-2xl w-full mx-auto">
+    <div
+      className={`flex flex-col justify-between h-full max-w-2xl w-full mx-auto ${
+        isAprilFools && "animate-bounce"
+      }`}
+    >
       <div className=" m-auto">
         <SongInfo playerOpen={playerOpen} />
       </div>

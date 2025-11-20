@@ -194,7 +194,8 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         const parsed = JSON.parse(stored);
 
         // Convert stored plain objects back to Song instances
-        const queue = parsed.queue?.map((item: any) => new Song(item)) || [];
+        const queue =
+          parsed.queue?.map((songData: any) => new Song(songData)) || [];
         const currentSong = parsed.currentSong
           ? new Song(parsed.currentSong)
           : null;

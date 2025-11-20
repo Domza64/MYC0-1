@@ -22,10 +22,10 @@ export default function HomePage() {
         </h1>
       </section>
       <VerticalScrollSection title="Recently played">
-        <span>Empty...</span>
+        <span>Soon...</span>
       </VerticalScrollSection>
       <VerticalScrollSection title="Recommended for today">
-        <span>Empty...</span>
+        <span>Soon...</span>
       </VerticalScrollSection>
       <VerticalScrollSection title="My playlists">
         {playlists ? (
@@ -37,7 +37,7 @@ export default function HomePage() {
         )}
       </VerticalScrollSection>
       <VerticalScrollSection title="Top...">
-        <span>Empty...</span>
+        <span>Soon...</span>
       </VerticalScrollSection>
     </div>
   );

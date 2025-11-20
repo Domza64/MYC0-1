@@ -31,7 +31,7 @@ export const playlistsApi = {
    */
   getSongs: (id: number): Promise<Song[]> =>
     apiRequest<Song[]>(`/playlists/songs/${id}`, {
-      converter: (data) => data.map((item) => new Song(item)),
+      converter: (data) => data.map((songData) => new Song(songData)),
     }),
 
   /**

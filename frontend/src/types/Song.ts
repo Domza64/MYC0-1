@@ -1,8 +1,8 @@
 export class Song {
   id: number;
-  title: string;
-  artist: string | null;
-  album: string | null;
+  _title: string;
+  _artist: string;
+  _album: string;
   genre?: string | null;
   year?: number | null;
   file_path: string;
@@ -17,10 +17,10 @@ export class Song {
 
   constructor(data: Partial<Song> = {}) {
     this.id = data.id ?? 0;
-    this.title = data.title ?? data.file_name ?? "Unknown Title";
-    this.artist = data.artist ?? "Unknown Artist";
-    this.album = data.album ?? "Unknown Album";
-    this.genre = data.genre ?? "Unknown Genre";
+    this._title = data.title || data.file_name || "Unknown Title";
+    this._artist = data.artist ?? "Unknown Artist";
+    this._album = data.album ?? "Unknown Album";
+    this.genre = data.genre ?? null;
     this.year = data.year ?? null;
     this.file_path = data.file_path ?? "";
     this.file_name = data.file_name ?? "";
@@ -31,6 +31,18 @@ export class Song {
     this.album_art = data.album_art ?? null;
     this.play_count = data.play_count ?? 0;
     this.last_played = data.last_played ?? null;
+  }
+
+  get title(): string {
+    return this._title;
+  }
+
+  get artist(): string {
+    return this._artist;
+  }
+
+  get album(): string {
+    return this._album;
   }
 
   get formattedFileSize(): string {
@@ -49,8 +61,8 @@ export class Song {
   }
 
   get displayName(): string {
-    if (this.title === "Unknown Title") {
-      return this.file_name;
+    if (this.artist === "Unknown Artist") {
+      return this.title;
     }
     return `${this.artist} - ${this.title}`;
   }
