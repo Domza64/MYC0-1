@@ -91,4 +91,16 @@ export const playlistsApi = {
     apiRequest(`/playlists/${playlistId}/${songId}`, {
       method: "DELETE",
     }),
+
+  /**
+   * Delete a playlist by ID.
+   * @param {number} playlistId - The playlist ID.
+   * @returns {Promise<void>}
+   * @example
+   * await playlistsApi.deletePlaylist(1);
+   */
+  deletePlaylist: (playlistId: number): Promise<void> =>
+    apiRequest(`/playlists/${playlistId}`, {
+      method: "DELETE",
+    }),
 };

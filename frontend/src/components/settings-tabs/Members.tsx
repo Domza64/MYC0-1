@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Button from "../ui/buttons/Button";
 import { TiPlus } from "react-icons/ti";
 import type { User } from "../../types/user";
-import CreateUserForm from "../ui/forms/CreateUserForm";
+import CreateUserForm from "../ui/modals/CreateUserForm";
 import toast from "react-hot-toast";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { useAuth } from "../../contexts/AuthContext";

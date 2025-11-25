@@ -97,13 +97,6 @@ export default function AddToPlaylistForm({
       <div className="space-y-3">
         {playlists != null ? (
           <div>
-            <label
-              htmlFor="playlist"
-              className="block text-sm font-medium mb-1"
-            >
-              Select Playlist
-            </label>
-            {selectedPlaylist}
             <select
               id="playlist"
               name="playlist"

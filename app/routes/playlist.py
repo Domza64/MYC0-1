@@ -21,25 +21,65 @@ class PlaylistData(BaseModel):
     shared: bool
 
 
-@router.get("", response_model=list[Playlist], dependencies=[Depends(cookie)])
-def get_all_playlists(session: SessionDep, session_data: SessionData = Depends(verifier)) -> list[Playlist]:
+class PlaylistRead(BaseModel):
+    id: int
+    name: str
+    description: Optional[str]
+    shared: bool
+    user_id: int
+    playlist_image: Optional[str]
+    username: str
+
+
+@router.get("", response_model=list[PlaylistRead], dependencies=[Depends(cookie)])
+def get_all_playlists(session: SessionDep, session_data: SessionData = Depends(verifier)) -> list[PlaylistRead]:
     """
     Get all playlists.
     """
     playlists = session.exec(select(Playlist).where((Playlist.user_id == session_data.user_id) | (Playlist.shared == True))).all()
-    return playlists
+    return [
+        PlaylistRead(
+            id=pl.id,
+            name=pl.name,
+            description=pl.description,
+            shared=pl.shared,
+            user_id=pl.user_id,
+            playlist_image=pl.playlist_image,
+            username=pl.user.username if pl.user else "Unknown"
+    ) for pl in playlists]
 
 
-@router.post("", response_model=Playlist, dependencies=[Depends(cookie)])
-def create_playlist(playlist_data: PlaylistData, session: SessionDep, session_data: SessionData = Depends(verifier)) -> Playlist:
+@router.post("", response_model=PlaylistRead, dependencies=[Depends(cookie)])
+def create_playlist(
+    playlist_data: PlaylistData,
+    session: SessionDep,
+    session_data: SessionData = Depends(verifier)
+) -> PlaylistRead:
     """
     Create a new playlist.
     """
-    new_playlist = Playlist(name=playlist_data.name, description=playlist_data.description, shared=playlist_data.shared, user_id=session_data.user_id)
+    new_playlist = Playlist(
+        name=playlist_data.name,
+        description=playlist_data.description,
+        shared=playlist_data.shared,
+        user_id=session_data.user_id
+    )
     session.add(new_playlist)
     session.commit()
     session.refresh(new_playlist)
-    return new_playlist
+
+    # Fetch username safely
+    username = session_data.username  # or fetch from User table if needed
+
+    return PlaylistRead(
+        id=new_playlist.id,
+        name=new_playlist.name,
+        description=new_playlist.description,
+        shared=new_playlist.shared,
+        user_id=new_playlist.user_id,
+        playlist_image=new_playlist.playlist_image,
+        username=username
+    )
 
 @router.get("/songs/{playlist_id}", response_model=list[Song], dependencies=[Depends(cookie)])
 def get_playlist_songs(playlist_id: int, session: SessionDep, session_data: SessionData = Depends(verifier)) -> list[Song]:
@@ -61,8 +101,9 @@ def get_playlist_songs(playlist_id: int, session: SessionDep, session_data: Sess
     ).all()
     return songs
 
-@router.get("/{playlist_id}", response_model=Playlist, dependencies=[Depends(cookie)])
-def read_playlist(playlist_id: int, session: SessionDep, session_data: SessionData = Depends(verifier)) -> Playlist:
+
+@router.get("/{playlist_id}", response_model=PlaylistRead, dependencies=[Depends(cookie)])
+def read_playlist(playlist_id: int, session: SessionDep, session_data: SessionData = Depends(verifier)) -> PlaylistRead:
     """
     Get a playlist by its ID.
     """
@@ -72,7 +113,16 @@ def read_playlist(playlist_id: int, session: SessionDep, session_data: SessionDa
     
     if playlist.user_id != session_data.user_id and not playlist.shared:
         raise HTTPException(status_code=403, detail="You do not have permission to access this playlist")
-    return playlist
+
+    return PlaylistRead(
+        id=playlist.id,
+        name=playlist.name,
+        description=playlist.description,
+        shared=playlist.shared,
+        user_id=playlist.user_id,
+        playlist_image=playlist.playlist_image,
+        username=playlist.user.username if playlist.user else "Unknown"
+    )
 
 @router.delete("/{playlist_id}/{song_id}", dependencies=[Depends(cookie)])
 def remove_song_from_playlist(playlist_id: int, song_id: int, session: SessionDep, session_data: SessionData = Depends(verifier)):
@@ -93,6 +143,22 @@ def remove_song_from_playlist(playlist_id: int, song_id: int, session: SessionDe
         raise HTTPException(status_code=404, detail="Song not found in playlist")
     
     session.delete(playlist_songs)
+    session.commit()
+    return Response(status_code=200)
+
+@router.delete("/{playlist_id}", dependencies=[Depends(cookie)])
+def delete_playlist(playlist_id: int, session: SessionDep, session_data: SessionData = Depends(verifier)):
+    """
+    Delete a playlist.
+    """
+    playlist = session.get(Playlist, playlist_id)
+    if not playlist:
+        raise HTTPException(status_code=404, detail="Playlist not found")
+    
+    if playlist.user_id != session_data.user_id:
+        raise HTTPException(status_code=403, detail="You do not have permission to delete this playlist")
+    
+    session.delete(playlist)
     session.commit()
     return Response(status_code=200)
 

@@ -5,4 +5,5 @@ export interface Playlist {
   shared: boolean;
   user_id: string;
   playlist_image?: string;
+  username: string;
 }

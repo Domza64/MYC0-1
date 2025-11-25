@@ -1,5 +1,5 @@
 from typing import Optional
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 
 
 class User(SQLModel, table=True):
@@ -7,3 +7,5 @@ class User(SQLModel, table=True):
     username: str = Field(index=True)
     role: str = Field(index=True)
     password: str = Field(index=False)
+    playlists: list["Playlist"] = Relationship(back_populates="user")
+    user_image: Optional[str] = Field(default=None)

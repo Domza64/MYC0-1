@@ -5,10 +5,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { usePlayer } from "../contexts/PlayerContext";
 import { playlistsApi } from "../lib/api/playlists";
 import Button from "../components/ui/buttons/Button";
-import { FaPlay } from "react-icons/fa6";
+import { FaPlay, FaUser } from "react-icons/fa6";
 import { MdOutlineQueueMusic } from "react-icons/md";
 import { IoChevronBack } from "react-icons/io5";
 import type { Song } from "../types/Song";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { useModal } from "../contexts/ModalContext";
+import AddToPlaylistForm from "../components/ui/modals/AddToPlaylistForm";
+import DeletePlaylistModal from "../components/ui/modals/DeletePlaylistModal";
 
 export default function PlaylistsPage() {
   const [playlist, setPlaylist] = useState<Playlist>();
@@ -17,6 +21,7 @@ export default function PlaylistsPage() {
   const navigate = useNavigate();
   const player = usePlayer();
   const { id } = useParams();
+  const { addModal, closeModal } = useModal();
 
   useEffect(() => {
     if (!id) return;
@@ -52,18 +57,32 @@ export default function PlaylistsPage() {
   }
 
   return (
-    <div>
-      <div className="flex items-center gap-2 mb-4">
-        <IoChevronBack
-          className="text-2xl cursor-pointer"
-          onClick={() => navigate(-1)}
-        />
-        <h1 className="text-xl">{playlist.name}</h1>
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <div className="flex items-start gap-2 mb-2">
+          <IoChevronBack
+            className="text-2xl cursor-pointer mt-1"
+            onClick={() => navigate(-1)}
+          />
+          <div>
+            <h1 className="text-xl">{playlist.name}</h1>
+            <p>{playlist.description}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 text-rose-600 font-semibold text-sm">
+          <span>{playlist.username}</span>
+          <FaUser className="text-base text-rose-600" />
+        </div>
       </div>
       <div className="flex gap-2 w-full items-center justify-between">
-        <h2>
-          <span className="font-medium">{songs.length}</span> Songs
-        </h2>
+        <div>
+          <h2>
+            <span className="font-medium">{songs.length}</span> Songs
+          </h2>
+          {songs.length == 0 && (
+            <div className="text-stone-400">No songs in playlist</div>
+          )}
+        </div>
         <div className="flex gap-2">
           <Button
             className="flex items-center gap-2"
@@ -93,15 +112,31 @@ export default function PlaylistsPage() {
             }}
           >
             <MdOutlineQueueMusic />
-            <span>Add</span>
+            <span>Queue</span>
+          </Button>
+          <Button
+            className="flex items-center gap-2"
+            onClick={() => {
+              addModal(
+                <DeletePlaylistModal
+                  id={Number(id)}
+                  onSuccess={() => {
+                    closeModal();
+                    navigate("/playlists");
+                  }}
+                  onCancel={closeModal}
+                />
+              );
+            }}
+          >
+            <FaRegTrashAlt />
+            <span>Delete</span>
           </Button>
         </div>
       </div>
 
       <ul className="flex flex-col">
-        {songs.length == 0 ? (
-          <div>No songs in playlist</div>
-        ) : (
+        {songs.length > 0 &&
           songs.map((song) => (
             <SongCard
               key={song.id}
@@ -120,10 +155,20 @@ export default function PlaylistsPage() {
                   },
                   text: "Remove from playlist",
                 },
+                {
+                  text: "Add to Playlist",
+                  onClick() {
+                    addModal(
+                      <AddToPlaylistForm
+                        songs={[song]}
+                        onSuccess={closeModal}
+                      />
+                    );
+                  },
+                },
               ]}
             />
-          ))
-        )}
+          ))}
       </ul>
     </div>
   );

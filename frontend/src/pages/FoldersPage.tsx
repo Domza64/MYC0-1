@@ -6,7 +6,7 @@ import { usePlayer } from "../contexts/PlayerContext";
 import Button from "../components/ui/buttons/Button";
 import { FaPlay } from "react-icons/fa6";
 import { MdOutlineQueueMusic, MdPlaylistAdd } from "react-icons/md";
-import AddToPlaylistForm from "../components/ui/forms/AddToPlaylistForm";
+import AddToPlaylistForm from "../components/ui/modals/AddToPlaylistForm";
 import { useModal } from "../contexts/ModalContext";
 import { Song } from "../types/Song";
 
@@ -88,9 +88,7 @@ export default function FoldersPage() {
   }, [currentFolder]);
 
   const handleCreatePlaylist = (): void => {
-    addModal(
-      <AddToPlaylistForm songs={player.state.queue} onSuccess={closeModal} />
-    );
+    addModal(<AddToPlaylistForm songs={songs} onSuccess={closeModal} />);
   };
 
   return (

@@ -1,7 +1,7 @@
 import { MdClearAll, MdPlaylistAdd } from "react-icons/md";
 import Button from "../components/ui/buttons/Button";
 import SongCard from "../components/ui/cards/SongCard";
-import AddToPlaylistForm from "../components/ui/forms/AddToPlaylistForm";
+import AddToPlaylistForm from "../components/ui/modals/AddToPlaylistForm";
 import { useModal } from "../contexts/ModalContext";
 import { usePlayer } from "../contexts/PlayerContext";
 import type { Song } from "../types/Song";

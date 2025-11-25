@@ -4,7 +4,7 @@ import type { Playlist } from "../types/music";
 import { playlistsApi } from "../lib/api/playlists";
 import toast from "react-hot-toast";
 import { useModal } from "../contexts/ModalContext";
-import CreatePlaylistForm from "../components/ui/forms/CreatePlaylistForm";
+import CreatePlaylistForm from "../components/ui/modals/CreatePlaylistForm";
 
 export default function PlaylistsPage() {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
