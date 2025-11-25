@@ -1,3 +1,4 @@
+import { MdClearAll, MdPlaylistAdd } from "react-icons/md";
 import Button from "../components/ui/buttons/Button";
 import SongCard from "../components/ui/cards/SongCard";
 import AddToPlaylistForm from "../components/ui/forms/AddToPlaylistForm";
@@ -7,10 +8,16 @@ import type { Song } from "../types/Song";
 
 export default function QueuePage() {
   const player = usePlayer();
-  const { showModal, hideModal } = useModal();
+  const { addModal, closeModal } = useModal();
 
   const handleClearQueue = (): void => {
     player.dispatch({ type: "CLEAR_QUEUE" });
+  };
+
+  const handleCreatePlaylist = (): void => {
+    addModal(
+      <AddToPlaylistForm songs={player.state.queue} onSuccess={closeModal} />
+    );
   };
 
   const handleClick = (song: Song) => {
@@ -30,9 +37,16 @@ export default function QueuePage() {
             Songs
           </h2>
           {player.state.queue.length > 0 && (
-            <Button onClick={handleClearQueue}>
-              <span>Clear Queue</span>
-            </Button>
+            <div className="flex gap-1">
+              <Button onClick={handleCreatePlaylist}>
+                <MdPlaylistAdd className="text-xl" />
+                <span>Playlist</span>
+              </Button>
+              <Button onClick={handleClearQueue}>
+                <MdClearAll className="text-xl" />
+                <span>Clear</span>
+              </Button>
+            </div>
           )}
         </div>
       </div>
@@ -54,8 +68,8 @@ export default function QueuePage() {
               {
                 text: "Add to playlist",
                 onClick: () => {
-                  showModal(
-                    <AddToPlaylistForm songs={[song]} onSuccess={hideModal} />
+                  addModal(
+                    <AddToPlaylistForm songs={[song]} onSuccess={closeModal} />
                   );
                 },
               },

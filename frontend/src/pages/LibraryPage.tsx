@@ -18,7 +18,7 @@ export default function LibraryPage() {
   const { ref, inView } = useInView();
 
   const { dispatch } = usePlayer();
-  const { showModal, hideModal } = useModal();
+  const { addModal, closeModal } = useModal();
 
   const fetchSongs = async () => {
     setIsLoading(true);
@@ -77,10 +77,10 @@ export default function LibraryPage() {
                 menuActions={[
                   {
                     onClick: () =>
-                      showModal(
+                      addModal(
                         <AddToPlaylistForm
                           songs={[song]}
-                          onSuccess={hideModal}
+                          onSuccess={closeModal}
                         />
                       ),
                     text: "Add to playlist",

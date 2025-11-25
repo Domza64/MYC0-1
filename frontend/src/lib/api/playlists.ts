@@ -73,7 +73,7 @@ export const playlistsApi = {
         if (addedCount > 0) {
           toast.success(`Added ${addedCount} song(s) to playlist`);
         } else {
-          toast.error("Song already in playlist");
+          toast.error("Song(s) already in playlist");
         }
         return addedCount;
       },

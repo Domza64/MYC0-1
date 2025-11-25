@@ -3,6 +3,8 @@ import Button from "../buttons/Button";
 import type { Playlist } from "../../../types/music";
 import { playlistsApi } from "../../../lib/api/playlists";
 import type { Song } from "../../../types/Song";
+import { useModal } from "../../../contexts/ModalContext";
+import CreatePlaylistForm from "./CreatePlaylistForm";
 
 interface AddToPlaylistFormProps {
   songs: Song[];
@@ -10,6 +12,9 @@ interface AddToPlaylistFormProps {
   onCancel?: () => void;
 }
 
+// TODO: When user clicks "New playlist" and creates a playlist songs are automatically added to it.
+// Problem is that CreatePlaylistForm modal closes but AddToPlaylistForm remains open underneath it untill
+// server responds withouth any visual indication that request is being processed.
 export default function AddToPlaylistForm({
   songs,
   onSuccess,
@@ -21,39 +26,31 @@ export default function AddToPlaylistForm({
   const [playlists, setPlaylists] = useState<Playlist[] | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const { addModal, closeModal } = useModal();
 
   useEffect(() => {
     playlistsApi
       .getAll()
       .then((playlists) => {
         setPlaylists(playlists);
-        setSelectedPlaylist(Number(playlists[0]?.id));
+        setSelectedPlaylist(playlists[0]?.id);
       })
       .catch(() => {
         setError("Failed to load playlists");
       });
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (selectedPlaylist == null) {
-      setError("Please select a playlist");
-      return;
-    }
-
+  const addToPlaylist = (playlistId: number) => {
     setSubmitting(true);
     setError("");
 
     playlistsApi
       .addSongs(
-        selectedPlaylist,
+        playlistId,
         songs.map((s) => s.id)
       )
       .then((data) => {
-        if (data.added_count === 0) {
-          setError("Song already in playlist");
-        } else {
+        if (data.added_count !== 0) {
           onSuccess?.();
         }
       })
@@ -63,6 +60,23 @@ export default function AddToPlaylistForm({
       .finally(() => {
         setSubmitting(false);
       });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (selectedPlaylist == null) {
+      setError("Please select a playlist");
+      return;
+    }
+
+    addToPlaylist(selectedPlaylist);
+  };
+
+  const handlePlaylistCreated = (newPlaylist: Playlist) => {
+    setPlaylists((playlists) => [...(playlists || []), newPlaylist]);
+    addToPlaylist(newPlaylist.id);
+    closeModal();
   };
 
   const title =
@@ -89,6 +103,7 @@ export default function AddToPlaylistForm({
             >
               Select Playlist
             </label>
+            {selectedPlaylist}
             <select
               id="playlist"
               name="playlist"
@@ -122,9 +137,20 @@ export default function AddToPlaylistForm({
             Cancel
           </Button>
         )}
-        <Button type="submit" className="w-full" disabled={submitting}>
-          {submitting ? "Adding..." : "Add"}
-        </Button>
+        <div className="flex flex-col gap-2 w-full">
+          <Button type="submit" className="w-full" disabled={submitting}>
+            {submitting ? "Adding..." : "Add"}
+          </Button>
+          <Button
+            onClick={() => {
+              addModal(
+                <CreatePlaylistForm onSuccess={handlePlaylistCreated} />
+              );
+            }}
+          >
+            New playlist
+          </Button>
+        </div>
       </div>
     </form>
   );

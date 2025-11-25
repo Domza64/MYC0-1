@@ -17,7 +17,7 @@ export default function Button({
       disabled={disabled}
       type={type}
       className={
-        "bg-rose-500/20 disabled:bg-stone-600 disabled:text-stone-400 border border-stone-950 py-0.5 px-2 rounded text-rose-600 font-semibold hover:bg-rose-500/30 transition-all duration-300 cursor-grab " +
+        "bg-rose-500/20 flex items-center justify-center gap-1 disabled:bg-stone-600 disabled:text-stone-400 border border-stone-950 py-0.5 px-2 rounded text-rose-600 font-semibold hover:bg-rose-500/30 transition-all duration-300 cursor-grab " +
         className
       }
     >

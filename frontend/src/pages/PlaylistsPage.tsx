@@ -9,7 +9,7 @@ import CreatePlaylistForm from "../components/ui/forms/CreatePlaylistForm";
 export default function PlaylistsPage() {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
 
-  const { showModal, hideModal } = useModal();
+  const { addModal, closeModal } = useModal();
 
   useEffect(() => {
     playlistsApi
@@ -21,7 +21,7 @@ export default function PlaylistsPage() {
   const handleSuccess = (newPlaylist: Playlist) => {
     setPlaylists((playlists) => [...playlists, newPlaylist]);
     toast.success("Playlist created");
-    hideModal();
+    closeModal();
   };
 
   return (
@@ -35,10 +35,10 @@ export default function PlaylistsPage() {
         ))}
         <button
           onClick={() => {
-            showModal(
+            addModal(
               <CreatePlaylistForm
                 onSuccess={handleSuccess}
-                onCancel={hideModal}
+                onCancel={closeModal}
               />
             );
           }}

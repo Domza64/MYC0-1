@@ -5,7 +5,7 @@ import SongCard from "../components/ui/cards/SongCard";
 import { usePlayer } from "../contexts/PlayerContext";
 import Button from "../components/ui/buttons/Button";
 import { FaPlay } from "react-icons/fa6";
-import { MdOutlineQueueMusic } from "react-icons/md";
+import { MdOutlineQueueMusic, MdPlaylistAdd } from "react-icons/md";
 import AddToPlaylistForm from "../components/ui/forms/AddToPlaylistForm";
 import { useModal } from "../contexts/ModalContext";
 import { Song } from "../types/Song";
@@ -17,7 +17,7 @@ export default function FoldersPage() {
   const [breadcrumbs, setBreadcrumbs] = useState<Folder[]>([]);
 
   const player = usePlayer();
-  const { showModal, hideModal } = useModal();
+  const { addModal, closeModal } = useModal();
 
   // Update breadcrumbs when currentFolder changes
   useEffect(() => {
@@ -86,6 +86,12 @@ export default function FoldersPage() {
     fetchFolders();
     fetchSongs();
   }, [currentFolder]);
+
+  const handleCreatePlaylist = (): void => {
+    addModal(
+      <AddToPlaylistForm songs={player.state.queue} onSuccess={closeModal} />
+    );
+  };
 
   return (
     <div>
@@ -160,7 +166,11 @@ export default function FoldersPage() {
                 }}
               >
                 <MdOutlineQueueMusic />
-                <span>Add</span>
+                <span>Queue</span>
+              </Button>
+              <Button onClick={handleCreatePlaylist}>
+                <MdPlaylistAdd className="text-xl" />
+                <span>Playlist</span>
               </Button>
             </div>
           </div>
@@ -181,10 +191,10 @@ export default function FoldersPage() {
                   {
                     text: "Add to Playlist",
                     onClick() {
-                      showModal(
+                      addModal(
                         <AddToPlaylistForm
                           songs={[song]}
-                          onSuccess={hideModal}
+                          onSuccess={closeModal}
                         />
                       );
                     },

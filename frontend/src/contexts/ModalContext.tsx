@@ -1,34 +1,41 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 
 type ModalContextType = {
-  showModal: (content: ReactNode) => void;
-  hideModal: () => void;
+  addModal: (content: ReactNode) => void;
+  closeModal: () => void;
 };
 
 const ModalContext = createContext<ModalContextType | null>(null);
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
-  const [modalContent, setModalContent] = useState<ReactNode | null>(null);
+  const [modalStack, setModalStack] = useState<ReactNode[]>([]);
 
-  const showModal = (content: ReactNode) => setModalContent(content);
-  const hideModal = () => setModalContent(null);
+  const addModal = (content: ReactNode) => {
+    setModalStack((prev) => [...prev, content]);
+  };
+
+  const closeModal = () => {
+    setModalStack((prev) => prev.slice(0, -1));
+  };
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      hideModal();
+      closeModal();
     }
   };
 
+  const topModal = modalStack[modalStack.length - 1];
+
   return (
-    <ModalContext.Provider value={{ showModal, hideModal }}>
+    <ModalContext.Provider value={{ addModal, closeModal }}>
       {children}
-      {modalContent && (
+      {topModal && (
         <div
           onClick={handleBackdropClick}
           className="fixed inset-0 backdrop-blur flex items-center justify-center z-50 text-stone-300"
         >
-          <div className="w-full max-w-md bg-stone-950/70 border border-stone-800 shadow-xl shadow-stone-900 rounded-xl flex justify-center items-center min-h-32 md:m-4 m-2">
-            {modalContent}
+          <div className="w-full max-w-md bg-stone-950/70 border border-stone-800 rounded-xl flex justify-center items-center md:m-4 m-2">
+            {topModal}
           </div>
         </div>
       )}

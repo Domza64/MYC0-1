@@ -13,7 +13,7 @@ export default function Members() {
   const [loading, setLoading] = useState(true);
 
   const { auth } = useAuth();
-  const { showModal, hideModal } = useModal();
+  const { addModal, closeModal } = useModal();
 
   const fetchMembers = async () => {
     setLoading(true);
@@ -69,11 +69,11 @@ export default function Members() {
         <Button
           className="flex items-center space-x-1"
           onClick={() =>
-            showModal(
+            addModal(
               <CreateUserForm
-                onCancel={hideModal}
+                onCancel={closeModal}
                 onSuccess={() => {
-                  hideModal();
+                  closeModal();
                   toast("User created successfully");
                   fetchMembers();
                 }}
