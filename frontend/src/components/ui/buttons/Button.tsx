@@ -23,7 +23,7 @@ export default function Button({
         className
       }
     >
-      {!disabled ? children : <ImSpinner10 className="animate-spin" />}
+      {!disabled ? children : <ImSpinner10 className="animate-spin my-1" />}
     </button>
   );
 }

@@ -52,18 +52,18 @@ def create_user(user_data: UserCreate, session: SessionDep, admin_session: Sessi
     session.refresh(user)
     return JSONResponse(status_code=200, content={"message": "User created successfully"})
 
-@router.delete("/{username}", dependencies=[Depends(cookie)])
-def delete_user(username: str, session: SessionDep, admin_session: SessionData = Depends(require_admin)):
+@router.delete("/{user_id}", dependencies=[Depends(cookie)])
+def delete_user(user_id: str, session: SessionDep, admin_session: SessionData = Depends(require_admin)):
     """
-    Delete a user by username.
+    Delete a user by id.
     """
-    if username == admin_session.username:
+    if user_id == admin_session.user_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="You cannot delete yourself :/"
         )
 
-    user = session.exec(select(User).where(User.username == username)).first()
+    user = session.exec(select(User).where(User.id == user_id)).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

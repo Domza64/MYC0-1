@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { useAuth } from "../../contexts/AuthContext";
 import { useModal } from "../../contexts/ModalContext";
+import DeleteUserModal from "../ui/modals/DeleteUserModal";
 
 export default function Members() {
   const [members, setMembers] = useState<User[]>([]);
@@ -15,6 +16,7 @@ export default function Members() {
   const { auth } = useAuth();
   const { addModal, closeModal } = useModal();
 
+  // TODO: make userApi same way as playlistsApi
   const fetchMembers = async () => {
     setLoading(true);
     try {
@@ -32,29 +34,6 @@ export default function Members() {
   useEffect(() => {
     fetchMembers();
   }, []);
-
-  const handleDelete = async (username: string) => {
-    if (!confirm(`Are you sure you want to delete user ${username}?`)) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`/api/users/${username}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || "Failed to delete user");
-      }
-
-      toast.success("User deleted successfully");
-      fetchMembers();
-    } catch (err: any) {
-      toast.error(err.message || "Failed to delete user");
-      console.error("Error deleting user:", err);
-    }
-  };
 
   // @ts-ignore
   const handleEdit = (user: User) => {
@@ -139,7 +118,23 @@ export default function Members() {
                               <FiEdit2 className="text-lg" />
                             </button>
                             <button
-                              onClick={() => handleDelete(member.username)}
+                              onClick={() =>
+                                addModal(
+                                  <DeleteUserModal
+                                    user={member}
+                                    onCancel={closeModal}
+                                    onSuccess={() => {
+                                      closeModal();
+                                      toast("User deleted successfully");
+                                      setMembers((prev) =>
+                                        prev.filter(
+                                          (m) => m.username !== member.username
+                                        )
+                                      );
+                                    }}
+                                  />
+                                )
+                              }
                               className="p-2 text-stone-400 hover:text-rose-500 transition-colors"
                             >
                               <FiTrash2 className="text-lg" />
