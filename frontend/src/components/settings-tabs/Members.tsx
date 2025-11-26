@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Button from "../ui/buttons/Button";
 import { TiPlus } from "react-icons/ti";
 import type { User } from "../../types/user";
-import CreateUserForm from "../ui/modals/CreateUserForm";
+import UserModal from "../ui/modals/UserModal";
 import toast from "react-hot-toast";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { useAuth } from "../../contexts/AuthContext";
@@ -41,6 +41,7 @@ export default function Members() {
     toast("Soon!");
   };
 
+  // TODO: instead of fetching members when a user is created/edited, update the members state directly, like when a user is deleted.
   return (
     <div>
       <div className="flex justify-between items-center max-w-400 space-y-4 mb-4">
@@ -49,7 +50,7 @@ export default function Members() {
           className="flex items-center space-x-1"
           onClick={() =>
             addModal(
-              <CreateUserForm
+              <UserModal
                 onCancel={closeModal}
                 onSuccess={() => {
                   closeModal();
@@ -112,7 +113,19 @@ export default function Members() {
                         auth.role === "ADMIN" && (
                           <div className="flex justify-end space-x-2">
                             <button
-                              onClick={() => handleEdit(member)}
+                              onClick={() =>
+                                addModal(
+                                  <UserModal
+                                    user={member}
+                                    onCancel={closeModal}
+                                    onSuccess={() => {
+                                      closeModal();
+                                      toast("User edited successfully");
+                                      fetchMembers();
+                                    }}
+                                  />
+                                )
+                              }
                               className="p-2 text-stone-400 hover:text-rose-500 transition-colors"
                             >
                               <FiEdit2 className="text-lg" />
