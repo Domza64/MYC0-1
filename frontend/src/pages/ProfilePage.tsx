@@ -8,6 +8,9 @@ export default function ProfilePage() {
       <button onClick={logout} className="py-2 w-32 bg-rose-500 rounded">
         Logout
       </button>
+      <span>
+        Edit profile, change password, username, profile picture... soon!
+      </span>
     </div>
   );
 }

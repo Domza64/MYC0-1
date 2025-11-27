@@ -8,10 +8,12 @@ import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { useAuth } from "../../contexts/AuthContext";
 import { useModal } from "../../contexts/ModalContext";
 import DeleteUserModal from "../ui/modals/DeleteUserModal";
+import { useNavigate } from "react-router-dom";
 
 export default function Members() {
   const [members, setMembers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const { auth } = useAuth();
   const { addModal, closeModal } = useModal();
@@ -109,27 +111,29 @@ export default function Members() {
                       </span>
                     </td>
                     <td className="p-4">
-                      {auth.username !== member.username &&
-                        auth.role === "ADMIN" && (
-                          <div className="flex justify-end space-x-2">
-                            <button
-                              onClick={() =>
-                                addModal(
-                                  <UserModal
-                                    user={member}
-                                    onCancel={closeModal}
-                                    onSuccess={() => {
-                                      closeModal();
-                                      toast("User edited successfully");
-                                      fetchMembers();
-                                    }}
-                                  />
-                                )
-                              }
-                              className="p-2 text-stone-400 hover:text-rose-500 transition-colors"
-                            >
-                              <FiEdit2 className="text-lg" />
-                            </button>
+                      {auth.role === "ADMIN" && (
+                        <div className="flex justify-end space-x-2">
+                          <button
+                            onClick={() =>
+                              auth.username === member.username
+                                ? navigate("/profile")
+                                : addModal(
+                                    <UserModal
+                                      user={member}
+                                      onCancel={closeModal}
+                                      onSuccess={() => {
+                                        closeModal();
+                                        toast("User edited successfully");
+                                        fetchMembers();
+                                      }}
+                                    />
+                                  )
+                            }
+                            className="p-2 text-stone-400 hover:text-rose-500 transition-colors"
+                          >
+                            <FiEdit2 className="text-lg" />
+                          </button>
+                          {auth.username !== member.username && (
                             <button
                               onClick={() =>
                                 addModal(
@@ -152,8 +156,9 @@ export default function Members() {
                             >
                               <FiTrash2 className="text-lg" />
                             </button>
-                          </div>
-                        )}
+                          )}
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))}
