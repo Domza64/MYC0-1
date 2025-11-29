@@ -1,6 +1,10 @@
 from pathlib import Path
 from typing import Optional
+
+from sqlmodel import Session, select
 from app.config import IMAGES_DIR
+from app.model.album import Album
+from app.model.author import Author
 from app.model.song import Song
 import eyed3
 
@@ -17,18 +21,19 @@ def create_default_song(path: Path, relative_path: Path) -> Song:
     )
 
 
-def extract_album_art(audio, file_stem: str) -> Optional[str]:
-    """Extract album art to IMAGES_DIR; return filename if saved."""
+def extract_image(audio, file_stem: str) -> Optional[str]:
+    """Extract image to IMAGES_DIR; return filename if saved."""
     if not audio or not audio.tag or not audio.tag.images:
         return None
 
     try:
         img = audio.tag.images[0]
+        # TODO: use save_picture() from file_utils.py here
         output = Path(IMAGES_DIR) / f"{file_stem}.jpg"
         output.write_bytes(img.image_data)
         return output.name
     except Exception as e:
-        print(f"Error extracting album art: {e}")
+        print(f"Error extracting image: {e}")
         return None
 
 
@@ -47,9 +52,40 @@ def extract_metadata(audio) -> dict:
     }
 
 
+def get_or_create_author(session: Session, name: Optional[str]):
+    if not name:
+        return None
 
-def create_song(file_path: Path, relative_path: Path) -> Song:
-    """Create a Song instance from an audio file path with metadata if available."""
+    author = session.exec(select(Author).where(Author.name == name)).first()
+    if not author:
+        author = Author(name=name)
+        session.add(author)
+        session.commit()
+        session.refresh(author)
+    return author
+
+
+def get_or_create_album(session: Session, title: Optional[str], author: Optional[Author]):
+    if not title:
+        return None
+
+    stmt = select(Album).where(Album.title == title)
+    if author:
+        stmt = stmt.where(Album.author_id == author.id)
+
+    album = session.exec(stmt).first()
+
+    if not album:
+        album = Album(title=title, author_id=author.id if author else None)
+        session.add(album)
+        session.commit()
+        session.refresh(album)
+
+    return album
+
+
+def create_song(session: Session, file_path: Path, relative_path: Path) -> Song:
+    """Create a Song instance with metadata if available."""
     if file_path.suffix.lower() != ".mp3":
         return create_default_song(file_path, relative_path)
 
@@ -59,18 +95,28 @@ def create_song(file_path: Path, relative_path: Path) -> Song:
             return create_default_song(file_path, relative_path)
 
         metadata = extract_metadata(audio)
-        album_art = extract_album_art(audio, file_path.stem)
+        image = extract_image(audio, file_path.stem)
 
-        return Song(
-            **metadata,
+        author = get_or_create_author(session, metadata["artist"])
+        album = get_or_create_album(session, metadata["album"], author)
+
+        song = Song(
+            title=metadata["title"],
+            genre=metadata["genre"],
+            year=metadata["year"],
+            duration=metadata["duration"],
+            author_id=author.id if author else None,
+            album_id=album.id if album else None,
             file_path=str(relative_path),
             file_name=file_path.name,
             file_size=file_path.stat().st_size,
             file_format=file_path.suffix.lstrip('.').lower(),
-            album_art=album_art,
+            image=image,
             play_count=0,
             last_played=None,
         )
+
+        return song
     except:
         print(f"Error getting metadata or for: {file_path}")
         return create_default_song(file_path, relative_path)

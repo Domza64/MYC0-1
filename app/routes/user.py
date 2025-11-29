@@ -1,8 +1,10 @@
 from typing import Annotated
+
+from pydantic import BaseModel
 from app.lib.passwd import hash_password
 from app.model.user import User
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlmodel import Session, select, SQLModel
+from sqlmodel import Session, select
 from app.session.cookie import cookie
 from app.session.session_data import SessionData
 from app.session.session_verifier import require_admin
@@ -15,12 +17,12 @@ router = APIRouter(prefix="/api/users")
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
-class UserCreate(SQLModel):
+class UserCreate(BaseModel):
     username: str
     role: str
     password: str
 
-class UserUpdate(SQLModel):
+class UserUpdate(BaseModel):
     username: str
     role: str
     password: str | None = None

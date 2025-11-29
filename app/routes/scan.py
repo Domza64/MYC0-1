@@ -3,9 +3,10 @@ from app.config import MUSIC_DIR
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 from app.lib.file_utils import read_all_audio_files
+from app.lib.mp3lib import create_song
 from app.model.song import Song
 from app.db.sqlite import get_session
-from app.lib.db_utils import create_song
+from app.lib.db_utils import insert_song
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from app.session.session_data import SessionData
@@ -15,28 +16,27 @@ router = APIRouter(prefix="/api")
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
+# TODO: Make this async background task cause this is not a good now but works for testing
 @router.post("/scan-library", dependencies=[Depends(cookie)])
 def scan_files(session: Session = Depends(get_session), session_data: SessionData = Depends(verifier)):
-    # Read all songs currently in filesystem
-    scanned_songs = read_all_audio_files(MUSIC_DIR)
+    # All songs and paths
+    scanned_files = read_all_audio_files(MUSIC_DIR)
+    scanned_paths = {song[0] for song in scanned_files} # file_path is at index 0
 
-    # Build a set of file paths found in the filesystem
-    scanned_paths = {song.file_path for song in scanned_songs}
-
-    # Read all songs currently in DB
+    # Read all songs currently in DB (costly?)
     db_songs = session.exec(select(Song)).all()
     db_paths = {song.file_path for song in db_songs}
 
     # Find differences
-    new_paths = scanned_paths - db_paths
     removed_paths = db_paths - scanned_paths
 
     # Add new songs
     added_count = 0
-    for song in scanned_songs:
-        if song.file_path in new_paths:
-            create_song(song, session)
-            added_count += 1
+    for file_path, relative_path in scanned_files:
+        # TODO: only update song if it is not in DB, or if it is maybe update metadata?
+        new_song = create_song(session, file_path, relative_path)
+        insert_song(new_song, session)
+        added_count += 1
 
     # Remove deleted songs
     removed_count = 0

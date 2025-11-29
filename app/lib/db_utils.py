@@ -27,7 +27,7 @@ def get_or_create_folder(session: Session, folder_path: str) -> Folder:
     return parent
 
 
-def create_song(song: Song, session: Session) -> Song:
+def insert_song(song: Song, session: Session) -> Song:
     """
     Creates a Song entry and ensures its folder structure exists.
     """

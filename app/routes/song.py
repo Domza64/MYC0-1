@@ -1,11 +1,12 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
-from app.model.song import Song
+from app.model.song import Song, SongRead
 from app.db.sqlite import get_session
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from app.session.session_data import SessionData
+from sqlalchemy.orm import selectinload
 
 
 router = APIRouter(prefix="/api/songs")
@@ -32,17 +33,24 @@ def read_song(song_id: int, session: SessionDep, session_data: SessionData = Dep
     return song
 
 
-@router.get("/folder/{folder_id}", response_model=list[Song], dependencies=[Depends(cookie)])
+@router.get("/folder/{folder_id}", response_model=list[SongRead], dependencies=[Depends(cookie)])
 def get_songs_in_folder(
     folder_id: int,
     session: Session = Depends(get_session),
     session_data: SessionData = Depends(verifier)
-) -> list[Song]:
+) -> list[SongRead]:
     """
     Return all songs that belong directly to the given folder.
     """
     songs = session.exec(
-        select(Song).where(Song.folder_id == folder_id)
+        select(Song)
+        .where(Song.folder_id == folder_id)
+        .options(
+            selectinload(Song.author), 
+            selectinload(Song.album)
+        )
     ).all()
+
+    print(songs[0].title)
 
     return songs

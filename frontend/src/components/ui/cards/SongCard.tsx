@@ -74,8 +74,8 @@ export default function SongCard({
   return (
     <li className="bg-stone-900/75 border-stone-900 shadow-stone-900 shadow-sm border hover:bg-stone-900 transition-colors my-2 flex justify-between items-center select-none rounded-md relative">
       <div className="bg-stone-800 h-10 w-10 flex justify-center items-center text-stone-400">
-        {song.album_art ? (
-          <img src={"/images/" + song.album_art} alt="img" />
+        {song.image ? (
+          <img src={"/images/" + song.image} alt="img" />
         ) : (
           <FaItunesNote />
         )}

@@ -201,8 +201,8 @@ def add_songs_to_playlist(playlist_id: int, data: AddSongsRequest, session: Sess
 
         # Get playlist image
         song = session.get(Song, song_id)
-        if song and song.album_art:
-            last_playlist_image = song.album_art
+        if song and song.image:
+            last_playlist_image = song.image
 
     if last_playlist_image:
         playlist.playlist_image = last_playlist_image

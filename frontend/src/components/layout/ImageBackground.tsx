@@ -6,8 +6,8 @@ export default function ImageBackground() {
   const [imgURL, setImgURL] = useState<string | null>(null);
 
   useEffect(() => {
-    if (state.currentSong?.album_art) {
-      setImgURL(`/images/${encodeURIComponent(state.currentSong.album_art)}`);
+    if (state.currentSong?.image) {
+      setImgURL(`/images/${encodeURIComponent(state.currentSong.image)}`);
     } else {
       setImgURL(null);
     }

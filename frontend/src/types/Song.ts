@@ -11,7 +11,7 @@ export class Song {
   duration?: number | null;
   file_size: number;
   file_format: string;
-  album_art?: string | null;
+  image?: string | null;
   play_count?: number;
   last_played?: string | null;
 
@@ -28,7 +28,7 @@ export class Song {
     this.duration = data.duration ?? null;
     this.file_size = data.file_size ?? 0;
     this.file_format = data.file_format ?? "";
-    this.album_art = data.album_art ?? null;
+    this.image = data.image ?? null;
     this.play_count = data.play_count ?? 0;
     this.last_played = data.last_played ?? null;
   }
@@ -82,7 +82,7 @@ export class Song {
       duration: this.duration,
       file_size: this.file_size,
       file_format: this.file_format,
-      album_art: this.album_art,
+      image: this.image,
       play_count: this.play_count,
       last_played: this.last_played,
     };

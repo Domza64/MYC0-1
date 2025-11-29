@@ -97,7 +97,7 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
       artist: currentSong.artist,
       album: currentSong.album,
       artwork: [
-        { src: "images/" + currentSong.album_art || "/static/album_cover.png" },
+        { src: "images/" + currentSong.image || "/static/album_cover.png" },
       ],
     });
 
