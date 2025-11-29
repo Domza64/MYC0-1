@@ -94,10 +94,12 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
     // Set metadata for the currently playing song
     mediaSession.metadata = new MediaMetadata({
       title: currentSong.title,
-      artist: currentSong.artist,
-      album: currentSong.album,
+      artist: currentSong.author.name,
+      album: currentSong.album.title,
       artwork: [
-        { src: "images/" + currentSong.image || "/static/album_cover.png" },
+        {
+          src: "/images/" + currentSong.image || "/static/album_cover.png",
+        },
       ],
     });
 

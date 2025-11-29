@@ -1,4 +1,4 @@
-import type { Playlist } from "../types/music";
+import type { Playlist } from "../types/data";
 import VerticalScrollSection from "../components/layout/VerticalScrollSection";
 import PlaylistCard from "../components/ui/cards/PlaylistCard";
 import { useAuth } from "../contexts/AuthContext";

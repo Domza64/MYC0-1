@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Button from "../buttons/Button";
-import type { Playlist } from "../../../types/music";
+import type { Playlist } from "../../../types/data";
 import { playlistsApi } from "../../../lib/api/playlists";
 import type { Song } from "../../../types/Song";
 import { useModal } from "../../../contexts/ModalContext";

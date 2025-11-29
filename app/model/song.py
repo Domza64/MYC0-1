@@ -18,12 +18,12 @@ class Song(SQLModel, table=True):
 
     genre: Optional[str] = Field(default=None, index=True)
     year: Optional[int] = Field(default=None, index=True)
-    file_path: str = Field(index=True)
-    file_name: str = Field(index=True)
+    file_path: str = Field()
+    file_name: str = Field()
     duration: Optional[int] = Field(default=None, index=True)  # in seconds
-    file_size: int = Field(index=True)  # in bytes
-    file_format: str = Field(index=True)  # 'mp3', 'flac', etc.
-    image: Optional[str] = Field(default=None, index=True)
+    file_size: int = Field()  # in bytes
+    file_format: str = Field()  # 'mp3', 'flac', etc.
+    image: Optional[str] = Field(default=None)
     play_count: int = Field(default=0, index=True)
     last_played: Optional[str] = Field(default=None, index=True)  # ISO string
 

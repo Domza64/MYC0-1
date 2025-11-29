@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import PlaylistCard from "../components/ui/cards/PlaylistCard";
-import type { Playlist } from "../types/music";
+import type { Playlist } from "../types/data";
 import { playlistsApi } from "../lib/api/playlists";
 import toast from "react-hot-toast";
 import { useModal } from "../contexts/ModalContext";

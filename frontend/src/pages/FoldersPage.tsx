@@ -81,7 +81,7 @@ export default function FoldersPage() {
             new Song({
               id: item.id,
               title: item.title,
-              artist: item.author?.name,
+              author: item.author?.name,
               album: item.album?.title,
               genre: item.genre,
               year: item.year,

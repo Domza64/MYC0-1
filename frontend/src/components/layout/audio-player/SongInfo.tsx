@@ -35,7 +35,7 @@ export default function SongInfo({
         {currentSong.image ? (
           <img
             src={"images/" + currentSong.image}
-            alt={currentSong.album || "Unknown"}
+            alt={currentSong.album.title}
             className={imageClasses}
           />
         ) : (
@@ -50,7 +50,7 @@ export default function SongInfo({
           {currentSong.title || currentSong.file_name}
         </h4>
         <p className="text-stone-400 text-sm truncate">
-          {currentSong.artist} • {currentSong.album}
+          {currentSong.author.name} • {currentSong.album.title}
         </p>
       </div>
     </div>

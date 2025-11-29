@@ -15,8 +15,8 @@ MYC0-1 transforms your local music folder into a personal streaming service. The
 ### Music Management
 
 - **Library Scanning** - Recursively scans your music folder for audio files (MP3, FLAC, WAV, etc.)
-- **Metadata Extraction** - Reads ID3 tags and audio metadata including title, artist, album, genre, duration...
-- **Organized Browsing** - Browse your collection by artist, album, genre, or folder structure
+- **Metadata Extraction** - Reads ID3 tags and audio metadata including title, author, album, genre, duration...
+- **Organized Browsing** - Browse your collection by author, album, genre, or folder structure
 - **Search & Filter** - Find songs quickly with real-time search and filtering
 - **Create playlists** - playlists :)
 

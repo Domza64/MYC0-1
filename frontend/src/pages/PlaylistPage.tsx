@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Playlist } from "../types/music";
+import type { Playlist } from "../types/data";
 import SongCard from "../components/ui/cards/SongCard";
 import { useNavigate, useParams } from "react-router-dom";
 import { usePlayer } from "../contexts/PlayerContext";

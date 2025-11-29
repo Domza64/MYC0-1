@@ -9,7 +9,11 @@ const Folders = lazy(() => import("../pages/FoldersPage"));
 const Queue = lazy(() => import("../pages/QueuePage"));
 const Playlists = lazy(() => import("../pages/PlaylistsPage"));
 const Profile = lazy(() => import("../pages/ProfilePage"));
+const Authors = lazy(() => import("../pages/AuthorsPage"));
+const AuthorPage = lazy(() => import("../pages/AuthorPage"));
 const Playlist = lazy(() => import("../pages/PlaylistPage"));
+const Albums = lazy(() => import("../pages/AlbumsPage"));
+const AlbumPage = lazy(() => import("../pages/AlbumPage"));
 
 export const routes = [
   {
@@ -31,6 +35,22 @@ export const routes = [
   {
     path: "/folders",
     element: <Folders />,
+  },
+  {
+    path: "/authors",
+    element: <Authors />,
+  },
+  {
+    path: "/authors/:id",
+    element: <AuthorPage />,
+  },
+  {
+    path: "/albums",
+    element: <Albums />,
+  },
+  {
+    path: "/albums/:id",
+    element: <AlbumPage />,
   },
   {
     path: "/queue",

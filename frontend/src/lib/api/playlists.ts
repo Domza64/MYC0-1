@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import type { Playlist } from "../../types/music";
+import type { Playlist } from "../../types/data";
 import { apiRequest } from "./client";
 import { Song } from "../../types/Song";
 

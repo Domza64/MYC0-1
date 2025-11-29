@@ -11,6 +11,8 @@ from app.routes.folder import router as folder_router
 from app.routes.auth import router as auth_router
 from app.routes.user import router as user_router
 from app.routes.playlist import router as playlist_router
+from app.routes.author import router as author_router
+from app.routes.album import router as album_router
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
@@ -35,12 +37,14 @@ if STATIC_DIR.exists():
     
     app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
+app.include_router(auth_router)
 app.include_router(music_router)
 app.include_router(scan_router)
 app.include_router(folder_router)
-app.include_router(auth_router)
 app.include_router(user_router)
 app.include_router(playlist_router)
+app.include_router(author_router)
+app.include_router(album_router)
 
 @app.on_event("startup")
 def on_startup():

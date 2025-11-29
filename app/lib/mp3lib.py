@@ -44,7 +44,7 @@ def extract_metadata(audio) -> dict:
 
     return {
         "title": getattr(tag, "title", None),
-        "artist": getattr(tag, "artist", None),
+        "author": getattr(tag, "artist", None),
         "album": getattr(tag, "album", None),
         "genre": str(tag.genre) if getattr(tag, "genre", None) else None,
         "year": 2000, # TODO: Replace with year extraction:
@@ -65,18 +65,18 @@ def get_or_create_author(session: Session, name: Optional[str]):
     return author
 
 
-def get_or_create_album(session: Session, title: Optional[str], author: Optional[Author]):
+def get_or_create_album(session: Session, title: Optional[str], author: Optional[Author], image: Optional[str] = None):
     if not title:
         return None
 
-    stmt = select(Album).where(Album.title == title)
+    statment = select(Album).where(Album.title == title)
     if author:
-        stmt = stmt.where(Album.author_id == author.id)
+        statment = statment.where(Album.author_id == author.id)
 
-    album = session.exec(stmt).first()
+    album = session.exec(statment).first()
 
     if not album:
-        album = Album(title=title, author_id=author.id if author else None)
+        album = Album(title=title, author_id=author.id if author else None, image=image)
         session.add(album)
         session.commit()
         session.refresh(album)
@@ -97,8 +97,8 @@ def create_song(session: Session, file_path: Path, relative_path: Path) -> Song:
         metadata = extract_metadata(audio)
         image = extract_image(audio, file_path.stem)
 
-        author = get_or_create_author(session, metadata["artist"])
-        album = get_or_create_album(session, metadata["album"], author)
+        author = get_or_create_author(session, metadata["author"])
+        album = get_or_create_album(session, metadata["album"], author, image="/TODO-add-image-when-creating-album")
 
         song = Song(
             title=metadata["title"],
@@ -118,5 +118,4 @@ def create_song(session: Session, file_path: Path, relative_path: Path) -> Song:
 
         return song
     except:
-        print(f"Error getting metadata or for: {file_path}")
         return create_default_song(file_path, relative_path)

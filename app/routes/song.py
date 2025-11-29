@@ -12,7 +12,7 @@ from sqlalchemy.orm import selectinload
 router = APIRouter(prefix="/api/songs")
 SessionDep = Annotated[Session, Depends(get_session)]
 
-
+# TODO: Getting songs for albuims, playlists or authors should be in their respective routers, not here.
 @router.get("", response_model=list[Song], dependencies=[Depends(cookie)])
 def get_all_songs(session: SessionDep, offset: int = 0, limit: int = 10, session_data: SessionData = Depends(verifier)) -> list[Song]:
     """
@@ -45,12 +45,10 @@ def get_songs_in_folder(
     songs = session.exec(
         select(Song)
         .where(Song.folder_id == folder_id)
-        .options(
-            selectinload(Song.author), 
-            selectinload(Song.album)
-        )
     ).all()
 
-    print(songs[0].title)
+    if not songs:
+        raise HTTPException(status_code=404, detail="Folder not found")
 
     return songs
+

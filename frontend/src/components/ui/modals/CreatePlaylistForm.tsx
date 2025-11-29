@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Button from "../buttons/Button";
 import { playlistsApi } from "../../../lib/api/playlists";
-import type { Playlist } from "../../../types/music";
+import type { Playlist } from "../../../types/data";
 
 interface CreatePlaylistFormProps {
   onSuccess?: (playlist: Playlist) => void;

@@ -44,6 +44,8 @@ export interface MenuAction {
  *   ]}
  * />
  */
+
+// TODO: Add default onClick handler and menuActions that interact with the player context.
 export default function SongCard({
   song,
   onClick,

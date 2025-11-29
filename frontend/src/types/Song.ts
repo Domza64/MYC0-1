@@ -1,8 +1,10 @@
+import type { Album, Author } from "./data";
+
 export class Song {
   id: number;
   _title: string;
-  _artist: string;
-  _album: string;
+  author: Author;
+  album: Album;
   genre?: string | null;
   year?: number | null;
   file_path: string;
@@ -18,8 +20,9 @@ export class Song {
   constructor(data: Partial<Song> = {}) {
     this.id = data.id ?? 0;
     this._title = data.title || data.file_name || "Unknown Title";
-    this._artist = data.artist ?? "Unknown Artist";
-    this._album = data.album ?? "Unknown Album";
+    // TODO: Backend should ensure author and album are always present, same unknown album and authro for all songs that don't have them
+    this.author = data.author || { id: 0, name: "Unknown Author" };
+    this.album = data.album || { id: 0, title: "Unknown Album", author_id: -1 };
     this.genre = data.genre ?? null;
     this.year = data.year ?? null;
     this.file_path = data.file_path ?? "";
@@ -35,14 +38,6 @@ export class Song {
 
   get title(): string {
     return this._title;
-  }
-
-  get artist(): string {
-    return this._artist;
-  }
-
-  get album(): string {
-    return this._album;
   }
 
   get formattedFileSize(): string {
@@ -61,10 +56,10 @@ export class Song {
   }
 
   get displayName(): string {
-    if (this.artist === "Unknown Artist") {
+    if (this.author.name === "Unknown Author") {
       return this.title;
     }
-    return `${this.artist} - ${this.title}`;
+    return `${this.author.name} - ${this.title}`;
   }
 
   // Convert to plain object (for API calls)
@@ -72,7 +67,7 @@ export class Song {
     return {
       id: this.id,
       title: this.title,
-      artist: this.artist,
+      author: this.author,
       album: this.album,
       genre: this.genre,
       year: this.year,

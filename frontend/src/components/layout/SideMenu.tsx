@@ -29,7 +29,7 @@ export default function SideMenu({
     { path: "/smart-playlists", label: "Smart Playlists", icon: FiStar },
     { path: "/queue", label: "Current Queue", icon: MdOutlineQueueMusic },
     { type: "divider" },
-    { path: "/artists", label: "Artists", icon: FiUsers },
+    { path: "/authors", label: "Authors", icon: FiUsers },
     { path: "/albums", label: "Albums", icon: FiDisc },
     { type: "divider" },
     { path: "/settings", label: "Settings", icon: FiSettings },
