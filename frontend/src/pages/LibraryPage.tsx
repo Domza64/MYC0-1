@@ -65,7 +65,7 @@ export default function LibraryPage() {
   return (
     <div>
       <h1>My Library</h1>
-      <ul>
+      <ul className="space-y-2">
         {songs.map((song, index) => {
           const isLastSong = index === songs.length - 10;
 

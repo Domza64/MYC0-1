@@ -18,7 +18,7 @@ def search(query: str, page: int = 0, session: Session = Depends(get_session), s
         return []
     
     fts_query = f"{query}*"
-    limit = 10
+    limit = 15
     offset = page * limit
     
     stmt = text(f"""

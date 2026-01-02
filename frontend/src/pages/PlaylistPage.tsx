@@ -135,7 +135,7 @@ export default function PlaylistsPage() {
         </div>
       </div>
 
-      <ul className="flex flex-col">
+      <ul className="flex flex-col space-y-2">
         {songs.length > 0 &&
           songs.map((song) => (
             <SongCard

@@ -1,7 +1,7 @@
 import { RiMenu2Fill } from "react-icons/ri";
 import { useAuth } from "../../contexts/AuthContext";
 import { Link } from "react-router-dom";
-import { FiSearch } from "react-icons/fi";
+import SearchBar from "../ui/SearchBar";
 
 export default function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
   const { auth } = useAuth();
@@ -13,16 +13,7 @@ export default function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
           className="lg:hidden block text-3xl min-w-max"
           onClick={onMenuToggle}
         />
-        <div className="relative w-full max-w-3xl">
-          <div className="relative">
-            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-stone-500 text-base" />
-            <input
-              type="text"
-              placeholder="Search music..."
-              className="w-full bg-stone-950 shadow shadow-stone-950 border-stone-700 rounded-full pl-10 py-1.5 text-stone-300 placeholder-stone-500 border focus:border-2 focus:outline-none focus:border-rose-500 focus:bg-stone-800 transition-colors"
-            />
-          </div>
-        </div>
+        <SearchBar />
         <Link
           to={"profile"}
           className="flex items-center gap-3 select-none hover:cursor-pointer"

@@ -191,7 +191,7 @@ export default function FoldersPage() {
               </Button>
             </div>
           </div>
-          <ul>
+          <ul className="space-y-2">
             {songs.map((song) => (
               <SongCard
                 key={song.id}

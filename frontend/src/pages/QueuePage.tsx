@@ -50,7 +50,7 @@ export default function QueuePage() {
           )}
         </div>
       </div>
-      <ul>
+      <ul className="space-y-2">
         {player.state.queue.map((song) => (
           <SongCard
             song={song}

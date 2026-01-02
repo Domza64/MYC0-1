@@ -46,7 +46,7 @@ export default function AlbumPage() {
   return (
     <div>
       <h1>{album.title}</h1>
-      <ul>
+      <ul className="space-y-2">
         {songs.map((song: Song, index: number) => (
           <SongCard
             key={index}
