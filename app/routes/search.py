@@ -30,7 +30,7 @@ def search(query: str, page: int = 0, session: Session = Depends(get_session), s
         LIMIT {limit} OFFSET {offset}
     """)
     
-    rows = session.exec(stmt, params={"query": fts_query}).all()
-    songs = [SongRead(**r._mapping) for r in rows]
+    results = session.exec(stmt, params={"query": fts_query}).all()
+    songs = [SongRead(**song._mapping) for song in results]
     return songs
 

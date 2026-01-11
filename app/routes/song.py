@@ -6,13 +6,13 @@ from app.db.sqlite import get_session
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from app.session.session_data import SessionData
-from sqlalchemy.orm import selectinload
 
 
 router = APIRouter(prefix="/api/songs")
 SessionDep = Annotated[Session, Depends(get_session)]
 
 # TODO: Getting songs for albuims, playlists or authors should be in their respective routers, not here.
+# TODO: return list[SongRead] not list[Song]
 @router.get("", response_model=list[Song], dependencies=[Depends(cookie)])
 def get_all_songs(session: SessionDep, offset: int = 0, limit: int = 10, session_data: SessionData = Depends(verifier)) -> list[Song]:
     """
@@ -22,6 +22,7 @@ def get_all_songs(session: SessionDep, offset: int = 0, limit: int = 10, session
     return songs
 
 
+# TODO: return SongRead
 @router.get("/{song_id}", response_model=Song, dependencies=[Depends(cookie)])
 def read_song(song_id: int, session: SessionDep, session_data: SessionData = Depends(verifier)) -> Song:
     """

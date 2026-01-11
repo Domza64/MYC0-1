@@ -10,7 +10,7 @@ from app.session.session_data import SessionData
 from datetime import datetime, timezone
 
 
-router = APIRouter(prefix="/api/analytics")
+router = APIRouter(prefix="/api/telemetry")
 SessionDep = Annotated[Session, Depends(get_session)]
 
 

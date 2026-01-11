@@ -24,10 +24,8 @@ class Song(SQLModel, table=True):
     file_size: int = Field()  # in bytes
     file_format: str = Field()  # 'mp3', 'flac', etc.
     image: Optional[str] = Field(default=None)
-    play_count: int = Field(default=0, index=True)
-    last_played: Optional[str] = Field(default=None, index=True)  # ISO string
 
-
+# TODO: Document why this is here... cause CongRead needs it
 class AuthorRead(BaseModel):
     id: int
     name: str
@@ -50,5 +48,7 @@ class SongRead(BaseModel):
     file_size: int
     file_format: str
     image: Optional[str] = None
-    play_count: int
-    last_played: Optional[str] = None
+
+    model_config = {
+        "from_attributes": True
+    }

@@ -2,7 +2,7 @@ from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel
 from sqlmodel import Session, select
-from app.model.playlist import Playlist
+from app.model.playlist import Playlist, PlaylistRead
 from app.db.sqlite import get_session
 from app.model.playlist_songs import PlaylistSongs
 from app.model.song import Song
@@ -19,16 +19,6 @@ class PlaylistData(BaseModel):
     name: str
     description: Optional[str]
     shared: bool
-
-
-class PlaylistRead(BaseModel):
-    id: int
-    name: str
-    description: Optional[str]
-    shared: bool
-    user_id: int
-    playlist_image: Optional[str]
-    username: str
 
 
 @router.get("", response_model=list[PlaylistRead], dependencies=[Depends(cookie)])
