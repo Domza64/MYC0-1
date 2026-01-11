@@ -52,6 +52,8 @@ docker-compose up -d
 
 3. **Access:** `http://localhost:5000`
 
+> http://localhost:5000/docs is API reference
+
 ---
 
 ## Development

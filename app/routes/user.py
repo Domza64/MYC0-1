@@ -51,8 +51,7 @@ def create_user(user_data: UserCreate, session: SessionDep, admin_session: Sessi
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Username already exists"
         )
-
-    # print(session_data)
+    
     user = User(username=user_data.username, role=user_data.role, password=hash_password(user_data.password))
     session.add(user)
     session.commit()

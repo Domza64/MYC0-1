@@ -14,6 +14,7 @@ from app.routes.playlist import router as playlist_router
 from app.routes.author import router as author_router
 from app.routes.album import router as album_router
 from app.routes.search import router as search_router
+from app.routes.analytics import router as analytics
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
@@ -47,6 +48,7 @@ app.include_router(playlist_router)
 app.include_router(author_router)
 app.include_router(album_router)
 app.include_router(search_router)
+app.include_router(analytics)
 
 @app.on_event("startup")
 def on_startup():
