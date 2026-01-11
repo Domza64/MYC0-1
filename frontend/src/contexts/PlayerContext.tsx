@@ -107,14 +107,23 @@ const playerReducer = (
             duration: 0,
           };
     case "PREVIOUS_SONG":
+      if (state.currentTime > 4) {
+        return {
+          ...state,
+          currentTime: 0,
+        };
+      }
+
       const prevIndex = state.currentIndex - 1;
-      return prevIndex >= 0
-        ? {
-            ...state,
-            currentIndex: prevIndex,
-            currentSong: state.queue[prevIndex],
-          }
-        : state;
+      if (prevIndex >= 0) {
+        return {
+          ...state,
+          currentIndex: prevIndex,
+          currentSong: state.queue[prevIndex],
+        };
+      }
+
+      return state;
     case "RESET_MESSAGE":
       return {
         ...state,

@@ -31,6 +31,8 @@ def search(query: str, page: int = 0, session: Session = Depends(get_session), s
     """)
     
     results = session.exec(stmt, params={"query": fts_query}).all()
-    songs = [SongRead(**song._mapping) for song in results]
-    return songs
+
+    print(results)
+
+    return [SongRead.model_validate(song) for song in results]
 

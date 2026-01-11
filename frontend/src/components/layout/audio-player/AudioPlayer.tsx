@@ -15,6 +15,14 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
 
   const { currentSong, isPlaying, volume, currentTime, duration } = state;
 
+  useEffect(() => {
+    if (currentTime == 0) {
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+      }
+    }
+  }, [currentTime]);
+
   // Sync audio element with player state
   useEffect(() => {
     const audio = audioRef.current;

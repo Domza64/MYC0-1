@@ -76,26 +76,7 @@ export default function FoldersPage() {
           throw new Error("Failed to fetch songs");
         }
         const data = await response.json();
-        const songs = data.map(
-          (item: any) =>
-            new Song({
-              id: item.id,
-              title: item.title,
-              author: item.author?.name,
-              album: item.album?.title,
-              genre: item.genre,
-              year: item.year,
-              file_path: item.file_path,
-              file_name: item.file_name,
-              folder_id: item.folder_id,
-              duration: item.duration,
-              file_size: item.file_size,
-              file_format: item.file_format,
-              image: item.image,
-              play_count: item.play_count,
-              last_played: item.last_played,
-            })
-        );
+        const songs = data.map((item: any) => new Song(item));
         setSongs(songs);
       } catch (error) {
         console.error("Error fetching songs:", error);

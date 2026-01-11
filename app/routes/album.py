@@ -41,6 +41,7 @@ def get_album(album_id: int, session: Session = Depends(get_session), session_da
     
     return album
 
+
 @router.get("/{album_id}/songs", response_model=list[SongRead], dependencies=[Depends(cookie)])
 def get_songs_in_album(
         album_id: int,
@@ -54,5 +55,4 @@ def get_songs_in_album(
     if not album:
         raise HTTPException(status_code=404, detail="Album not found")
 
-    songs = album.songs
-    return songs
+    return [SongRead.model_validate(song) for song in album.songs]

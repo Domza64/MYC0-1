@@ -5,7 +5,7 @@ from sqlmodel import Session, select
 from app.model.playlist import Playlist, PlaylistRead
 from app.db.sqlite import get_session
 from app.model.playlist_songs import PlaylistSongs
-from app.model.song import Song
+from app.model.song import Song, SongRead
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from app.session.session_data import SessionData
@@ -27,6 +27,8 @@ def get_all_playlists(session: SessionDep, session_data: SessionData = Depends(v
     Get all playlists.
     """
     playlists = session.exec(select(Playlist).where((Playlist.user_id == session_data.user_id) | (Playlist.shared == True))).all()
+
+    # TODO: Return this same way as with SongRead
     return [
         PlaylistRead(
             id=pl.id,
@@ -71,8 +73,8 @@ def create_playlist(
         username=username
     )
 
-@router.get("/songs/{playlist_id}", response_model=list[Song], dependencies=[Depends(cookie)])
-def get_playlist_songs(playlist_id: int, session: SessionDep, session_data: SessionData = Depends(verifier)) -> list[Song]:
+@router.get("/songs/{playlist_id}", response_model=list[SongRead], dependencies=[Depends(cookie)])
+def get_playlist_songs(playlist_id: int, session: SessionDep, session_data: SessionData = Depends(verifier)) -> list[SongRead]:
     """
     Get all songs in a playlist.
     """
@@ -87,9 +89,9 @@ def get_playlist_songs(playlist_id: int, session: SessionDep, session_data: Sess
         select(Song)
         .join(PlaylistSongs, PlaylistSongs.song_id == Song.id)
         .where(PlaylistSongs.playlist_id == playlist_id)
-        .order_by(PlaylistSongs.position)
     ).all()
-    return songs
+    
+    return [SongRead.model_validate(song) for song in songs]
 
 
 @router.get("/{playlist_id}", response_model=PlaylistRead, dependencies=[Depends(cookie)])

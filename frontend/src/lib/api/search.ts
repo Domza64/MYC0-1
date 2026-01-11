@@ -12,6 +12,6 @@ export const searchApi = {
    */
   getSongs: (query: string, page: number = 0): Promise<Song[]> =>
     apiRequest<Song[]>(`/search?query=${query}&page=${page}`, {
-      converter: (data) => data.map((songData) => new Song(songData)),
+      converter: (data) => data.map((songData: any) => new Song(songData)),
     }),
 };

@@ -25,14 +25,24 @@ class Song(SQLModel, table=True):
     file_format: str = Field()  # 'mp3', 'flac', etc.
     image: Optional[str] = Field(default=None)
 
-# TODO: Document why this is here... cause CongRead needs it
+# AuthorRead and AlbumRead are used in SongRead and have no connection to Author and Album models
 class AuthorRead(BaseModel):
     id: int
     name: str
 
+    model_config = {
+        "from_attributes": True
+    }
+
+
 class AlbumRead(BaseModel):
     id: int
     title: str
+
+    model_config = {
+        "from_attributes": True
+    }
+
 
 class SongRead(BaseModel):
     id: int
