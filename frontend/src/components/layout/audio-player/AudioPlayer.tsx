@@ -8,6 +8,7 @@ import Time from "./Time";
 import ProgressBar from "./ProgressBar";
 import ShuffleButton from "../../ui/buttons/ShuffleButton";
 import RepeatButton from "../../ui/buttons/RepeatButton";
+import { telemetryApi } from "../../../lib/api/telemetryApi";
 
 export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
   const { state, dispatch } = usePlayer();
@@ -15,6 +16,7 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
 
   const { currentSong, isPlaying, volume, currentTime, duration } = state;
 
+  // Ensure audio resets when the user restarts a song from the beginning
   useEffect(() => {
     if (currentTime == 0) {
       if (audioRef.current) {
@@ -22,6 +24,21 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
       }
     }
   }, [currentTime]);
+
+  // Telemetry
+  useEffect(() => {
+    if (!audioRef.current || !state.currentSong) return;
+
+    // Wait 15 seconds before sending telemetry.
+    // If song is playing for less than 15 seconds telemetry won't be sent
+    const timer = setTimeout(() => {
+      telemetryApi.playSong(state.currentSong!.id);
+    }, 15000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [state.currentSong]);
 
   // Sync audio element with player state
   useEffect(() => {
