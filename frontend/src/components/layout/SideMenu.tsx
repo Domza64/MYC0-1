@@ -51,7 +51,7 @@ export default function SideMenu({
               width={120}
             />
           </h2>
-          <span className="text-xs text-stone-400">v0.0.0-dev</span>
+          <span className="text-xs text-stone-400">pre-alpha</span>
         </div>
       </div>
 

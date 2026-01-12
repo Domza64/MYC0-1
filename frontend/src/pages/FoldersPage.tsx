@@ -9,6 +9,7 @@ import { MdOutlineQueueMusic, MdPlaylistAdd } from "react-icons/md";
 import AddToPlaylistForm from "../components/ui/modals/AddToPlaylistForm";
 import { useModal } from "../contexts/ModalContext";
 import { Song } from "../types/Song";
+import { useSongMenuActions } from "../hooks/useSongMenuActions";
 
 export default function FoldersPage() {
   const [folders, setFolders] = useState<Folder[]>([]);
@@ -18,6 +19,7 @@ export default function FoldersPage() {
 
   const player = usePlayer();
   const { addModal, closeModal } = useModal();
+  const { addToPlaylist, addToQueue } = useSongMenuActions();
 
   // Update breadcrumbs when currentFolder changes
   useEffect(() => {
@@ -177,37 +179,7 @@ export default function FoldersPage() {
               <SongCard
                 key={song.id}
                 song={song}
-                onClick={() => {
-                  player.dispatch({
-                    type: "ADD_TO_QUEUE",
-                    payload: songs,
-                    replace: true,
-                  });
-                  player.dispatch({ type: "PLAY_SONG", payload: song });
-                }}
-                menuActions={[
-                  {
-                    text: "Add to Playlist",
-                    onClick() {
-                      addModal(
-                        <AddToPlaylistForm
-                          songs={[song]}
-                          onSuccess={closeModal}
-                        />
-                      );
-                    },
-                  },
-                  {
-                    text: "Add to Queue",
-                    onClick() {
-                      player.dispatch({
-                        type: "ADD_TO_QUEUE",
-                        payload: [song],
-                        showMessage: true,
-                      });
-                    },
-                  },
-                ]}
+                menuActions={[addToPlaylist(song), addToQueue(song)]}
               />
             ))}
           </ul>

@@ -97,7 +97,7 @@ export default function VerticalScrollSection({
 
         <ul
           ref={scrollContainerRef}
-          className="flex gap-6 overflow-x-auto w-full cursor-grab scrollbar-hide select-none scroll-smooth"
+          className="flex gap-6 overflow-x-auto w-full scrollbar-hide select-none scroll-smooth"
         >
           {React.Children.toArray(children).map((child, index) => (
             <li key={index}>{child}</li>

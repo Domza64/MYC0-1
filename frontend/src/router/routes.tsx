@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import SmartPlaylistsPage from "../pages/SmartPlaylistsPage";
 
 // Lazy load pages for better performance
 const Home = lazy(() => import("../pages/HomePage"));
@@ -43,6 +44,10 @@ export const routes = [
   {
     path: "/authors/:id",
     element: <AuthorPage />,
+  },
+  {
+    path: "/smart-playlists",
+    element: <SmartPlaylistsPage />,
   },
   {
     path: "/albums",

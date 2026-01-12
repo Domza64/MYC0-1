@@ -11,8 +11,8 @@ import { IoChevronBack } from "react-icons/io5";
 import type { Song } from "../types/Song";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useModal } from "../contexts/ModalContext";
-import AddToPlaylistForm from "../components/ui/modals/AddToPlaylistForm";
 import DeletePlaylistModal from "../components/ui/modals/DeletePlaylistModal";
+import { useSongMenuActions } from "../hooks/useSongMenuActions";
 
 export default function PlaylistsPage() {
   const [playlist, setPlaylist] = useState<Playlist>();
@@ -22,6 +22,7 @@ export default function PlaylistsPage() {
   const player = usePlayer();
   const { id } = useParams();
   const { addModal, closeModal } = useModal();
+  const { addToPlaylist } = useSongMenuActions();
 
   useEffect(() => {
     if (!id) return;
@@ -35,12 +36,6 @@ export default function PlaylistsPage() {
     if (!playlist) return;
     playlistsApi.getSongs(Number(id)).then(setSongs);
   }, [playlist]);
-
-  // TODO: move this to some utils file
-  const handleSongClick = (song: Song) => {
-    player.dispatch({ type: "ADD_TO_QUEUE", payload: songs, replace: true });
-    player.dispatch({ type: "PLAY_SONG", payload: song });
-  };
 
   const removeFromPlaylist = (song: Song) => {
     playlistsApi.removeSong(Number(id), song.id).then(() => {
@@ -141,10 +136,10 @@ export default function PlaylistsPage() {
             <SongCard
               key={song.id}
               song={song}
-              onClick={() => handleSongClick(song)}
               menuActions={[
                 {
                   onClick: () => {
+                    // TODO: Display modal like for creating playlists and adding songs
                     if (
                       !confirm(
                         "Are you sure you want to remove this song from the playlist?"
@@ -155,17 +150,7 @@ export default function PlaylistsPage() {
                   },
                   text: "Remove from playlist",
                 },
-                {
-                  text: "Add to Playlist",
-                  onClick() {
-                    addModal(
-                      <AddToPlaylistForm
-                        songs={[song]}
-                        onSuccess={closeModal}
-                      />
-                    );
-                  },
-                },
+                addToPlaylist(song),
               ]}
             />
           ))}

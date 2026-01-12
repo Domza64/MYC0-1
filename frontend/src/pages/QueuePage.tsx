@@ -4,11 +4,11 @@ import SongCard from "../components/ui/cards/SongCard";
 import AddToPlaylistForm from "../components/ui/modals/AddToPlaylistForm";
 import { useModal } from "../contexts/ModalContext";
 import { usePlayer } from "../contexts/PlayerContext";
-import type { Song } from "../types/Song";
-
+import { useSongMenuActions } from "../hooks/useSongMenuActions";
 export default function QueuePage() {
   const player = usePlayer();
   const { addModal, closeModal } = useModal();
+  const { addToPlaylist, removeFromQueue } = useSongMenuActions();
 
   const handleClearQueue = (): void => {
     player.dispatch({ type: "CLEAR_QUEUE" });
@@ -18,13 +18,6 @@ export default function QueuePage() {
     addModal(
       <AddToPlaylistForm songs={player.state.queue} onSuccess={closeModal} />
     );
-  };
-
-  const handleClick = (song: Song) => {
-    const index = player.state.queue.findIndex((s) => s.id === song.id);
-    if (index !== -1) {
-      player.dispatch({ type: "SET_CURRENT_INDEX", payload: index });
-    }
   };
 
   return (
@@ -54,26 +47,7 @@ export default function QueuePage() {
         {player.state.queue.map((song) => (
           <SongCard
             song={song}
-            onClick={() => {
-              handleClick(song);
-            }}
-            menuActions={[
-              {
-                text: "Remove",
-                onClick: () => {
-                  // Remove from queue
-                  alert("Remove from queue");
-                },
-              },
-              {
-                text: "Add to playlist",
-                onClick: () => {
-                  addModal(
-                    <AddToPlaylistForm songs={[song]} onSuccess={closeModal} />
-                  );
-                },
-              },
-            ]}
+            menuActions={[addToPlaylist(song), removeFromQueue(song)]}
             key={song.id}
           />
         ))}

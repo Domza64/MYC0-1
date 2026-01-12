@@ -7,18 +7,15 @@ import { playlistsApi } from "../lib/api/playlists";
 import { recommendationsApi } from "../lib/api/recommendations";
 import type { Song } from "../types/Song";
 import SongCard from "../components/ui/cards/SongCard";
-import AddToPlaylistForm from "../components/ui/modals/AddToPlaylistForm";
-import { useModal } from "../contexts/ModalContext";
-import { usePlayer } from "../contexts/PlayerContext";
 import { Link } from "react-router-dom";
+import { useSongMenuActions } from "../hooks/useSongMenuActions";
 
 export default function HomePage() {
   // TODO: Handle loading state
   const [playlists, setPlaylists] = useState<Playlist[] | null>(null);
   const [recentlyPlayed, setRecentlyPlayed] = useState<Song[] | null>(null);
 
-  const { dispatch } = usePlayer();
-  const { addModal, closeModal } = useModal();
+  const { addToPlaylist, addToQueue } = useSongMenuActions();
 
   const { auth } = useAuth();
 
@@ -57,35 +54,14 @@ export default function HomePage() {
         )}
       </VerticalScrollSection>
 
-      <VerticalScrollSection title="Recently played">
+      <VerticalScrollSection title="Recently played songs ">
         {recentlyPlayed ? (
           recentlyPlayed.map((song) => (
             <SongCard
               song={song}
               key={song.id}
               square={true}
-              menuActions={[
-                {
-                  onClick: () =>
-                    addModal(
-                      <AddToPlaylistForm
-                        songs={[song]}
-                        onSuccess={closeModal}
-                      />
-                    ),
-                  text: "Add to playlist",
-                },
-                {
-                  onClick: () => {
-                    dispatch({
-                      type: "ADD_TO_QUEUE",
-                      payload: [song],
-                      showMessage: true,
-                    });
-                  },
-                  text: "Add to queue",
-                },
-              ]}
+              menuActions={[addToPlaylist(song), addToQueue(song)]}
             />
           ))
         ) : (

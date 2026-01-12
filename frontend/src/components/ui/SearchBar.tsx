@@ -2,11 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import type { Song } from "../../types/Song";
 import SongCard from "./cards/SongCard";
-import { usePlayer } from "../../contexts/PlayerContext";
-import { useModal } from "../../contexts/ModalContext";
-import AddToPlaylistForm from "./modals/AddToPlaylistForm";
 import { searchApi } from "../../lib/api/search";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useSongMenuActions } from "../../hooks/useSongMenuActions";
 
 export default function SearchBar() {
   const [results, setResults] = useState<Song[]>([]);
@@ -14,8 +12,7 @@ export default function SearchBar() {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
 
-  const { dispatch } = usePlayer();
-  const { addModal, closeModal } = useModal();
+  const { addToPlaylist, addToQueue } = useSongMenuActions();
 
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -40,12 +37,6 @@ export default function SearchBar() {
     // Cleanup: cancel previous request
     return () => clearTimeout(timeoutId);
   }, [search]);
-
-  // TODO: move this to some utils file
-  const handleSongClick = (song: Song) => {
-    dispatch({ type: "ADD_TO_QUEUE", payload: [song], replace: true });
-    dispatch({ type: "PLAY_SONG", payload: song });
-  };
 
   // TODO: Extract this into reusable hook
   useEffect(() => {
@@ -89,29 +80,7 @@ export default function SearchBar() {
                 <SongCard
                   song={song}
                   key={index}
-                  onClick={() => handleSongClick(song)}
-                  menuActions={[
-                    {
-                      onClick: () =>
-                        addModal(
-                          <AddToPlaylistForm
-                            songs={[song]}
-                            onSuccess={closeModal}
-                          />
-                        ),
-                      text: "Add to playlist",
-                    },
-                    {
-                      onClick: () => {
-                        dispatch({
-                          type: "ADD_TO_QUEUE",
-                          payload: [song],
-                          showMessage: true,
-                        });
-                      },
-                      text: "Add to queue",
-                    },
-                  ]}
+                  menuActions={[addToPlaylist(song), addToQueue(song)]}
                 />
               ))}
             </div>

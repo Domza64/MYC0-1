@@ -40,25 +40,23 @@ export interface MenuAction {
  *   song={song}
  *   onClick={() => playSong(song)}
  *   menuActions={[
- *     { text: "Add to Favorites", onClick: () => addToFavorites(song) },
- *     { text: "Remove", onClick: () => removeSong(song.id) },
- *   ]}
+      addToPlaylist(song), // import from useSongMenuActions or create custom action
+      addToQueue(song)
+     ]}
  * />
  */
 
-// TODO: Add default onClick handler and menuActions that interact with the player context.
 export default function SongCard({
   song,
-  onClick,
   menuActions,
   square = false,
 }: {
   song: Song;
-  onClick?: () => void;
   menuActions?: MenuAction[];
   square?: boolean;
 }) {
   const [showMenu, setShowMenu] = useState(false);
+  const { dispatch } = usePlayer();
   const player = usePlayer();
 
   useEffect(() => {
@@ -78,7 +76,10 @@ export default function SongCard({
   const active = player.state.currentSong?.id === song.id;
   if (square) {
     return (
-      <div className="bg-stone-900/75 hover:bg-stone-900 transition-colors flex flex-col select-none rounded-lg overflow-hidden relative aspect-square w-full h-full max-w-[200px]">
+      <div
+        onClick={() => dispatch({ type: "PLAY_SONG", payload: song })}
+        className="bg-stone-900/75 hover:bg-stone-900 transition-colors flex flex-col select-none rounded-lg overflow-hidden relative aspect-square w-full h-full max-w-[200px]"
+      >
         <div className="relative flex-1 w-full">
           <div className="absolute inset-0 bg-stone-800 flex justify-center items-center">
             {song.image ? (
@@ -95,7 +96,6 @@ export default function SongCard({
 
         <div className="p-2 flex flex-col gap-1">
           <span
-            onClick={onClick}
             className={`${
               active ? "text-rose-500" : "text-stone-300"
             } font-semibold text-sm truncate`}
@@ -153,7 +153,7 @@ export default function SongCard({
         )}
       </div>
       <span
-        onClick={onClick}
+        onClick={() => dispatch({ type: "PLAY_SONG", payload: song })}
         className={`${
           active ? "font-semibold text-rose-500" : "text-stone-300"
         } w-full p-2 truncate`}

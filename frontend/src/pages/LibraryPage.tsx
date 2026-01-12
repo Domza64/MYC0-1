@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import SongCard from "../components/ui/cards/SongCard";
-import { usePlayer } from "../contexts/PlayerContext";
 import { useInView } from "react-intersection-observer";
-import { useModal } from "../contexts/ModalContext";
-import AddToPlaylistForm from "../components/ui/modals/AddToPlaylistForm";
+import { useSongMenuActions } from "../hooks/useSongMenuActions";
 import { Song } from "../types/Song";
 
 const LIMIT = 30;
@@ -17,8 +15,7 @@ export default function LibraryPage() {
   const hasFetchedInitial = useRef(false);
   const { ref, inView } = useInView();
 
-  const { dispatch } = usePlayer();
-  const { addModal, closeModal } = useModal();
+  const { addToPlaylist, addToQueue } = useSongMenuActions();
 
   const fetchSongs = async () => {
     setIsLoading(true);
@@ -57,11 +54,6 @@ export default function LibraryPage() {
     }
   }, [inView]);
 
-  const handleSongClick = (song: Song) => {
-    dispatch({ type: "ADD_TO_QUEUE", payload: [song], replace: true });
-    dispatch({ type: "PLAY_SONG", payload: song });
-  };
-
   return (
     <div>
       <h1>My Library</h1>
@@ -73,29 +65,7 @@ export default function LibraryPage() {
             <div key={song.id} ref={isLastSong ? ref : null}>
               <SongCard
                 song={song}
-                onClick={() => handleSongClick(song)}
-                menuActions={[
-                  {
-                    onClick: () =>
-                      addModal(
-                        <AddToPlaylistForm
-                          songs={[song]}
-                          onSuccess={closeModal}
-                        />
-                      ),
-                    text: "Add to playlist",
-                  },
-                  {
-                    onClick: () => {
-                      dispatch({
-                        type: "ADD_TO_QUEUE",
-                        payload: [song],
-                        showMessage: true,
-                      });
-                    },
-                    text: "Add to queue",
-                  },
-                ]}
+                menuActions={[addToPlaylist(song), addToQueue(song)]}
               />
             </div>
           );

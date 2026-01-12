@@ -40,8 +40,11 @@ const playerReducer = (
         (song) => song.id === action.payload.id
       );
       if (songIndex === -1) {
-        toast.error("Song not in queue found");
-        return state;
+        return {
+          ...state,
+          currentSong: action.payload,
+          isPlaying: true,
+        };
       }
       return {
         ...state,
