@@ -51,7 +51,7 @@ export default function AlbumPage() {
             onClick={() => navigate(-1)}
           />
           <div>
-            <h1 className="text-xl">{album.title}</h1>
+            <h1>{album.title}</h1>
             <Link
               to={"/authors/" + album.author.id}
               className="text-md text-stone-400 hover:text-white transition-colors duration-300"

@@ -76,67 +76,69 @@ export default function SongCard({
   const active = player.state.currentSong?.id === song.id;
   if (square) {
     return (
-      <div
-        onClick={() => dispatch({ type: "PLAY_SONG", payload: song })}
-        className="bg-stone-900/75 hover:bg-stone-900 transition-colors flex flex-col select-none rounded-lg overflow-hidden relative aspect-square w-full h-full max-w-[200px]"
-      >
-        <div className="relative flex-1 w-full">
-          <div className="absolute inset-0 bg-stone-800 flex justify-center items-center">
-            {song.image ? (
-              <img
-                src={"/images/" + song.image}
-                alt={song.displayName}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <FaItunesNote className="w-12 h-12 text-stone-400" />
-            )}
-          </div>
-        </div>
-
-        <div className="p-2 flex flex-col gap-1">
-          <span
-            className={`${
-              active ? "text-rose-500" : "text-stone-300"
-            } font-semibold text-sm truncate`}
-          >
-            {song.displayName}
-          </span>
-          {song.author?.name && (
-            <span className="text-stone-400 text-xs truncate">
-              {song.author.name}
-            </span>
-          )}
-        </div>
-
-        <div className="absolute top-2 right-1">
-          <HiOutlineDotsVertical
-            id={song.id.toString()}
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowMenu((prev) => !prev);
-            }}
-            className="w-6 h-6 cursor-pointer text-stone-400 hover:text-white p-1"
-          />
-          {showMenu && (
-            <div className="absolute right-0 top-6 bg-stone-800 rounded mt-1 z-10 min-w-[120px] shadow-lg">
-              <ul>
-                {menuActions?.map((action) => (
-                  <li
-                    key={action.text}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      action.onClick();
-                      setShowMenu(false);
-                    }}
-                    className="cursor-pointer hover:bg-stone-900 px-3 py-2 text-sm"
-                  >
-                    {action.text}
-                  </li>
-                ))}
-              </ul>
+      <div className="flex flex-col w-full">
+        <div
+          onClick={() => dispatch({ type: "PLAY_SONG", payload: song })}
+          className="w-full aspect-square rounded-2xl overflow-hidden bg-stone-900/75 hover:bg-stone-900 transition-colors cursor-pointer select-none"
+        >
+          {song.image ? (
+            <img
+              src={"/images/" + song.image}
+              alt={song.displayName}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex justify-center items-center bg-stone-800 text-stone-400">
+              <FaItunesNote className="text-4xl" />
             </div>
           )}
+        </div>
+
+        <div className="flex items-start justify-between gap-2 pt-1">
+          <div className="flex flex-col min-w-0 flex-1">
+            <span
+              className={`pl-0.5 w-full truncate ${
+                active ? "text-rose-500" : "text-stone-300"
+              }`}
+            >
+              {song.displayName}
+            </span>
+            {song.author?.name && (
+              <span className="pl-0.5 text-sm text-stone-400 truncate">
+                {song.author.name}
+              </span>
+            )}
+          </div>
+
+          <div className="relative shrink-0 my-auto">
+            <HiOutlineDotsVertical
+              id={song.id.toString()}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowMenu((prev) => !prev);
+              }}
+              className="w-7 h-7 cursor-pointer text-stone-400 hover:text-white p-1"
+            />
+            {showMenu && (
+              <div className="absolute right-0 bottom-8 bg-stone-800 rounded mt-1 z-10 min-w-[120px] shadow-lg">
+                <ul>
+                  {menuActions?.map((action) => (
+                    <li
+                      key={action.text}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        action.onClick();
+                        setShowMenu(false);
+                      }}
+                      className="cursor-pointer hover:bg-stone-900 px-3 py-2 text-sm"
+                    >
+                      {action.text}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );

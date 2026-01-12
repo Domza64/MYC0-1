@@ -7,7 +7,7 @@ export default function PlaylistCard({ playlist }: { playlist: Playlist }) {
     <Link
       to={`/playlists/${playlist.id}`}
       key={playlist.id}
-      className="group flex flex-col items-center"
+      className="group flex flex-col items-start w-40"
     >
       <div className="w-40 h-40 rounded-2xl overflow-hidden">
         {playlist.playlist_image ? (
@@ -23,7 +23,10 @@ export default function PlaylistCard({ playlist }: { playlist: Playlist }) {
           </div>
         )}
       </div>
-      <p className="pt-2 w-full">{playlist.name}</p>
+      <p className="pt-2 w-40 truncate">{playlist.name}</p>
+      <span className="truncate w-40 text-sm text-stone-400">
+        {playlist.description}
+      </span>
     </Link>
   );
 }

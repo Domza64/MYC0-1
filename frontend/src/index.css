@@ -13,9 +13,9 @@ body {
 }
 
 h1 {
-  @apply text-2xl;
+  @apply text-2xl font-medium;
 }
 
 h2 {
-  @apply text-lg m-0;
+  @apply text-xl m-0;
 }

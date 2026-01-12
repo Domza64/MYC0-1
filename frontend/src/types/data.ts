@@ -23,6 +23,7 @@ export interface Playlist {
 export interface Author {
   id: number;
   name: string;
+  image?: string;
 }
 
 export interface Album {

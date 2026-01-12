@@ -22,7 +22,11 @@ export class Song {
     this._title = data.title || data.file_name || "Unknown Title";
     // TODO: Backend should ensure author and album are always present, same unknown album and authro for all songs that don't have them
     this.author = data.author || { id: 0, name: "Unknown Author" };
-    this.album = data.album || { id: 0, title: "Unknown Album", author_id: -1 };
+    this.album = data.album || {
+      id: 0,
+      title: "Unknown Album",
+      author: { id: -1, name: "Unknown Author" },
+    };
     this.genre = data.genre ?? null;
     this.year = data.year ?? null;
     this.file_path = data.file_path ?? "";
