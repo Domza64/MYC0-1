@@ -185,7 +185,7 @@ const playerReducer = (
 const initialState: PlayerState = {
   currentSong: null,
   isPlaying: false,
-  volume: 0.7,
+  volume: 1.0,
   currentTime: 0,
   duration: 0,
   queue: [],

@@ -1,15 +1,13 @@
-import { useState } from "react";
 import { usePlayer } from "../../../contexts/PlayerContext";
 import { FaVolumeUp, FaVolumeMute, FaVolumeDown } from "react-icons/fa";
 
 export default function VolumeControll() {
-  const [volumeOpen, setVolumeOpen] = useState(false);
   const { dispatch, state } = usePlayer();
 
   const { volume } = state;
 
   const toggleMute = () => {
-    dispatch({ type: "SET_VOLUME", payload: volume > 0 ? 0 : 0.7 });
+    dispatch({ type: "SET_VOLUME", payload: volume > 0 ? 0 : 1.0 });
   };
 
   const getVolumeIcon = () => {
@@ -28,34 +26,39 @@ export default function VolumeControll() {
   };
 
   return (
-    <div className="relative">
+    <div className="hidden lg:flex">
       <button
-        onClick={toggleMute}
-        onMouseEnter={() => setVolumeOpen(true)}
-        onMouseLeave={() => setVolumeOpen(false)}
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleMute();
+        }}
         className="text-stone-400 hover:text-white p-2 transition-colors"
         title="Volume"
       >
         {getVolumeIcon()}
       </button>
 
-      {volumeOpen && (
-        <div
-          className="absolute bottom-full mb-2 right-0 bg-stone-700 rounded-lg p-4 shadow-xl"
-          onMouseEnter={() => setVolumeOpen(true)}
-          onMouseLeave={() => setVolumeOpen(false)}
-        >
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={volume}
-            onChange={handleVolumeChange}
-            className="w-24 h-1 bg-stone-600 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
-          />
-        </div>
-      )}
+      <div>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={volume}
+          onPointerDown={(e) => e.stopPropagation()}
+          onPointerUp={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+          onChange={handleVolumeChange}
+          className="w-24 h-1 bg-stone-600 rounded-lg appearance-none cursor-pointer
+          [&::-webkit-slider-thumb]:appearance-none
+          [&::-webkit-slider-thumb]:h-2
+          [&::-webkit-slider-thumb]:w-2
+          [&::-webkit-slider-thumb]:rounded-full
+        [&::-webkit-slider-thumb]:bg-stone-400
+          hover:[&::-webkit-slider-thumb]:scale-115
+          hover:[&::-webkit-slider-thumb]:bg-white"
+        />
+      </div>
     </div>
   );
 }
