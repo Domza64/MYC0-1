@@ -2,6 +2,7 @@ import { RiMenu2Fill } from "react-icons/ri";
 import { useAuth } from "../../contexts/AuthContext";
 import { Link } from "react-router-dom";
 import SearchBar from "../ui/SearchBar";
+import { FaUser } from "react-icons/fa6";
 
 export default function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
   const { auth } = useAuth();
@@ -20,7 +21,8 @@ export default function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
         >
           <span className="hidden lg:block font-semibold">{auth.username}</span>
           <div className="rounded-full bg-rose-600 w-8 h-8 flex justify-center items-center font-semibold">
-            <img src="pfp.png" alt={auth?.username?.charAt(0)} />
+            <FaUser className="text-black" />
+            {/* <img src={auth.picure} alt={auth?.username?.charAt(0)} /> */}
           </div>
         </Link>
       </div>
