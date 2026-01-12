@@ -7,14 +7,14 @@ export default function PlaylistCard({ playlist }: { playlist: Playlist }) {
     <Link
       to={`/playlists/${playlist.id}`}
       key={playlist.id}
-      className="group flex flex-col items-center backdrop-blur-md transition-all duration-300"
+      className="group flex flex-col items-center"
     >
       <div className="w-40 h-40 rounded-2xl overflow-hidden">
         {playlist.playlist_image ? (
           <img
             src={"images/" + playlist.playlist_image}
             alt={playlist.name}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="w-full h-full object-cover"
             draggable={false}
           />
         ) : (

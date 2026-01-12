@@ -72,7 +72,7 @@ export default function VerticalScrollSection({
   // This component works when it's full screen width, but on desktop,
   // it's not because of side navbar that's always open
   return (
-    <section className="lg:max-w-2xl xl:max-w-4xl 2xl:max-w-6xl">
+    <div className="lg:max-w-2xl xl:max-w-4xl 2xl:max-w-6xl">
       {title && (
         <h2 className="text-xl font-semibold text-stone-300">{title}</h2>
       )}
@@ -104,6 +104,6 @@ export default function VerticalScrollSection({
           ))}
         </ul>
       </div>
-    </section>
+    </div>
   );
 }

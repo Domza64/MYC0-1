@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Album } from "../types/data";
 import { albumsApi } from "../lib/api/albums";
-import { Link } from "react-router-dom";
+import AlbumCard from "../components/ui/cards/AlbumCard";
 
 export default function AlbumsPage() {
   const [albums, setAlbums] = useState<Album[]>([]);
@@ -11,14 +11,12 @@ export default function AlbumsPage() {
   }, []);
 
   return (
-    <div>
-      <h1>Albums</h1>
-      <ul>
+    <div className="max-w-400">
+      <h1 className="mb-4">My Albums</h1>
+      <ul className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
         {albums.map((album, index) => (
-          <li className="my-2 bg-stone-800 rounded-lg px-4 py-2" key={index}>
-            <Link to={`/albums/${album.id}`}>
-              <span>{album.title}</span>
-            </Link>
+          <li key={index} className="max-w-[420px] w-full justify-self-start">
+            <AlbumCard album={album} />
           </li>
         ))}
       </ul>

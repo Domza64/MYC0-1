@@ -1,7 +1,7 @@
 from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
-from app.model.album import Album
+from app.model.album import Album, AlbumRead
 from app.db.sqlite import get_session
 from app.model.song import SongRead
 from app.session.cookie import cookie
@@ -13,12 +13,12 @@ router = APIRouter(prefix="/api/albums")
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
-@router.get("", response_model=list[Album], dependencies=[Depends(cookie)])
+@router.get("", response_model=list[AlbumRead], dependencies=[Depends(cookie)])
 def get_all_albums(
         author_id: Optional[int] = Query(None, description="Filter albums by author ID"),
         session: Session = Depends(get_session), 
         session_data: SessionData = Depends(verifier)
-    ) -> list[Album]:
+    ) -> list[AlbumRead]:
     """
     Get all albums. Optionally filter by author_id.
     """
@@ -27,11 +27,11 @@ def get_all_albums(
         statment = statment.where(Album.author_id == author_id)
 
     albums = session.exec(statment).all()
-    return albums
+    return [AlbumRead.model_validate(album) for album in albums]
 
 
-@router.get("/{album_id}", response_model=Album, dependencies=[Depends(cookie)])
-def get_album(album_id: int, session: Session = Depends(get_session), session_data: SessionData = Depends(verifier)) -> Album:
+@router.get("/{album_id}", response_model=AlbumRead, dependencies=[Depends(cookie)])
+def get_album(album_id: int, session: Session = Depends(get_session), session_data: SessionData = Depends(verifier)) -> AlbumRead:
     """
     Get an album by ID.
     """
@@ -39,7 +39,7 @@ def get_album(album_id: int, session: Session = Depends(get_session), session_da
     if not album:
         raise HTTPException(status_code=404, detail="Album not found")
     
-    return album
+    return AlbumRead.model_validate(album)
 
 
 @router.get("/{album_id}/songs", response_model=list[SongRead], dependencies=[Depends(cookie)])
