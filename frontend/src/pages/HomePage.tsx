@@ -27,16 +27,10 @@ export default function HomePage() {
   return (
     <div className="flex flex-col gap-6">
       <section>
-        <h1 className="text-3xl! font-normal!">
+        <h1 className="font-normal!">
           Hello <span className="font-semibold">{auth.username}</span>
         </h1>
       </section>
-      <VerticalScrollSection title="Recommended for today">
-        <p>
-          List of custom servermade playlists.{" "}
-          <span className="text-s text-stone-400">soon</span>
-        </p>
-      </VerticalScrollSection>
 
       <VerticalScrollSection title="Your playlists">
         {playlists ? (
@@ -67,6 +61,13 @@ export default function HomePage() {
         ) : (
           <span>Loading...</span>
         )}
+      </VerticalScrollSection>
+
+      <VerticalScrollSection title="Recommended for today">
+        <p>
+          List of custom servermade playlists.{" "}
+          <span className="text-s text-stone-400">soon</span>
+        </p>
       </VerticalScrollSection>
 
       <VerticalScrollSection title="Most listened artists">

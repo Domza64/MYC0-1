@@ -110,6 +110,11 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
     }
   };
 
+  const secretText = (): boolean => {
+    console.log(Math.random());
+    return Math.random() > 0.02; // 2% chance
+  };
+
   // Media Session API for Mobile/Desktop notifications
   useEffect(() => {
     if (!currentSong || !("mediaSession" in navigator)) return;
@@ -153,7 +158,7 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
         className="flex items-center justify-center text-stone-400"
       >
         <FaMusic className="w-4 h-4 mr-2" />
-        <p>No song selected</p>
+        <p>{secretText() ? "No music playing" : "It's quiet here..."}</p>
       </div>
     );
   }

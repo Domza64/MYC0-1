@@ -163,6 +163,10 @@ const playerReducer = (
     case "CLEAR_QUEUE":
       return {
         ...state,
+        currentSong: null,
+        isPlaying: false,
+        currentTime: 0,
+        duration: 0,
         queue: [],
         currentIndex: 0,
       };

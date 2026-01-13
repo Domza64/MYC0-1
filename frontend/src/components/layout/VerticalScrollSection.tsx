@@ -73,8 +73,8 @@ export default function VerticalScrollSection({
   // it's not because of side navbar that's always open
   return (
     <div className="lg:max-w-2xl xl:max-w-4xl 2xl:max-w-6xl">
-      {title && <h2 className="text-xl font-medium text-stone-300">{title}</h2>}
-      <div className="mt-4 relative">
+      {title && <h2 className="text-stone-300">{title}</h2>}
+      <div className="mt-3 relative">
         {isOverflowing && showLeftButton && (
           <div
             className="absolute z-10 bg-gray-950 rounded-full p-2 text-stone-300 top-1/2 -translate-y-1/2"
@@ -95,7 +95,7 @@ export default function VerticalScrollSection({
 
         <ul
           ref={scrollContainerRef}
-          className="flex gap-6 overflow-x-auto w-full scrollbar-hide select-none scroll-smooth"
+          className="flex gap-4 overflow-x-auto w-full scrollbar-hide select-none scroll-smooth"
         >
           {React.Children.toArray(children).map((child, index) => (
             <li key={index} className="max-w-60">
