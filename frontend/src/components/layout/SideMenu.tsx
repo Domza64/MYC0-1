@@ -23,7 +23,7 @@ export default function SideMenu({
   const menuItems = [
     { path: "/", label: "Home", icon: FiHome },
     { path: "/playlists", label: "My Playlists", icon: FiMusic },
-    { path: "library", label: "My Library", icon: FiBook },
+    { path: "/library", label: "My Library", icon: FiBook },
     { path: "/folders", label: "My Folders", icon: FiFolder },
     { type: "divider" },
     { path: "/smart-playlists", label: "Smart Playlists", icon: FiStar },
