@@ -58,8 +58,24 @@ const playerReducer = (
         isPlaying: action.payload,
       };
     case "TOGGLE_SHUFFLE":
+      // Is this the most efficient way to do this?
+      let new_queue = state.queue;
+      let unsuhffledQueue = state.unsuhffledQueue;
+      if (!state.shuffle) {
+        unsuhffledQueue = state.queue;
+        new_queue = [...state.queue];
+        // At some point in future, give sort priority to some songs. eg. songs with least plays.
+        new_queue.sort(function (_, __) {
+          return Math.random() - 0.5;
+        });
+      } else {
+        new_queue = unsuhffledQueue;
+        unsuhffledQueue = [];
+      }
       return {
         ...state,
+        queue: new_queue,
+        unsuhffledQueue,
         shuffle: !state.shuffle,
       };
     case "TOGGLE_REPEAT":
@@ -195,11 +211,12 @@ const initialState: PlayerState = {
   volume: 1.0,
   currentTime: 0,
   duration: 0,
-  queue: [],
   currentIndex: 0,
   message: null,
   shuffle: false,
   repeat: false,
+  unsuhffledQueue: [],
+  queue: [],
 };
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {

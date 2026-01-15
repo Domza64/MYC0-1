@@ -27,7 +27,9 @@ export default function Library() {
     }
   };
   return (
-    <div>
+    <div className="space-y-2">
+      <h2>Scan Library</h2>
+      <p>Click the button below to start scaning your music library.</p>
       <Button onClick={scanLibrary} disabled={isScanning}>
         <span>{isScanning ? "Scanning..." : "Scan Library"}</span>
       </Button>
