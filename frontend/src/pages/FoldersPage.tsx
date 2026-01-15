@@ -10,7 +10,9 @@ import AddToPlaylistForm from "../components/ui/modals/AddToPlaylistForm";
 import { useModal } from "../contexts/ModalContext";
 import { Song } from "../types/Song";
 import { useSongMenuActions } from "../hooks/useSongMenuActions";
+import { songsApi } from "../lib/api/songs";
 
+// TODO: Does this need both folders and breadcrumns states? also put all updates in one useEffect
 export default function FoldersPage() {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [currentFolder, setCurrentFolder] = useState<Folder | null>(null);
@@ -21,7 +23,28 @@ export default function FoldersPage() {
   const { addModal, closeModal } = useModal();
   const { addToPlaylist, addToQueue } = useSongMenuActions();
 
-  // Update breadcrumbs when currentFolder changes
+  const handleBreadcrumbClick = (folder: Folder | null) => {
+    setCurrentFolder(folder);
+  };
+
+  const handleFolderClick = (folder: Folder) => {
+    setCurrentFolder(folder);
+  };
+
+  useEffect(() => {
+    setSongs([]);
+    setFolders([]);
+
+    songsApi.getFolders(currentFolder?.id).then((folders) => {
+      folders.sort((a, b) => a.name.localeCompare(b.name));
+      setFolders(folders);
+    });
+
+    if (currentFolder !== null) {
+      songsApi.getByFolder(currentFolder.id).then(setSongs);
+    }
+  }, [currentFolder]);
+
   useEffect(() => {
     if (!currentFolder) {
       setBreadcrumbs([]);
@@ -37,56 +60,6 @@ export default function FoldersPage() {
     } else {
       setBreadcrumbs((prev) => prev.slice(0, currentIndex + 1));
     }
-  }, [currentFolder]);
-
-  const handleBreadcrumbClick = (folder: Folder | null) => {
-    setCurrentFolder(folder);
-  };
-
-  const handleFolderClick = (folder: Folder) => {
-    setCurrentFolder(folder);
-  };
-
-  // Update data when currentFolder changes
-  useEffect(() => {
-    const fetchFolders = async () => {
-      try {
-        const response = await fetch(
-          currentFolder?.id
-            ? `/api/folders/${currentFolder.id}`
-            : "/api/folders/"
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch folders");
-        }
-        const data: Folder[] = await response.json();
-        data.sort((a, b) => a.name.localeCompare(b.name));
-        setFolders(data);
-      } catch (error) {
-        console.error("Error fetching folders:", error);
-      }
-    };
-
-    const fetchSongs = async () => {
-      try {
-        if (!currentFolder) {
-          setSongs([]);
-          return;
-        }
-        const response = await fetch(`/api/songs/folder/${currentFolder.id}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch songs");
-        }
-        const data = await response.json();
-        const songs = data.map((item: any) => new Song(item));
-        setSongs(songs);
-      } catch (error) {
-        console.error("Error fetching songs:", error);
-      }
-    };
-
-    fetchFolders();
-    fetchSongs();
   }, [currentFolder]);
 
   const handleCreatePlaylist = (): void => {

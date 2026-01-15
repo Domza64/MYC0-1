@@ -10,6 +10,7 @@ export default function Library() {
     setIsScanning(true);
     setError(null);
 
+    // Replace with web sockets in future for realtime progress updates...
     try {
       const response = await fetch("/api/scan-library", {
         method: "POST",

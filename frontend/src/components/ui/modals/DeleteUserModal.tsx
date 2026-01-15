@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Button from "../buttons/Button";
 import type { User } from "../../../types/user";
-import toast from "react-hot-toast";
+import { usersApi } from "../../../lib/api/users";
 
 interface DeleteUserModalProps {
   user: User;
@@ -19,28 +19,14 @@ export default function DeleteUserModal({
   const handleDelete = async () => {
     setDeleting(true);
 
-    try {
-      const response = await fetch(`/api/users/${user.id}`, {
-        method: "DELETE",
+    usersApi
+      .deleteUser(user.id)
+      .then(() => {
+        onSuccess();
+      })
+      .finally(() => {
+        setDeleting(false);
       });
-
-      if (!response.ok) {
-        let errorData;
-        const raw = await response.text();
-
-        try {
-          errorData = JSON.parse(raw);
-        } catch {
-          errorData = raw;
-        }
-        throw new Error(errorData || "Failed to delete user");
-      }
-
-      onSuccess();
-    } catch (err: any) {
-      toast.error(err.message || "Failed to delete user");
-      console.error("Error deleting user:", err);
-    }
   };
 
   return (

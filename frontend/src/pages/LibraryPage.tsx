@@ -3,6 +3,7 @@ import SongCard from "../components/ui/cards/SongCard";
 import { useInView } from "react-intersection-observer";
 import { useSongMenuActions } from "../hooks/useSongMenuActions";
 import { Song } from "../types/Song";
+import { songsApi } from "../lib/api/songs";
 
 const LIMIT = 30;
 
@@ -19,26 +20,19 @@ export default function LibraryPage() {
 
   const fetchSongs = async () => {
     setIsLoading(true);
-    try {
-      const response = await fetch(
-        "api/songs?offset=" + offset + "&limit=" + LIMIT
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch songs");
-      }
-      const data = await response.json();
-      const songs = data.map((item: any) => new Song(item));
-      if (songs.length === 0) {
-        setLoadedAll(true);
-        return;
-      }
-      setSongs((prevSongs) => [...prevSongs, ...songs]);
-      setOffset((prevOffset) => prevOffset + LIMIT);
-    } catch (error) {
-      console.error("Error fetching songs:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    songsApi
+      .getSongs(offset, LIMIT)
+      .then((data) => {
+        if (data.length === 0) {
+          setLoadedAll(true);
+          return;
+        }
+        setSongs((prevSongs) => [...prevSongs, ...data]);
+        setOffset((prevOffset) => prevOffset + LIMIT);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {

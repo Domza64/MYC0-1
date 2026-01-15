@@ -1,12 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-
-interface AuthState {
-  username: string | null;
-  role: string | null;
-}
+import { authApi } from "../lib/api/auth";
+import type { User } from "../types/user";
 
 interface AuthContextType {
-  auth: AuthState;
+  auth: User | null;
   login: (username: string, password: string) => Promise<void>;
   getAuth: () => Promise<void>;
   logout: () => void;
@@ -15,15 +12,10 @@ interface AuthContextType {
   clearError: () => void;
 }
 
-const initialState: AuthState = {
-  username: null,
-  role: null,
-};
-
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [auth, setAuth] = useState<AuthState>(initialState);
+  const [auth, setAuth] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,59 +35,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (username: string, password: string): Promise<void> => {
     setLoading(true);
     setError(null);
-    try {
-      const response = await fetch(`/api/auth/login`, {
-        method: "POST",
-        body: JSON.stringify({ username, password }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
 
-      if (response.ok) {
-        const data = await response.json();
-        setAuth({ username: data.username, role: data.role });
+    authApi
+      .login(username, password)
+      .then((data) => {
+        setAuth(data);
         setError(null);
-      } else {
-        const errorData = await response
-          .json()
-          .catch(() => ({ message: "Login failed" }));
-        throw new Error(
-          errorData.error || errorData.message || "Failed to create session"
-        );
-      }
-    } catch (error) {
-      console.error("Error creating session:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "Login failed";
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
+      })
+      .catch((err) => {
+        setError(err.message);
+        setAuth(null);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const getAuth = async (): Promise<void> => {
-    try {
-      const response = await fetch("/api/auth/whoami");
-      if (response.ok) {
-        const data = await response.json();
-        setAuth({ username: data.username, role: data.role });
-      } else {
-        setAuth({ username: null, role: null });
-      }
-    } catch (error) {
-      console.error("Error fetching user info:", error);
-      setAuth({ username: null, role: null });
-    }
+    authApi
+      .getUserData()
+      .then((data) => {
+        setAuth(data);
+      })
+      .catch(() => {
+        setAuth(null);
+      });
   };
 
   const logout = (): void => {
-    setAuth({ username: null, role: null });
-    try {
-      fetch("/api/auth/logout", { method: "POST" });
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
+    authApi.logout().then(() => {
+      setAuth(null);
+    });
   };
 
   return (

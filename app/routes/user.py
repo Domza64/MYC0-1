@@ -56,7 +56,8 @@ def create_user(user_data: UserCreate, session: SessionDep, admin_session: Sessi
     session.add(user)
     session.commit()
     session.refresh(user)
-    return JSONResponse(status_code=200, content={"message": "User created successfully"})
+    # TODO: Return some UserRead object
+    return JSONResponse(status_code=200, content=user.model_dump(exclude={"password"}))
 
 @router.put("/{user_id}", response_model=User, dependencies=[Depends(cookie)])
 def update_user(user_id: str, user_data: UserUpdate, session: SessionDep, admin_session: SessionData = Depends(require_admin)):
@@ -90,13 +91,15 @@ def update_user(user_id: str, user_data: UserUpdate, session: SessionDep, admin_
 
     session.commit()
     session.refresh(user)
-    return JSONResponse(status_code=200, content={"message": "User updated successfully"})
+    # TODO: Return some UserRead object
+    return JSONResponse(status_code=200, content=user.model_dump(exclude={"password"}))
 
 @router.delete("/{user_id}", dependencies=[Depends(cookie)])
-def delete_user(user_id: str, session: SessionDep, admin_session: SessionData = Depends(require_admin)):
+def delete_user(user_id: int, session: SessionDep, admin_session: SessionData = Depends(require_admin)):
     """
     Delete a user by id.
     """
+    print("USERID: ", user_id)
     if user_id == admin_session.user_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -112,4 +115,4 @@ def delete_user(user_id: str, session: SessionDep, admin_session: SessionData = 
     
     session.delete(user)
     session.commit()
-    return JSONResponse(status_code=200, content={"message": "User deleted successfully"})
+    return JSONResponse(status_code=200, content={"detail": "User deleted successfully"})

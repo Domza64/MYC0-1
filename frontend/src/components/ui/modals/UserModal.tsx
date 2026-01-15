@@ -20,11 +20,16 @@
 
 import { useEffect, useState } from "react";
 import Button from "../buttons/Button";
-import type { User } from "../../../types/user";
+import type {
+  CreateUserInput,
+  UpdateUserInput,
+  User,
+} from "../../../types/user";
+import { usersApi } from "../../../lib/api/users";
 
 interface UserModalProps {
   user?: User;
-  onSuccess?: () => void;
+  onSuccess?: (user: User) => void;
   onCancel?: () => void;
 }
 
@@ -57,37 +62,44 @@ export default function UserModal({
     }
   }, [user]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    try {
-      const isEditing = !!user;
+    if (user) {
+      // UPDATE
+      const payload: UpdateUserInput = {
+        id: user.id,
+        username: formData.username,
+        role: formData.role,
+        ...(formData.password ? { password: formData.password } : {}),
+      };
 
-      const response = await fetch(
-        `/api/users${isEditing ? `/${user.id}` : ""}`,
-        {
-          method: isEditing ? "PUT" : "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      usersApi
+        .updateUser(payload)
+        .then((user) => {
+          onSuccess?.(user);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      // CREATE
+      const payload: CreateUserInput = {
+        username: formData.username,
+        role: formData.role,
+        password: formData.password,
+      };
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.detail || `Failed to ${isEditing ? "edit" : "create"} user`
-        );
-      }
-
-      onSuccess?.();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setLoading(false);
+      usersApi
+        .createUser(payload)
+        .then((user) => {
+          onSuccess?.(user);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   };
 

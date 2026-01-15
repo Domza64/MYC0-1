@@ -45,8 +45,5 @@ def get_songs_in_folder(
     """
     songs = session.exec(select(Song).where(Song.folder_id == folder_id)).all()
 
-    if not songs:
-        raise HTTPException(status_code=404, detail="Folder not found")
-
     return [SongRead.model_validate(song) for song in songs]
 

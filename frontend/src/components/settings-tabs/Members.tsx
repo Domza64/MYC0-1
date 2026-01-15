@@ -9,6 +9,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useModal } from "../../contexts/ModalContext";
 import DeleteUserModal from "../ui/modals/DeleteUserModal";
 import { useNavigate } from "react-router-dom";
+import { usersApi } from "../../lib/api/users";
 
 export default function Members() {
   const [members, setMembers] = useState<User[]>([]);
@@ -18,32 +19,14 @@ export default function Members() {
   const { auth } = useAuth();
   const { addModal, closeModal } = useModal();
 
-  // TODO: make userApi same way as playlistsApi
-  const fetchMembers = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch("/api/users");
-      if (!response.ok) throw new Error("Failed to fetch members");
-      const data = await response.json();
-      setMembers(data);
-    } catch (err) {
-      console.error("Error fetching members:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchMembers();
+    setLoading(true);
+    usersApi
+      .getUsers()
+      .then(setMembers)
+      .finally(() => setLoading(false));
   }, []);
 
-  // @ts-ignore
-  const handleEdit = (user: User) => {
-    // TODO: Implement edit functionality
-    toast("Soon!");
-  };
-
-  // TODO: instead of fetching members when a user is created/edited, update the members state directly, like when a user is deleted.
   return (
     <div>
       <div className="flex justify-between items-center max-w-400 space-y-4 mb-4">
@@ -54,10 +37,9 @@ export default function Members() {
             addModal(
               <UserModal
                 onCancel={closeModal}
-                onSuccess={() => {
+                onSuccess={(user: User) => {
                   closeModal();
-                  toast("User created successfully");
-                  fetchMembers();
+                  setMembers([...members, user]);
                 }}
               />
             )
@@ -121,10 +103,15 @@ export default function Members() {
                                     <UserModal
                                       user={member}
                                       onCancel={closeModal}
-                                      onSuccess={() => {
+                                      onSuccess={(user: User) => {
                                         closeModal();
-                                        toast("User edited successfully");
-                                        fetchMembers();
+                                        console.log(user), console.log(members);
+                                        setMembers((prev) =>
+                                          prev.map((m) =>
+                                            m.id === user.id ? user : m
+                                          )
+                                        );
+                                        toast("User updated!");
                                       }}
                                     />
                                   )

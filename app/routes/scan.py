@@ -49,7 +49,7 @@ def scan_files(session: Session = Depends(get_session), session_data: SessionDat
     session.commit()
 
     return {
-        "message": f"Library synced successfully.",
+        "detail": "Library synced successfully.",
         "added": added_count,
         "removed": removed_count,
         "total": len(scanned_paths)

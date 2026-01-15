@@ -19,7 +19,7 @@ export default function AppRouter() {
   }, [player.state.currentSong]);
 
   if (loading) return <></>; // Put app logo here in the future
-  if (!auth.username) return <Login />;
+  if (auth == null) return <Login />;
 
   return (
     <BrowserRouter>

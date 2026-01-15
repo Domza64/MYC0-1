@@ -33,7 +33,7 @@ async def create_session(login_data: LoginRequest, response: Response, session: 
     user = session.exec(select(User).where(User.username == username)).first()
     
     if not user or verify_password(password, user.password) == False:
-        return JSONResponse(status_code=401, content={"message": "Invalid credentials"})
+        return JSONResponse(status_code=401, content={"detail": "Invalid credentials"})
 
     auth_session = uuid4()
     data = SessionData(user_id=user.id, username=user.username, role=user.role)
@@ -44,8 +44,8 @@ async def create_session(login_data: LoginRequest, response: Response, session: 
     return data
 
 
-@router.get("/whoami", dependencies=[Depends(cookie)])
-async def whoami(session_data: SessionData = Depends(verifier)):
+@router.get("/user", dependencies=[Depends(cookie)])
+async def user(session_data: SessionData = Depends(verifier)):
     return session_data
 
 

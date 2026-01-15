@@ -81,6 +81,9 @@ export async function apiRequest<T = any, R = T>(
     if (showToastError && !String(err.message).startsWith("HTTP_")) {
       toast.error("Something went wrong.");
     }
+    if (String(err.message).startsWith("HTTP_")) {
+      throw new Error(err.message.split(":")[1]);
+    }
     throw err;
   }
 }
