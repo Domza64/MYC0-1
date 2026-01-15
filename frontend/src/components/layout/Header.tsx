@@ -19,7 +19,9 @@ export default function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
           to={"profile"}
           className="flex items-center gap-3 select-none hover:cursor-pointer"
         >
-          <span className="hidden lg:block font-semibold">{auth.username}</span>
+          <span className="hidden lg:block font-semibold">
+            {auth?.username}
+          </span>
           <div className="rounded-full bg-rose-600 w-8 h-8 flex justify-center items-center font-semibold">
             <FaUser className="text-black" />
             {/* <img src={auth.picure} alt={auth?.username?.charAt(0)} /> */}

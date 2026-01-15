@@ -5,8 +5,8 @@ import type { User } from "../types/user";
 interface AuthContextType {
   auth: User | null;
   login: (username: string, password: string) => Promise<void>;
-  getAuth: () => Promise<void>;
   logout: () => void;
+  setAuth: (user: User | null) => void;
   loading: boolean;
   error: string | null;
   clearError: () => void;
@@ -18,17 +18,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [auth, setAuth] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const clearError = () => setError(null);
 
-  // Call getAuth on component mount
   useEffect(() => {
     getAuth().finally(() => {
-      setLoading(false);
-      // Timeout will be used so that app logo displays for at least 1 second when app isloading
-      /*setTimeout(() => {
+      setTimeout(() => {
         setLoading(false);
-      }, 1000);*/
+      }, 500);
     });
   }, []);
 
@@ -70,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ auth, login, getAuth, logout, loading, error, clearError }}
+      value={{ auth, login, logout, loading, error, clearError, setAuth }}
     >
       {children}
     </AuthContext.Provider>

@@ -93,7 +93,7 @@ export default function Members() {
                       </span>
                     </td>
                     <td className="p-4">
-                      {auth.role === "ADMIN" && (
+                      {auth?.role === "ADMIN" && (
                         <div className="flex justify-end space-x-2">
                           <button
                             onClick={() =>

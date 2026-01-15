@@ -59,7 +59,11 @@ export async function apiRequest<T = any, R = T>(
         errorData.detail || res.statusText || `Error ${res.status}`;
 
       if (showToastError) {
-        toast.error(message);
+        toast.error(
+          typeof message === "object"
+            ? JSON.stringify(message)
+            : String(message)
+        );
       }
 
       throw new Error(`HTTP_${res.status}:${message}`);
@@ -78,10 +82,11 @@ export async function apiRequest<T = any, R = T>(
 
     return result as R;
   } catch (err: any) {
-    if (showToastError && !String(err.message).startsWith("HTTP_")) {
+    const message: string = err.message;
+    if (showToastError && !message.startsWith("HTTP_")) {
       toast.error("Something went wrong.");
     }
-    if (String(err.message).startsWith("HTTP_")) {
+    if (message.startsWith("HTTP_")) {
       throw new Error(err.message.split(":")[1]);
     }
     throw err;

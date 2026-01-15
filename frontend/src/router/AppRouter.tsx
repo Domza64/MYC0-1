@@ -18,7 +18,17 @@ export default function AppRouter() {
     }
   }, [player.state.currentSong]);
 
-  if (loading) return <></>; // Put app logo here in the future
+  if (loading)
+    return (
+      <div className="w-screen h-screen flex justify-center items-center flex-col gap-4">
+        <img
+          src="/static/MYC0-1-rose-500.svg"
+          className="w-64"
+          alt="MYC0-1 Logo"
+        />
+        <span className="text-rose-500 animate-pulse">Loading</span>
+      </div>
+    ); // Put app logo here in the future
   if (auth == null) return <Login />;
 
   return (

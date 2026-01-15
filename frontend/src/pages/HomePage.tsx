@@ -28,7 +28,7 @@ export default function HomePage() {
     <div className="flex flex-col gap-6">
       <section>
         <h1 className="font-normal!">
-          Hello <span className="font-semibold">{auth.username}</span>
+          Hello <span className="font-semibold">{auth?.username}</span>
         </h1>
       </section>
 

@@ -2,6 +2,7 @@ export interface User {
   id: number;
   username: string;
   role: "ADMIN" | "MEMBER";
+  user_image: string | null;
 }
 
 /**

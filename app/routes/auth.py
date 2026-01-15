@@ -41,12 +41,16 @@ async def create_session(login_data: LoginRequest, response: Response, session: 
     await backend.create(auth_session, data)
     cookie.attach_to_response(response, auth_session)
 
-    return data
+    user_dict = data.model_dump()
+    user_dict["id"] = user_dict.pop("user_id")
+    return user_dict
 
 
 @router.get("/user", dependencies=[Depends(cookie)])
 async def user(session_data: SessionData = Depends(verifier)):
-    return session_data
+    user_dict = session_data.model_dump()
+    user_dict["id"] = user_dict.pop("user_id")
+    return user_dict
 
 
 @router.post("/logout")

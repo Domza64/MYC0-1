@@ -23,8 +23,8 @@ class UserCreate(BaseModel):
     password: str
 
 class UserUpdate(BaseModel):
-    username: str
-    role: str
+    username: str | None = None
+    role: str | None = None
     password: str | None = None
 
 
@@ -57,21 +57,22 @@ def create_user(user_data: UserCreate, session: SessionDep, admin_session: Sessi
     session.commit()
     session.refresh(user)
     # TODO: Return some UserRead object
-    return JSONResponse(status_code=200, content=user.model_dump(exclude={"password"}))
+    return user.model_dump(exclude={"password"})
 
 @router.put("/{user_id}", response_model=User, dependencies=[Depends(cookie)])
-def update_user(user_id: str, user_data: UserUpdate, session: SessionDep, admin_session: SessionData = Depends(require_admin)):
+def update_user(user_id: int, user_data: UserUpdate, session: SessionDep, session_data: SessionData = Depends(verifier)):
     """
     Update an existing user.
     """
-    # TODO: Revoke session if session for this user exists
+    # TODO: Revoke session if password is changed
 
     # Check if username already exists
     existing_user = session.exec(
         select(User).where(User.username == user_data.username)
     ).first()
+
     # If the existing user is not the same as the one being updated
-    if existing_user and existing_user.id != int(user_id):
+    if existing_user and existing_user.id != user_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Username already exists"
@@ -84,22 +85,28 @@ def update_user(user_id: str, user_data: UserUpdate, session: SessionDep, admin_
             detail="User not found"
         )
 
-    user.username = user_data.username
-    user.role = user_data.role
+    if user_data.username:
+        user.username = user_data.username
+    if user_data.role:
+        if session_data.role != "ADMIN":
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Admin privileges required"
+            )
+        user.role = user_data.role
     if user_data.password:
         user.password = hash_password(user_data.password)
 
     session.commit()
     session.refresh(user)
     # TODO: Return some UserRead object
-    return JSONResponse(status_code=200, content=user.model_dump(exclude={"password"}))
+    return user.model_dump(exclude={"password"})
 
 @router.delete("/{user_id}", dependencies=[Depends(cookie)])
 def delete_user(user_id: int, session: SessionDep, admin_session: SessionData = Depends(require_admin)):
     """
     Delete a user by id.
     """
-    print("USERID: ", user_id)
     if user_id == admin_session.user_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

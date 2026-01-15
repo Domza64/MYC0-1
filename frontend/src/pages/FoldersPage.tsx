@@ -93,20 +93,21 @@ export default function FoldersPage() {
           </span>
         ))}
       </div>
-
-      <ul className="flex gap-4 flex-wrap">
+      <ul className="grid grid-cols-[repeat(auto-fill,minmax(90px,1fr))] gap-4">
         {folders.map((folder) => (
-          <FolderCard
-            folder={folder}
-            key={folder.id}
-            onClick={() => handleFolderClick(folder)}
-          />
+          <li className="flex justify-center">
+            <FolderCard
+              folder={folder}
+              key={folder.id}
+              onClick={() => handleFolderClick(folder)}
+            />
+          </li>
         ))}
       </ul>
 
       {songs.length > 0 && (
         <div className="mt-4">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center pb-2">
             <h2>
               <span className="font-medium">{songs.length}</span> Songs
             </h2>
