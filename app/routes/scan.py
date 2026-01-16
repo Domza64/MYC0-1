@@ -21,20 +21,22 @@ SessionDep = Annotated[Session, Depends(get_session)]
 def scan_files(session: Session = Depends(get_session), session_data: SessionData = Depends(verifier)):
     # All songs and paths
     scanned_files = read_all_audio_files(MUSIC_DIR)
-    scanned_paths = {song[0] for song in scanned_files} # file_path is at index 0
+    scanned_paths = {str(song[1]) for song in scanned_files} # file_path is at index 0
 
     # Read all songs currently in DB (costly?)
     db_songs = session.exec(select(Song)).all()
     db_paths = {song.file_path for song in db_songs}
-
+    db_songs = set([song.file_name for song in db_songs])
+    
     # Find differences
     removed_paths = db_paths - scanned_paths
 
     # Add new songs
     added_count = 0
     for file_path, relative_path in scanned_files:
-        # TODO: only update song if it is not in DB, or if it is maybe update metadata?
         new_song = create_song(session, file_path, relative_path)
+        if file_path.name in db_songs:
+            continue
         insert_song(new_song, session)
         added_count += 1
 
@@ -43,7 +45,7 @@ def scan_files(session: Session = Depends(get_session), session_data: SessionDat
     for path in removed_paths:
         song = session.exec(select(Song).where(Song.file_path == path)).first()
         if song:
-            session.delete(song) # TODO - also delete orphaned folders and move function to db_utils
+            session.delete(song)
             removed_count += 1
 
     session.commit()

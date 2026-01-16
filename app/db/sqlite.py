@@ -1,6 +1,8 @@
 from sqlmodel import SQLModel, create_engine, Session, select, text
 from app.lib.passwd import hash_password
 
+# TODO: Use alembic in future in case of schema changes
+
 sqlite_file_name = "data/myc0-1.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
