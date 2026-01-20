@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional
+from app.config import IMAGES_DIR
 
 
 AUDIO_EXTENSIONS = {".mp3", ".flac", ".wav", ".m4a", ".aac", ".ogg", ".wma"}
@@ -20,7 +20,13 @@ def read_all_audio_files(folder_path: str):
     return files
 
 
-# TODO: implement this
-def save_picture(image_data: bytes, file_stem: str) -> Optional[str]:
+def save_picture(image_data: bytes, file_stem: str, format: str) -> str:
     """Save image data to IMAGES_DIR and return the filename if successful."""
-    pass
+    try:
+        output = Path(IMAGES_DIR) / f"{file_stem}.{format}"
+        output.write_bytes(image_data)
+        return output.name
+    except Exception as e:
+        print(f"Error extracting image: {e}")
+        return None
+    

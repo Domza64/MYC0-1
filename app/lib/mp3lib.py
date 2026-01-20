@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Optional
 
 from sqlmodel import Session, select
-from app.config import IMAGES_DIR
+from app.lib.file_utils import save_picture
 from app.model.album import Album
 from app.model.author import Author
 from app.model.song import Song
@@ -22,19 +22,12 @@ def create_default_song(path: Path, relative_path: Path) -> Song:
 
 
 def extract_image(audio, file_stem: str) -> Optional[str]:
-    """Extract image to IMAGES_DIR; return filename if saved."""
+    """Extract image to IMAGES_DIR; return filename if successful."""
     if not audio or not audio.tag or not audio.tag.images:
         return None
-
-    try:
-        img = audio.tag.images[0]
-        # TODO: use save_picture() from file_utils.py here
-        output = Path(IMAGES_DIR) / f"{file_stem}.jpg"
-        output.write_bytes(img.image_data)
-        return output.name
-    except Exception as e:
-        print(f"Error extracting image: {e}")
-        return None
+    
+    img = audio.tag.images[0]
+    return save_picture(img.image_data, file_stem, "jpg")
 
 
 def extract_metadata(audio) -> dict:
