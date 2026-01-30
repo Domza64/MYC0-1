@@ -83,7 +83,7 @@ export default function AlbumPage() {
                 payload: songs,
                 showMessage: true,
               });
-              if (player.state.queue.length === 0) {
+              if (player.state.currentQueue.length === 0) {
                 player.dispatch({ type: "PLAY_SONG", payload: songs[0] });
               }
             }}

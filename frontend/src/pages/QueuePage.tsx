@@ -16,20 +16,27 @@ export default function QueuePage() {
 
   const handleCreatePlaylist = (): void => {
     addModal(
-      <AddToPlaylistForm songs={player.state.queue} onSuccess={closeModal} />
+      <AddToPlaylistForm
+        songs={player.state.currentQueue}
+        onSuccess={closeModal}
+      />,
     );
   };
 
   return (
     <div>
       <div>
-        <h1>{player.state.queue.length > 0 ? "Queue" : "Queue empty"}</h1>
+        <h1>
+          {player.state.currentQueue.length > 0 ? "Queue" : "Queue empty"}
+        </h1>
         <div className="flex w-full justify-between mt-4">
           <h2>
-            <span className="font-medium">{player.state.queue.length}</span>{" "}
+            <span className="font-medium">
+              {player.state.currentQueue.length}
+            </span>{" "}
             Songs
           </h2>
-          {player.state.queue.length > 0 && (
+          {player.state.currentQueue.length > 0 && (
             <div className="flex gap-1">
               <Button onClick={handleCreatePlaylist}>
                 <MdPlaylistAdd className="text-xl" />
@@ -44,7 +51,7 @@ export default function QueuePage() {
         </div>
       </div>
       <ul className="space-y-2">
-        {player.state.queue.map((song) => (
+        {player.state.currentQueue.map((song) => (
           <SongCard
             song={song}
             menuActions={[addToPlaylist(song), removeFromQueue(song)]}

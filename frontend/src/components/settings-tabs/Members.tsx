@@ -41,7 +41,7 @@ export default function Members() {
                   closeModal();
                   setMembers([...members, user]);
                 }}
-              />
+              />,
             )
           }
         >
@@ -105,15 +105,14 @@ export default function Members() {
                                       onCancel={closeModal}
                                       onSuccess={(user: User) => {
                                         closeModal();
-                                        console.log(user), console.log(members);
                                         setMembers((prev) =>
                                           prev.map((m) =>
-                                            m.id === user.id ? user : m
-                                          )
+                                            m.id === user.id ? user : m,
+                                          ),
                                         );
                                         toast("User updated!");
                                       }}
-                                    />
+                                    />,
                                   )
                             }
                             className="p-2 text-stone-400 hover:text-rose-500 transition-colors"
@@ -132,11 +131,11 @@ export default function Members() {
                                       toast("User deleted successfully");
                                       setMembers((prev) =>
                                         prev.filter(
-                                          (m) => m.username !== member.username
-                                        )
+                                          (m) => m.username !== member.username,
+                                        ),
                                       );
                                     }}
-                                  />
+                                  />,
                                 )
                               }
                               className="p-2 text-stone-400 hover:text-rose-500 transition-colors"

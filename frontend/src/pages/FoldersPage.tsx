@@ -52,7 +52,7 @@ export default function FoldersPage() {
     }
 
     const currentIndex = breadcrumbs.findIndex(
-      (f) => f.id === currentFolder.id
+      (f) => f.id === currentFolder.id,
     );
 
     if (currentIndex === -1) {
@@ -95,10 +95,9 @@ export default function FoldersPage() {
       </div>
       <ul className="grid grid-cols-[repeat(auto-fill,minmax(90px,1fr))] gap-4">
         {folders.map((folder) => (
-          <li className="flex justify-center">
+          <li key={folder.id} className="flex justify-center">
             <FolderCard
               folder={folder}
-              key={folder.id}
               onClick={() => handleFolderClick(folder)}
             />
           </li>
@@ -120,7 +119,7 @@ export default function FoldersPage() {
                     payload: songs,
                     replace: true,
                   });
-                  player.dispatch({ type: "PLAY_SONG", payload: songs[0] });
+                  player.dispatch({ type: "START_PLAYBACK" });
                 }}
               >
                 <FaPlay />
@@ -134,8 +133,8 @@ export default function FoldersPage() {
                     payload: songs,
                     showMessage: true,
                   });
-                  if (player.state.queue.length === 0) {
-                    player.dispatch({ type: "PLAY_SONG", payload: songs[0] });
+                  if (player.state.currentQueue.length === 0) {
+                    player.dispatch({ type: "START_PLAYBACK" });
                   }
                 }}
               >

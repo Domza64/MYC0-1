@@ -72,7 +72,7 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
       audio.removeEventListener("play", handlePlay);
       audio.removeEventListener("pause", handlePause);
     };
-  }, [dispatch, state.queue, state.currentIndex]);
+  }, [dispatch, state.currentQueue, state.currentIndex]);
 
   // Control audio playback
   useEffect(() => {
@@ -111,7 +111,6 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
   };
 
   const secretText = (): boolean => {
-    console.log(Math.random());
     return Math.random() > 0.02; // 2% chance
   };
 

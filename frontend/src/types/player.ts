@@ -10,6 +10,7 @@ export interface PlayerState {
   message: string | null;
   shuffle: boolean;
   repeat: boolean;
-  unsuhffledQueue: Song[];
-  queue: Song[];
+  currentQueue: Song[];
+  unshuffledQueue: Song[];
+  shuffledQueue: Song[];
 }

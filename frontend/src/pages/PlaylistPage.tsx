@@ -101,7 +101,7 @@ export default function PlaylistsPage() {
                 payload: songs,
                 showMessage: true,
               });
-              if (player.state.queue.length === 0) {
+              if (player.state.currentQueue.length === 0) {
                 player.dispatch({ type: "PLAY_SONG", payload: songs[0] });
               }
             }}
@@ -120,7 +120,7 @@ export default function PlaylistsPage() {
                     navigate("/playlists");
                   }}
                   onCancel={closeModal}
-                />
+                />,
               );
             }}
           >
@@ -142,7 +142,7 @@ export default function PlaylistsPage() {
                     // TODO: Display modal like for creating playlists and adding songs
                     if (
                       !confirm(
-                        "Are you sure you want to remove this song from the playlist?"
+                        "Are you sure you want to remove this song from the playlist?",
                       )
                     )
                       return;

@@ -23,6 +23,7 @@ type PlayerAction =
     }
   | { type: "SET_CURRENT_INDEX"; payload: number }
   | { type: "RESET_MESSAGE" }
+  | { type: "START_PLAYBACK" }
   | { type: "CLEAR_QUEUE" };
 
 const PlayerContext = createContext<{
@@ -32,12 +33,12 @@ const PlayerContext = createContext<{
 
 const playerReducer = (
   state: PlayerState,
-  action: PlayerAction
+  action: PlayerAction,
 ): PlayerState => {
   switch (action.type) {
     case "PLAY_SONG":
-      const songIndex = state.queue.findIndex(
-        (song) => song.id === action.payload.id
+      const songIndex = state.currentQueue.findIndex(
+        (song) => song.id === action.payload.id,
       );
       if (songIndex === -1) {
         return {
@@ -57,26 +58,38 @@ const playerReducer = (
         ...state,
         isPlaying: action.payload,
       };
-    case "TOGGLE_SHUFFLE":
-      // Is this the most efficient way to do this?
-      let new_queue = state.queue;
-      let unsuhffledQueue = state.unsuhffledQueue;
-      if (!state.shuffle) {
-        unsuhffledQueue = state.queue;
-        new_queue = [...state.queue];
-        // At some point in future, give sort priority to some songs. eg. songs with least plays.
-        new_queue.sort(function (_, __) {
-          return Math.random() - 0.5;
-        });
-      } else {
-        new_queue = unsuhffledQueue;
-        unsuhffledQueue = [];
+    case "START_PLAYBACK":
+      if (state.currentQueue.length === 0) {
+        return state;
       }
+
+      let index = state.currentIndex;
+      if (index >= state.currentQueue.length) index = 0;
+
       return {
         ...state,
-        queue: new_queue,
-        unsuhffledQueue,
-        shuffle: !state.shuffle,
+        currentIndex: index,
+        currentSong: state.currentQueue[index],
+        isPlaying: true,
+      };
+    case "TOGGLE_SHUFFLE":
+      const shuffle = !state.shuffle;
+      const currentId = state.currentSong?.id;
+
+      const shuffled = shuffle
+        ? [...state.unshuffledQueue].sort((a, b) => {
+            if (a.id === currentId) return -1;
+            if (b.id === currentId) return 1;
+            return Math.random() - 0.5;
+          })
+        : state.shuffledQueue;
+
+      return {
+        ...state,
+        shuffle,
+        shuffledQueue: shuffled,
+        currentIndex: 0,
+        currentQueue: shuffle ? shuffled : state.unshuffledQueue,
       };
     case "TOGGLE_REPEAT":
       return {
@@ -99,27 +112,17 @@ const playerReducer = (
         duration: action.payload,
       };
     case "NEXT_SONG":
-      if (state.shuffle) {
-        const nextIndex = Math.floor(Math.random() * state.queue.length);
-        return {
-          ...state,
-          currentIndex: nextIndex,
-          currentSong: state.queue[nextIndex],
-          isPlaying: true,
-        };
-      }
-
       const nextIndex = state.currentIndex + 1;
-      return nextIndex < state.queue.length
+      return nextIndex < state.currentQueue.length
         ? {
             ...state,
             currentIndex: nextIndex,
-            currentSong: state.queue[nextIndex],
+            currentSong: state.currentQueue[nextIndex],
             isPlaying: true,
           }
         : {
             ...state,
-            currentSong: state.queue[0],
+            currentSong: state.currentQueue[0],
             currentIndex: 0,
             isPlaying: state.repeat,
             currentTime: 0,
@@ -138,7 +141,7 @@ const playerReducer = (
         return {
           ...state,
           currentIndex: prevIndex,
-          currentSong: state.queue[prevIndex],
+          currentSong: state.currentQueue[prevIndex],
         };
       }
 
@@ -148,34 +151,50 @@ const playerReducer = (
         ...state,
         message: null,
       };
-    case "ADD_TO_QUEUE":
-      let newSongs: Song[] = [];
-      let message: string | null = null;
+    case "ADD_TO_QUEUE": {
+      const incoming = action.payload;
 
-      if (action.replace) {
-        newSongs = action.payload;
-        if (newSongs.length > 0) {
-          message = `${newSongs.length} song(s) added to queue`;
-        }
-      } else {
-        newSongs = action.payload.filter(
-          (newSong) =>
-            !state.queue.some((existingSong) => existingSong.id === newSong.id)
-        );
-        // Display message
-        if (newSongs.length > 0) {
-          message = `${newSongs.length} song(s) added to queue`;
-        } else {
-          message = "Song(s) are already in the queue";
-        }
-        newSongs = [...state.queue, ...newSongs];
+      const newSongs = action.replace
+        ? incoming
+        : incoming.filter(
+            (newSong) =>
+              !state.unshuffledQueue.some(
+                (existingSong) => existingSong.id === newSong.id,
+              ),
+          );
+
+      let message: string | null = null;
+      if (newSongs.length > 0) {
+        message = `${newSongs.length} song(s) added to queue`;
+      } else if (!action.replace) {
+        message = "Song(s) are already in the queue";
       }
+
+      const unshuffledQueue = action.replace
+        ? [...newSongs]
+        : [...state.unshuffledQueue, ...newSongs];
+
+      if (state.shuffle) {
+        const currentId = state.currentSong?.id;
+        newSongs.sort((a, b) => {
+          if (a.id === currentId) return -1;
+          if (b.id === currentId) return 1;
+          return Math.random() - 0.5;
+        });
+      }
+
+      let shuffledQueue = action.replace
+        ? newSongs
+        : [...state.shuffledQueue, ...newSongs];
 
       return {
         ...state,
-        queue: newSongs,
+        unshuffledQueue,
+        shuffledQueue,
+        currentQueue: state.shuffle ? shuffledQueue : unshuffledQueue,
         message: action.showMessage ? message : null,
       };
+    }
     case "CLEAR_QUEUE":
       return {
         ...state,
@@ -183,22 +202,24 @@ const playerReducer = (
         isPlaying: false,
         currentTime: 0,
         duration: 0,
-        queue: [],
+        currentQueue: [],
+        shuffledQueue: [],
+        unshuffledQueue: [],
         currentIndex: 0,
       };
     case "SET_CURRENT_INDEX":
       var newIndex;
       if (action.payload < 0) {
         newIndex = 0;
-      } else if (action.payload >= state.queue.length) {
-        newIndex = state.queue.length - 1;
+      } else if (action.payload >= state.currentQueue.length) {
+        newIndex = state.currentQueue.length - 1;
       } else {
         newIndex = action.payload;
       }
       return {
         ...state,
         currentIndex: newIndex,
-        currentSong: state.queue[newIndex],
+        currentSong: state.currentQueue[newIndex],
       };
     default:
       return state;
@@ -215,8 +236,9 @@ const initialState: PlayerState = {
   message: null,
   shuffle: false,
   repeat: false,
-  unsuhffledQueue: [],
-  queue: [],
+  unshuffledQueue: [],
+  shuffledQueue: [],
+  currentQueue: [],
 };
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
@@ -227,8 +249,13 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         const parsed = JSON.parse(stored);
 
         // Convert stored plain objects back to Song instances
-        const queue =
-          parsed.queue?.map((songData: any) => new Song(songData)) || [];
+        const shuffledQueue =
+          parsed.shuffledQueue?.map((songData: any) => new Song(songData)) ||
+          [];
+        const unshuffledQueue =
+          parsed.unshuffledQueue?.map((songData: any) => new Song(songData)) ||
+          [];
+        const shuffle = parsed.shuffle;
         const currentSong = parsed.currentSong
           ? new Song(parsed.currentSong)
           : null;
@@ -236,7 +263,10 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         return {
           ...init,
           ...parsed,
-          queue,
+          shuffledQueue,
+          unshuffledQueue,
+          currentQueue: shuffle ? shuffledQueue : unshuffledQueue,
+          shuffle,
           currentSong,
           isPlaying: false,
           currentTime: 0,
@@ -254,13 +284,19 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       const stateToStore = {
         ...state,
         // Convert Song instances to plain objects
-        queue: state.queue.map((song) => (song.toJSON ? song.toJSON() : song)),
+        shuffledQueue: state.shuffledQueue.map((song) =>
+          song.toJSON ? song.toJSON() : song,
+        ),
+        unshuffledQueue: state.unshuffledQueue.map((song) =>
+          song.toJSON ? song.toJSON() : song,
+        ),
         currentSong: state.currentSong?.toJSON
           ? state.currentSong.toJSON()
           : state.currentSong,
         isPlaying: false,
         currentTime: 0,
         message: null,
+        shuffle: state.shuffle,
       };
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToStore));
@@ -277,6 +313,8 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     }
   }, [state.message]);
 
+  // TODO: Idealy this exported state should only have currentQueue, and shouldn't have
+  // shuffledQueue and unshuffledQueue to avoid confusion since they are and should only be used internally.
   return (
     <PlayerContext.Provider value={{ state, dispatch }}>
       {children}

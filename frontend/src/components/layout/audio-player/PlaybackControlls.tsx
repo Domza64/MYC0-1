@@ -14,7 +14,7 @@ export default function PlaybackControlls({
   const { state, dispatch } = usePlayer();
   const { isPlaying, shuffle, repeat } = state;
 
-  const hasNext = state.queue.length > state.currentIndex + 1;
+  const hasNext = state.currentQueue.length > state.currentIndex + 1;
   const hasPrevious = state.currentIndex > 0;
 
   const playNext = () => {
