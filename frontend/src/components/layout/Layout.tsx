@@ -25,7 +25,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         `}
         >
           <div
-            className={`w-full h-full bg-stone-950/${isMenuOpen ? "60" : "15"}`}
+            className={`w-full h-full ${isMenuOpen ? "bg-stone-950/65" : "bg-stone-950/15"}`}
           >
             <SideMenu onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} />
           </div>
@@ -34,7 +34,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {/* Overlay for mobile */}
         {isMenuOpen && (
           <div
-            className="fixed inset-0 lg:hidden backdrop-blur-sm bg-stone-950/30 z-20"
+            className="fixed inset-0 lg:hidden backdrop-blur-sm bg-stone-950/10 z-20"
             onClick={() => setIsMenuOpen(false)}
           ></div>
         )}

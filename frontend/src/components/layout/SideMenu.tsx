@@ -45,12 +45,7 @@ export default function SideMenu({
         <div className="flex w-full items-center justify-between">
           <h2 className="text-xl font-bold">
             <Link to={"/"} className="cursor-pointer">
-              <img
-                src="/static/MYC0-1-rose-500.svg"
-                className="opacity-90"
-                alt="MYC0-1"
-                width={120}
-              />
+              <img src="/static/MYC0-1-rose-500.svg" alt="MYC0-1" width={120} />
             </Link>
           </h2>
           <span className="text-xs text-stone-400">pre-alpha</span>

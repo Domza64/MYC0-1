@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Button from "../buttons/Button";
 import type { Playlist } from "../../../types/data";
 import { playlistsApi } from "../../../lib/api/playlists";
@@ -21,7 +21,7 @@ export default function AddToPlaylistForm({
   onCancel,
 }: AddToPlaylistFormProps) {
   const [selectedPlaylist, setSelectedPlaylist] = useState<number | undefined>(
-    undefined
+    undefined,
   );
   const [playlists, setPlaylists] = useState<Playlist[] | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -29,16 +29,18 @@ export default function AddToPlaylistForm({
   const { addModal, closeModal } = useModal();
 
   useEffect(() => {
-    playlistsApi
-      .getAll()
-      .then((playlists) => {
-        setPlaylists(playlists);
-        setSelectedPlaylist(playlists[0]?.id);
-      })
-      .catch(() => {
-        setError("Failed to load playlists");
-      });
-  }, []);
+    if (playlists == null) {
+      playlistsApi
+        .getAll()
+        .then((playlists) => {
+          setPlaylists(playlists);
+          setSelectedPlaylist(playlists[playlists.length - 1]?.id); // TODO: set to playlist that has last been updated by date
+        })
+        .catch(() => {
+          setError("Failed to load playlists");
+        });
+    }
+  }, [playlists]);
 
   const addToPlaylist = (playlistId: number) => {
     setSubmitting(true);
@@ -47,7 +49,7 @@ export default function AddToPlaylistForm({
     playlistsApi
       .addSongs(
         playlistId,
-        songs.map((s) => s.id)
+        songs.map((s) => s.id),
       )
       .then((data) => {
         if (data.added_count !== 0) {
@@ -75,18 +77,23 @@ export default function AddToPlaylistForm({
 
   const handlePlaylistCreated = (newPlaylist: Playlist) => {
     setPlaylists((playlists) => [...(playlists || []), newPlaylist]);
-    addToPlaylist(newPlaylist.id);
+    setSelectedPlaylist(newPlaylist.id);
+    // Seems like closeModal is rerendering this whole component and thus preventing it from properly selecting the new playlist
     closeModal();
   };
 
   const title =
     songs.length === 1
-      ? `Add "${songs[0].title}" to playlist`
-      : `Add ${songs.length} songs to playlist`;
+      ? songs[0].title
+      : `${songs[0].title.slice(0, 20)}... and more ${songs.length} songs`;
 
   return (
     <form onSubmit={handleSubmit} className="w-full p-6 space-y-4">
-      <h3 className="text-lg font-semibold">{title}</h3>
+      <h3 className="text-lg font-semibold">
+        Add to playlist:
+        <br />
+        <span className="text-sm text-stone-300 font-normal">{title}</span>
+      </h3>
 
       {error && (
         <div className="p-3 bg-rose-500/20 border border-rose-500/50 rounded-lg text-rose-300 text-sm">
@@ -95,28 +102,29 @@ export default function AddToPlaylistForm({
       )}
 
       <div className="space-y-3">
-        {playlists != null ? (
-          <div>
-            <select
-              id="playlist"
-              name="playlist"
-              value={selectedPlaylist}
-              onChange={(e) =>
-                setSelectedPlaylist(Number(e.target.value) || undefined)
-              }
-              required
-              className="w-full px-3 py-2 bg-stone-800/50 border border-stone-700 rounded-lg focus:outline-none focus:border-stone-500"
-            >
-              {playlists.map((playlist: Playlist) => (
-                <option key={playlist.id} value={playlist.id}>
-                  {playlist.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        ) : (
-          !error && <p>Loading playlists...</p>
-        )}
+        {playlists != null
+          ? playlists.length > 0 && (
+              <div>
+                <select
+                  id="playlist"
+                  name="playlist"
+                  value={selectedPlaylist}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setSelectedPlaylist(value ? Number(value) : undefined);
+                  }}
+                  required
+                  className="w-full px-3 py-2 bg-stone-800/50 border border-stone-700 rounded-lg focus:outline-none focus:border-stone-500"
+                >
+                  {playlists.map((playlist: Playlist) => (
+                    <option key={playlist.id} value={playlist.id}>
+                      {playlist.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )
+          : !error && <p>Loading playlists...</p>}
       </div>
 
       <div className="flex gap-3 pt-2">
@@ -131,17 +139,19 @@ export default function AddToPlaylistForm({
           </Button>
         )}
         <div className="flex flex-col gap-2 w-full">
-          <Button type="submit" className="w-full" disabled={submitting}>
-            {submitting ? "Adding..." : "Add"}
-          </Button>
+          {playlists != null && playlists.length > 0 && (
+            <Button type="submit" className="w-full" disabled={submitting}>
+              {submitting ? "Adding..." : "Add"}
+            </Button>
+          )}
           <Button
             onClick={() => {
               addModal(
-                <CreatePlaylistForm onSuccess={handlePlaylistCreated} />
+                <CreatePlaylistForm onSuccess={handlePlaylistCreated} />,
               );
             }}
           >
-            New playlist
+            Create New Playlist
           </Button>
         </div>
       </div>

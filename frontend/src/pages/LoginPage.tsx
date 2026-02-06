@@ -59,6 +59,7 @@ export default function LoginPage() {
           <input
             type="text"
             value={username}
+            autoFocus
             onChange={handleInputChange(setUsername)}
             placeholder="Enter your username"
             className="w-full px-4 py-3 bg-stone-800/50 border border-stone-700 rounded-xl placeholder-stone-400 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-white"
