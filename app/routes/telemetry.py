@@ -24,7 +24,7 @@ def get_album(song_id: int, session: Session = Depends(get_session), session_dat
     play = SongPlayHistory(
         user_id=session_data.user_id,
         song_id=song_id,
-        played_at=datetime.now(timezone.utc),
+        played_at=datetime.now(timezone.utc).isoformat(),
     )
 
     try:

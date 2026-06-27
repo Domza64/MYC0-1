@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel
@@ -36,6 +36,8 @@ def get_all_playlists(session: SessionDep, session_data: SessionData = Depends(v
             name=pl.name,
             description=pl.description,
             shared=pl.shared,
+            updated_at=pl.updated_at,
+            created_at=pl.created_at,
             user_id=pl.user_id,
             playlist_image=pl.playlist_image,
             username=pl.user.username if pl.user else "Unknown"
@@ -56,7 +58,8 @@ def create_playlist(
         description=playlist_data.description,
         shared=playlist_data.shared,
         user_id=session_data.user_id,
-        updated_at=datetime.now(),
+        updated_at=datetime.now(timezone.utc).isoformat(),
+        created_at=datetime.now(timezone.utc).isoformat(),
     )
     session.add(new_playlist)
     session.commit()
@@ -70,6 +73,8 @@ def create_playlist(
         name=new_playlist.name,
         description=new_playlist.description,
         shared=new_playlist.shared,
+        updated_at=new_playlist.updated_at,
+        created_at=new_playlist.created_at,
         user_id=new_playlist.user_id,
         playlist_image=new_playlist.playlist_image,
         username=username
@@ -113,6 +118,8 @@ def read_playlist(playlist_id: int, session: SessionDep, session_data: SessionDa
         name=playlist.name,
         description=playlist.description,
         shared=playlist.shared,
+        updated_at=playlist.updated_at,
+        created_at=playlist.created_at,
         user_id=playlist.user_id,
         playlist_image=playlist.playlist_image,
         username=playlist.user.username if playlist.user else "Unknown"
@@ -138,7 +145,7 @@ def update_playlist(playlist_id: int, data: UpdatePlaylistDTO, session: SessionD
     playlist.name = data.name
     playlist.description = data.description
     playlist.shared = data.shared
-    playlist.updated_at = datetime.now()
+    playlist.updated_at = datetime.now(timezone.utc).isoformat()
 
     session.commit()
 
@@ -147,6 +154,8 @@ def update_playlist(playlist_id: int, data: UpdatePlaylistDTO, session: SessionD
         name=playlist.name,
         description=playlist.description,
         shared=playlist.shared,
+        updated_at=playlist.updated_at,
+        created_at=playlist.created_at,
         user_id=playlist.user_id,
         playlist_image=playlist.playlist_image,
         username=playlist.user.username
@@ -171,7 +180,7 @@ def remove_song_from_playlist(playlist_id: int, song_id: int, session: SessionDe
         raise HTTPException(status_code=404, detail="Song not found in playlist")
     
     session.delete(playlist_songs)
-    playlist.updated_at = datetime.now()
+    playlist.updated_at = datetime.now(timezone.utc).isoformat()
     session.commit()
     return Response(status_code=200)
 
@@ -237,7 +246,7 @@ def add_songs_to_playlist(playlist_id: int, data: AddSongsRequest, session: Sess
         playlist.playlist_image = last_playlist_image
 
     if added_count > 0:
-        playlist.updated_at = datetime.now()
+        playlist.updated_at = datetime.now(timezone.utc).isoformat()
 
     session.commit()
     return {"added_count": added_count}

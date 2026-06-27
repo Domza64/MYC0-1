@@ -16,6 +16,7 @@ import { useSongMenuActions } from "../hooks/useSongMenuActions";
 import { BsPeopleFill } from "react-icons/bs";
 import { useAuth } from "../contexts/AuthContext";
 import { ImCancelCircle } from "react-icons/im";
+import { formatSmartDate } from "../lib/formatters";
 
 export default function PlaylistsPage() {
   const [playlist, setPlaylist] = useState<Playlist>();
@@ -185,6 +186,11 @@ export default function PlaylistsPage() {
               <span>{playlist.username}</span>
             </>
           )}
+          <div className="text-right">
+            <span className="font-semibold text-rose-700">Updated</span>
+            <br />
+            <span>{formatSmartDate(playlist.updated_at)}</span>
+          </div>
         </div>
       </div>
       <div className="flex gap-2 w-full items-center justify-between">

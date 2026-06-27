@@ -20,6 +20,7 @@ export default function AddToPlaylistForm({
   onSuccess,
   onCancel,
 }: AddToPlaylistFormProps) {
+  // Selected playlist ID
   const [selectedPlaylist, setSelectedPlaylist] = useState<number | undefined>(
     undefined,
   );
@@ -33,8 +34,13 @@ export default function AddToPlaylistForm({
       playlistsApi
         .getAll()
         .then((playlists) => {
-          setPlaylists(playlists);
-          setSelectedPlaylist(playlists[playlists.length - 1]?.id); // TODO: set to playlist that has last been updated by date
+          const sorted = playlists.sort(
+            (a, b) =>
+              new Date(b.updated_at).getTime() -
+              new Date(a.updated_at).getTime(),
+          );
+          setPlaylists(sorted);
+          setSelectedPlaylist(playlists[0]?.id);
         })
         .catch(() => {
           setError("Failed to load playlists");

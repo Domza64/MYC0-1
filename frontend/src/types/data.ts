@@ -15,6 +15,7 @@ export interface Playlist {
   name: string;
   description?: string;
   shared: boolean;
+  updated_at: string;
   user_id: number;
   playlist_image?: string;
   username: string;
