@@ -16,6 +16,7 @@ export class Song {
   image?: string | null;
   play_count?: number;
   last_played?: string | null;
+  rating: number | null;
 
   constructor(data: Partial<Song> = {}) {
     this.id = data.id ?? 0;
@@ -38,6 +39,7 @@ export class Song {
     this.image = data.image ?? null;
     this.play_count = data.play_count ?? 0;
     this.last_played = data.last_played ?? null;
+    this.rating = data.rating ?? null;
   }
 
   get title(): string {

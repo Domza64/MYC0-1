@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlmodel import Session, select
 from app.model.song import Song, SongRead
 from app.db.sqlite import get_session
@@ -32,6 +32,19 @@ def read_song(song_id: int, session: SessionDep, session_data: SessionData = Dep
         raise HTTPException(status_code=404, detail="Song not found")
     
     return SongRead.model_validate(song)
+
+
+@router.get("/{song_id}/{rate}", response_model=SongRead, dependencies=[Depends(cookie)])
+def read_song(song_id: int, rate: int, session: SessionDep, session_data: SessionData = Depends(verifier)) -> Response:
+    """
+    Set a rate for a song.
+    """
+    song = session.get(Song, song_id)
+    if not song:
+        raise HTTPException(status_code=404, detail="Song not found")
+
+    # TODO IMPLEMENT
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.get("/folder/{folder_id}", response_model=list[SongRead], dependencies=[Depends(cookie)])

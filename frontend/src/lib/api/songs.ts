@@ -17,6 +17,17 @@ export const songsApi = {
     }),
 
   /**
+   * Rate song.
+   * @param {number} songId - Id of a song
+   * @param {number} rate - Rate from 1 - 5
+   * @returns {Promise<void>} - An empty promise :)
+   * @exmaple
+   * await songsApi.rateSong(1, 2);
+   */
+  rateSong: (songId: number, rate: number): Promise<void> =>
+    apiRequest<void>(`/songs/${songId}/${rate}`, { method: "PATCH" }),
+
+  /**
    * Fetch songs by author ID.
    *
    * @param {number} authorId - The unique ID of the author whose albums to retrieve.
@@ -41,7 +52,7 @@ export const songsApi = {
    */
   getFolders: (currentFolderId?: number): Promise<Folder[]> =>
     apiRequest<Folder[]>(
-      "/folders" + (currentFolderId ? `/${currentFolderId}` : "/")
+      "/folders" + (currentFolderId ? `/${currentFolderId}` : "/"),
     ),
 
   /**

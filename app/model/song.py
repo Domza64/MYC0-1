@@ -25,6 +25,7 @@ class Song(SQLModel, table=True):
     file_format: str = Field()  # 'mp3', 'flac', etc.
     image: Optional[str] = Field(default=None)
 
+
 # AuthorRead and AlbumRead are used in SongRead and have no connection to Author and Album models
 class AuthorRead(BaseModel):
     id: int
@@ -58,6 +59,8 @@ class SongRead(BaseModel):
     file_size: int
     file_format: str
     image: Optional[str] = None
+
+    rating: Optional[int] = None # User specific rating
 
     model_config = {
         "from_attributes": True

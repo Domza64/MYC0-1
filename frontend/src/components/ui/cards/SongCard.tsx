@@ -3,6 +3,7 @@ import { usePlayer } from "../../../contexts/PlayerContext";
 import { FaItunesNote } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { Song } from "../../../types/Song";
+import SongRating from "../SongRating";
 
 /**
  * Represents a single action in a song card's dropdown menu.
@@ -162,6 +163,7 @@ export default function SongCard({
       >
         {song.displayName}
       </span>
+      <SongRating song={song} className="mr-2" />
       <HiOutlineDotsVertical
         id={song.id.toString()}
         onClick={(e) => {
