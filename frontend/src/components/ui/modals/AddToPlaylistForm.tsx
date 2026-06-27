@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../buttons/Button";
 import type { Playlist } from "../../../types/data";
 import { playlistsApi } from "../../../lib/api/playlists";

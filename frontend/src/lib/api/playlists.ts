@@ -35,6 +35,29 @@ export const playlistsApi = {
     }),
 
   /**
+   * Updates an existing playlist.
+   *
+   * @param {number} id - The ID of the playlist to update.
+   * @param {{ name: string; description: string; shared: boolean }} data - The updated playlist details.
+   * @returns {Promise<Playlist>} A promise that resolves to the updated playlist.
+   *
+   * @example
+   * const updatedPlaylist = await playlistsApi.updatePlaylist(1, {
+   *   name: "Chill Hits",
+   *   description: "Cool playlist",
+   *   shared: true,
+   * });
+   */
+  updatePlaylist: (
+    id: number,
+    data: { name: string; description: string; shared: boolean },
+  ): Promise<Playlist> =>
+    apiRequest<Playlist>(`/playlists/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+
+  /**
    * Create a new playlist.
    * @param {{ name: string; description?: string; shared: boolean }} data - Playlist info.
    * @returns {Promise<Playlist>} - The created playlist.
@@ -63,7 +86,7 @@ export const playlistsApi = {
    */
   addSongs: (
     playlistId: number,
-    songIds: number[]
+    songIds: number[],
   ): Promise<{ added_count: number }> =>
     apiRequest<{ added_count: number }>(`/playlists/songs/${playlistId}`, {
       method: "POST",

@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel
@@ -54,7 +55,8 @@ def create_playlist(
         name=playlist_data.name,
         description=playlist_data.description,
         shared=playlist_data.shared,
-        user_id=session_data.user_id
+        user_id=session_data.user_id,
+        updated_at=datetime.now(),
     )
     session.add(new_playlist)
     session.commit()
@@ -116,6 +118,40 @@ def read_playlist(playlist_id: int, session: SessionDep, session_data: SessionDa
         username=playlist.user.username if playlist.user else "Unknown"
     )
 
+class UpdatePlaylistDTO(BaseModel):
+    name: str
+    description: str
+    shared: bool
+
+@router.patch("/{playlist_id}", response_model=PlaylistRead, dependencies=[Depends(cookie)])
+def update_playlist(playlist_id: int, data: UpdatePlaylistDTO, session: SessionDep, session_data: SessionData = Depends(verifier)) -> PlaylistRead:
+    """
+    Get a playlist by its ID.
+    """
+    playlist = session.get(Playlist, playlist_id)
+    if not playlist:
+        raise HTTPException(status_code=404, detail="Playlist not found")
+
+    if playlist.user_id != session_data.user_id:
+        raise HTTPException(status_code=403, detail="You do not have permission to edit this playlist")
+
+    playlist.name = data.name
+    playlist.description = data.description
+    playlist.shared = data.shared
+    playlist.updated_at = datetime.now()
+
+    session.commit()
+
+    return PlaylistRead(
+        id=playlist.id,
+        name=playlist.name,
+        description=playlist.description,
+        shared=playlist.shared,
+        user_id=playlist.user_id,
+        playlist_image=playlist.playlist_image,
+        username=playlist.user.username
+    )
+
 @router.delete("/{playlist_id}/{song_id}", dependencies=[Depends(cookie)])
 def remove_song_from_playlist(playlist_id: int, song_id: int, session: SessionDep, session_data: SessionData = Depends(verifier)):
     """
@@ -135,6 +171,7 @@ def remove_song_from_playlist(playlist_id: int, song_id: int, session: SessionDe
         raise HTTPException(status_code=404, detail="Song not found in playlist")
     
     session.delete(playlist_songs)
+    playlist.updated_at = datetime.now()
     session.commit()
     return Response(status_code=200)
 
@@ -198,6 +235,9 @@ def add_songs_to_playlist(playlist_id: int, data: AddSongsRequest, session: Sess
 
     if last_playlist_image:
         playlist.playlist_image = last_playlist_image
+
+    if added_count > 0:
+        playlist.updated_at = datetime.now()
 
     session.commit()
     return {"added_count": added_count}
