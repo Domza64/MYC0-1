@@ -1,9 +1,10 @@
 import { useState } from "react";
 import Button from "../ui/buttons/Button";
+import toast from "react-hot-toast";
 
+// TODO: Actually implement this the right way, only show scan to admin, fetch scan progres before showing scan button...
 export default function Library() {
   const [isScanning, setIsScanning] = useState(false);
-  const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
   const scanLibrary = async () => {
@@ -18,8 +19,7 @@ export default function Library() {
 
       if (!response.ok) throw new Error("Scan failed");
 
-      const data = await response.json();
-      setResult(data);
+      toast("Library Scan started...");
     } catch (err) {
       setError("Failed to scan library");
     } finally {
@@ -36,16 +36,6 @@ export default function Library() {
       {error && (
         <div className="mt-4 p-2 bg-rose-950/50 text-rose-500 rounded">
           {error}
-        </div>
-      )}
-      {result && (
-        <div className="mt-4 p-3 bg-stone-800 rounded">
-          <p className="font-medium">{result.message}</p>
-          <div className="mt-2 text-sm">
-            <p>Added: {result.added}</p>
-            <p>Removed: {result.removed}</p>
-            <p>Total: {result.total}</p>
-          </div>
         </div>
       )}
     </div>

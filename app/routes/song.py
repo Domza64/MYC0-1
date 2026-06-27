@@ -34,7 +34,22 @@ def read_song(song_id: int, session: SessionDep, session_data: SessionData = Dep
     return SongRead.model_validate(song)
 
 
-@router.get("/{song_id}/{rate}", response_model=SongRead, dependencies=[Depends(cookie)])
+@router.get("/folder/{folder_id}", response_model=list[SongRead], dependencies=[Depends(cookie)])
+def get_songs_in_folder(
+    folder_id: int,
+    session: Session = Depends(get_session),
+    session_data: SessionData = Depends(verifier)
+) -> list[SongRead]:
+    """
+    Return all songs that belong directly to the given folder.
+    """
+    print(folder_id)
+    songs = session.exec(select(Song).where(Song.folder_id == folder_id)).all()
+
+    return [SongRead.model_validate(song) for song in songs]
+
+
+@router.get("/{song_id}/{rate}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(cookie)])
 def read_song(song_id: int, rate: int, session: SessionDep, session_data: SessionData = Depends(verifier)) -> Response:
     """
     Set a rate for a song.
@@ -45,18 +60,3 @@ def read_song(song_id: int, rate: int, session: SessionDep, session_data: Sessio
 
     # TODO IMPLEMENT
     return Response(status_code=status.HTTP_204_NO_CONTENT)
-
-
-@router.get("/folder/{folder_id}", response_model=list[SongRead], dependencies=[Depends(cookie)])
-def get_songs_in_folder(
-    folder_id: int,
-    session: Session = Depends(get_session),
-    session_data: SessionData = Depends(verifier)
-) -> list[SongRead]:
-    """
-    Return all songs that belong directly to the given folder.
-    """
-    songs = session.exec(select(Song).where(Song.folder_id == folder_id)).all()
-
-    return [SongRead.model_validate(song) for song in songs]
-
