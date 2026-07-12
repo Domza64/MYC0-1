@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, text
 from app.db.sqlite import get_session
-from app.model.song import SongRead
+from app.models.song import SongRead
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from app.session.session_data import SessionData

@@ -1,9 +1,9 @@
 from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
-from app.model.album import Album, AlbumRead
+from app.models.album import Album, AlbumRead
 from app.db.sqlite import get_session
-from app.model.song import SongRead
+from app.models.song import SongRead
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from app.session.session_data import SessionData

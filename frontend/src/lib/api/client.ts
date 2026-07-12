@@ -38,7 +38,7 @@ type RequestOptions = RequestInit & {
  */
 export async function apiRequest<T = any, R = T>(
   endpoint: string,
-  options: RequestOptions & { converter?: (data: T) => R } = {}
+  options: RequestOptions & { converter?: (data: T) => R } = {},
 ): Promise<R> {
   const showToastError = options.showToastError ?? true;
   const { converter, ...fetchOptions } = options;
@@ -62,7 +62,7 @@ export async function apiRequest<T = any, R = T>(
         toast.error(
           typeof message === "object"
             ? JSON.stringify(message)
-            : String(message)
+            : String(message),
         );
       }
 

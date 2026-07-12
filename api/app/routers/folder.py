@@ -1,7 +1,7 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
-from app.model.folder import Folder
+from app.models.folder import Folder
 from app.db.sqlite import get_session
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier

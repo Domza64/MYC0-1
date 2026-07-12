@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlmodel import Session
 from app.db.sqlite import get_session
-from app.model.song_play_history import SongPlayHistory
+from app.models.song_play_history import SongPlayHistory
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from app.session.session_data import SessionData

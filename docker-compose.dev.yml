@@ -15,13 +15,13 @@ services:
 
   backend:
     build:
-      context: ./app
+      context: api
       dockerfile: Dockerfile.dev
     user: "1000:1000"
     volumes:
-      - ./app:/app
-      - ./app/music:/app/music
-      - ./app/data:/app/data:rw
+      - ./api/app:/app
+      - ./api/music:/music
+      - ./api/data:/data:rw
     networks:
       - app-network
 

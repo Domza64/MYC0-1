@@ -2,9 +2,9 @@ from http.client import HTTPException
 from typing import Annotated
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
-from app.model.author import Author
+from app.models.author import Author
 from app.db.sqlite import get_session
-from app.model.song import SongRead
+from app.models.song import SongRead
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from app.session.session_data import SessionData

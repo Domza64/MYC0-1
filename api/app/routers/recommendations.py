@@ -2,8 +2,8 @@ from typing import Annotated, List
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, select, func
 from app.db.sqlite import get_session
-from app.model.song import Song, SongRead
-from app.model.song_play_history import SongPlayHistory
+from app.models.song import Song, SongRead
+from app.models.song_play_history import SongPlayHistory
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from app.session.session_data import SessionData

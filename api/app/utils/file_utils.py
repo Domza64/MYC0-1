@@ -1,5 +1,5 @@
 from pathlib import Path
-from app.config import IMAGES_DIR
+from app.core.config import IMAGES_DIR
 
 
 AUDIO_EXTENSIONS = {".mp3", ".flac", ".wav", ".m4a", ".aac", ".ogg", ".wma"}

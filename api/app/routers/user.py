@@ -1,8 +1,8 @@
 from typing import Annotated
 
 from pydantic import BaseModel
-from app.lib.passwd import hash_password
-from app.model.user import User
+from app.utils.passwd import hash_password
+from app.models.user import User
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 from app.session.cookie import cookie

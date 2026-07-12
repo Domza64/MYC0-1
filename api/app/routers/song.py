@@ -1,7 +1,7 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlmodel import Session, select
-from app.model.song import Song, SongRead
+from app.models.song import Song, SongRead
 from app.db.sqlite import get_session
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier

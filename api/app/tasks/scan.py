@@ -1,12 +1,12 @@
 
-from app.config import MUSIC_DIR
+from app.core.config import MUSIC_DIR
 from sqlmodel import select, Session
 
 from app.db.sqlite import engine
-from app.lib.mp3lib import create_song
-from app.model.song import Song
-from app.lib.db_utils import insert_song
-from app.lib.file_utils import read_all_audio_files
+from app.utils.mp3lib import create_song
+from app.models.song import Song
+from app.utils.db_utils import insert_song
+from app.utils.file_utils import read_all_audio_files
 
 # TODO: Prevent multiple of same task running, raise app error if task is already running
 

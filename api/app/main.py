@@ -1,21 +1,21 @@
-from app.limiter import limiter
-from app.config import IMAGES_DIR, MUSIC_DIR
-from fastapi import FastAPI, HTTPException
+from app.core import limiter
+from app.core.config import IMAGES_DIR, MUSIC_DIR
+from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from app.db.sqlite import create_db_and_tables
-from app.routes.song import router as music_router
-from app.routes.scan import router as scan_router
-from app.routes.folder import router as folder_router
-from app.routes.auth import router as auth_router
-from app.routes.user import router as user_router
-from app.routes.playlist import router as playlist_router
-from app.routes.author import router as author_router
-from app.routes.album import router as album_router
-from app.routes.search import router as search_router
-from app.routes.telemetry import router as telemetry
-from app.routes.recommendations import router as recommendations
+from app.routers.song import router as music_router
+from app.routers.scan import router as scan_router
+from app.routers.folder import router as folder_router
+from app.routers.auth import router as auth_router
+from app.routers.user import router as user_router
+from app.routers.playlist import router as playlist_router
+from app.routers.author import router as author_router
+from app.routers.album import router as album_router
+from app.routers.search import router as search_router
+from app.routers.telemetry import router as telemetry
+from app.routers.recommendations import router as recommendations
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
@@ -56,15 +56,11 @@ app.include_router(recommendations)
 def on_startup():
     create_db_and_tables()
 
+@app.get("/")
+async def root():
+    return FileResponse(STATIC_DIR / "index.html")
+
+
 @app.get("/{full_path:path}")
-async def serve_spa(full_path: str):
-    # If the path starts with api/, music/, assets/, or static/, it should have been handled
-    if any(full_path.startswith(prefix) for prefix in ["api/", "music/", "assets/", "static/"]):
-        raise HTTPException(status_code=404, detail="Not found")
-    
-    # Serve index.html for all other routes (SPA routing)
-    index_path = STATIC_DIR / "index.html"
-    if index_path.exists():
-        return FileResponse(index_path)
-    else:
-        raise HTTPException(status_code=404, detail="SPA not found")
+async def spa(full_path: str):
+    return FileResponse(STATIC_DIR / "index.html")

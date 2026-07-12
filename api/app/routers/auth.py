@@ -1,10 +1,9 @@
 from typing import Annotated
-from app.lib.passwd import verify_password
-from app.model.user import User
+from app.utils.passwd import verify_password
+from app.models.user import User
 from app.session.session_data import SessionData
 from fastapi import APIRouter, Depends
 from fastapi.responses import Response, JSONResponse
-from sqlmodel import Session
 from pydantic import BaseModel
 from app.db.sqlite import get_session
 from app.session.backend import backend
@@ -12,7 +11,7 @@ from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from sqlmodel import Session, select
 from uuid import UUID, uuid4
-from app.limiter import limiter
+from app.core.limiter import limiter
 from starlette.requests import Request
 
 class LoginRequest(BaseModel):

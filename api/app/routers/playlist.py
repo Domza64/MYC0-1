@@ -3,10 +3,10 @@ from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel
 from sqlmodel import Session, select
-from app.model.playlist import Playlist, PlaylistRead
+from app.models.playlist import Playlist, PlaylistRead
 from app.db.sqlite import get_session
-from app.model.playlist_songs import PlaylistSongs
-from app.model.song import Song, SongRead
+from app.models.playlist_songs import PlaylistSongs
+from app.models.song import Song, SongRead
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from app.session.session_data import SessionData

@@ -2,10 +2,10 @@ from pathlib import Path
 from typing import Optional
 
 from sqlmodel import Session, select
-from app.lib.file_utils import save_picture
-from app.model.album import Album
-from app.model.author import Author
-from app.model.song import Song
+from app.utils.file_utils import save_picture
+from app.models.album import Album
+from app.models.author import Author
+from app.models.song import Song
 import eyed3
 
 

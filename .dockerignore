@@ -1,14 +1,14 @@
 # Ignore Python virtual environments
-app/.venv/
+api/.venv/
 # Ignore cache
-app/__pycache__/
+api/__pycache__/
 # Ignore Docker and git metadata
-app/Dockerfile.dev
-app/.dockerignore
-app/.gitignore
+api/Dockerfile.dev
+api/.dockerignore
+api/.gitignore
 # Ignore directories with large data
-app/data/
-app/music/
+api/data/
+api/music/
 # Optional: ignore logs or temp files
 *.log
 *.tmp

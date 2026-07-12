@@ -1,7 +1,7 @@
 import os
 from sqlmodel import Session, select
-from app.model.song import Song
-from app.model.folder import Folder
+from app.models.song import Song
+from app.models.folder import Folder
 
 
 def get_or_create_folder(session: Session, folder_path: str) -> Folder:

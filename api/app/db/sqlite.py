@@ -1,5 +1,5 @@
 from sqlmodel import SQLModel, create_engine, Session, select, text
-from app.lib.passwd import hash_password
+from app.utils.passwd import hash_password
 
 # TODO: Use alembic in future in case of schema changes
 
@@ -19,7 +19,7 @@ def create_db_and_tables():
 
 def create_default_user():
     with Session(engine) as session:
-        from app.model.user import User
+        from app.models.user import User
         
         statement = select(User)
         results = session.exec(statement)

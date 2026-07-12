@@ -5,8 +5,8 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - </path/to/your/music/folder>:/app/music # Your local music folder
-      - data:/app/data
+      - </path/to/your/music/folder>:/music # Your local music folder
+      - data:/data
     restart: unless-stopped
 
 volumes:
