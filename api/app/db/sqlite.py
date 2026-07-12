@@ -1,5 +1,6 @@
 from sqlmodel import SQLModel, create_engine, Session, select, text
 from app.utils.passwd import hash_password
+from app.session.roles import ADMIN_ROLE
 
 # TODO: Use alembic in future in case of schema changes
 
@@ -30,7 +31,7 @@ def create_default_user():
             default_user = User(
                 username="admin",
                 password=hash_password("admin"),
-                role="ADMIN"
+                role=ADMIN_ROLE
             )
             session.add(default_user)
             session.commit()

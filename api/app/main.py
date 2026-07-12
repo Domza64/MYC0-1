@@ -18,7 +18,7 @@ from app.routers.telemetry import router as telemetry
 from app.routers.recommendations import router as recommendations
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-
+from app.exceptions.api.handlers import ApiException, api_exception_handler
 
 # App
 app = FastAPI()
@@ -26,6 +26,7 @@ app = FastAPI()
 # Rate limiting
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_exception_handler(ApiException, api_exception_handler)
 
 # Music directory
 app.mount("/music", StaticFiles(directory=MUSIC_DIR), name="music")
@@ -55,7 +56,9 @@ app.include_router(recommendations)
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
+# TODO - Add CORS middleware
 
+# TODO - move to SPA router
 @app.get("/")
 async def root():
     return FileResponse(STATIC_DIR / "index.html")

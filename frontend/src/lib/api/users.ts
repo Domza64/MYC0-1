@@ -46,7 +46,7 @@ export const usersApi = {
    */
   updateUser: (data: UpdateUserInput): Promise<User> =>
     apiRequest<User>(`/users/${data.id}`, {
-      method: "PUT",
+      method: "PATCH",
       body: JSON.stringify(data),
     }),
 
