@@ -25,7 +25,10 @@ export const songsApi = {
    * await songsApi.rateSong(1, 2);
    */
   rateSong: (songId: number, rate: number): Promise<void> =>
-    apiRequest<void>(`/songs/${songId}/${rate}`, { method: "PATCH" }),
+    apiRequest<void>(`/songs/${songId}/rating`, {
+      method: "PUT",
+      body: JSON.stringify({ rate: rate }),
+    }),
 
   /**
    * Fetch songs by author ID.
