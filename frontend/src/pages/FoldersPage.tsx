@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Folder } from "../types/folder";
 import FolderCard from "../components/ui/cards/FolderCard";
-import SongCard from "../components/ui/cards/SongCard";
 import { usePlayer } from "../contexts/PlayerContext";
 import Button from "../components/ui/buttons/Button";
 import { FaPlay } from "react-icons/fa6";
@@ -11,6 +10,7 @@ import { useModal } from "../contexts/ModalContext";
 import { Song } from "../types/Song";
 import { useSongMenuActions } from "../hooks/useSongMenuActions";
 import { songsApi } from "../lib/api/songs";
+import SongRow from "../components/ui/cards/SongRow";
 
 // TODO: Does this need both folders and breadcrumns states? also put all updates in one useEffect
 export default function FoldersPage() {
@@ -149,7 +149,7 @@ export default function FoldersPage() {
           </div>
           <ul className="space-y-2">
             {songs.map((song) => (
-              <SongCard
+              <SongRow
                 key={song.id}
                 song={song}
                 menuActions={[addToPlaylist(song), addToQueue(song)]}

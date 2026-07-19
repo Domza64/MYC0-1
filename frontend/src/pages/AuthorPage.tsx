@@ -6,11 +6,11 @@ import { authorsApi } from "../lib/api/authors";
 import type { Song } from "../types/Song";
 import AlbumCard from "../components/ui/cards/AlbumCard";
 import { songsApi } from "../lib/api/songs";
-import SongCard from "../components/ui/cards/SongCard";
 import { FaPlay } from "react-icons/fa6";
 import Button from "../components/ui/buttons/Button";
 import { MdOutlineQueueMusic } from "react-icons/md";
 import { usePlayer } from "../contexts/PlayerContext";
+import SongRow from "../components/ui/cards/SongRow";
 
 export default function AuthorPage() {
   const [loading, setLoading] = useState(true);
@@ -93,7 +93,7 @@ export default function AuthorPage() {
       </div>
       <ul>
         {songs.map((song, index) => (
-          <SongCard song={song} key={index} />
+          <SongRow song={song} key={index} />
         ))}
       </ul>
     </div>

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import type { Song } from "../../types/Song";
-import SongCard from "./cards/SongCard";
 import { searchApi } from "../../lib/api/search";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useSongMenuActions } from "../../hooks/useSongMenuActions";
+import SongRow from "./cards/SongRow";
 
 export default function SearchBar() {
   const [results, setResults] = useState<Song[]>([]);
@@ -77,7 +77,7 @@ export default function SearchBar() {
           ) : results.length > 0 ? (
             <div className="flex flex-col space-y-2">
               {results.map((song: Song, index) => (
-                <SongCard
+                <SongRow
                   song={song}
                   key={index}
                   menuActions={[addToPlaylist(song), addToQueue(song)]}

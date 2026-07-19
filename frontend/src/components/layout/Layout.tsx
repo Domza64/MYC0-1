@@ -40,7 +40,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         )}
 
         {/* Current Page */}
-        <div className="w-full">
+        <div className="w-full flex-1 min-w-0">
           <Header onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} />
           <main className="md:p-4 p-2 md:pb-26 pb-20">{children}</main>
         </div>

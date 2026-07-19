@@ -1,10 +1,10 @@
 import { MdClearAll, MdPlaylistAdd } from "react-icons/md";
 import Button from "../components/ui/buttons/Button";
-import SongCard from "../components/ui/cards/SongCard";
 import AddToPlaylistForm from "../components/ui/modals/AddToPlaylistForm";
 import { useModal } from "../contexts/ModalContext";
 import { usePlayer } from "../contexts/PlayerContext";
 import { useSongMenuActions } from "../hooks/useSongMenuActions";
+import SongRow from "../components/ui/cards/SongRow";
 export default function QueuePage() {
   const player = usePlayer();
   const { addModal, closeModal } = useModal();
@@ -52,7 +52,7 @@ export default function QueuePage() {
       </div>
       <ul className="space-y-2">
         {player.state.currentQueue.map((song) => (
-          <SongCard
+          <SongRow
             song={song}
             menuActions={[addToPlaylist(song), removeFromQueue(song)]}
             key={song.id}

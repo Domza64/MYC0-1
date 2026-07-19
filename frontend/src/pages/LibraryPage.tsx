@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import SongCard from "../components/ui/cards/SongCard";
 import { useInView } from "react-intersection-observer";
 import { useSongMenuActions } from "../hooks/useSongMenuActions";
 import { Song } from "../types/Song";
 import { songsApi } from "../lib/api/songs";
+import SongRow from "../components/ui/cards/SongRow";
 
 const LIMIT = 30;
 
@@ -57,7 +57,7 @@ export default function LibraryPage() {
 
           return (
             <div key={song.id} ref={isLastSong ? ref : null}>
-              <SongCard
+              <SongRow
                 song={song}
                 menuActions={[addToPlaylist(song), addToQueue(song)]}
               />

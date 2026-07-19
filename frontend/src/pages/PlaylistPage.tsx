@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import type { Playlist } from "../types/data";
-import SongCard from "../components/ui/cards/SongCard";
 import { useNavigate, useParams } from "react-router-dom";
 import { usePlayer } from "../contexts/PlayerContext";
 import { playlistsApi } from "../lib/api/playlists";
@@ -17,6 +16,7 @@ import { BsPeopleFill } from "react-icons/bs";
 import { useAuth } from "../contexts/AuthContext";
 import { ImCancelCircle } from "react-icons/im";
 import { formatSmartDate } from "../lib/formatters";
+import SongRow from "../components/ui/cards/SongRow";
 
 export default function PlaylistsPage() {
   const [playlist, setPlaylist] = useState<Playlist>();
@@ -257,7 +257,7 @@ export default function PlaylistsPage() {
       <ul className="flex flex-col space-y-2">
         {songs.length > 0 &&
           songs.map((song) => (
-            <SongCard
+            <SongRow
               key={song.id}
               song={song}
               menuActions={[

@@ -3,13 +3,13 @@ import type { Album } from "../types/data";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { albumsApi } from "../lib/api/albums";
 import type { Song } from "../types/Song";
-import SongCard from "../components/ui/cards/SongCard";
 import { useSongMenuActions } from "../hooks/useSongMenuActions";
 import Button from "../components/ui/buttons/Button";
 import { FaPlay } from "react-icons/fa";
 import { IoChevronBack } from "react-icons/io5";
 import { usePlayer } from "../contexts/PlayerContext";
 import { MdOutlineQueueMusic } from "react-icons/md";
+import SongRow from "../components/ui/cards/SongRow";
 
 export default function AlbumPage() {
   const [loading, setLoading] = useState(true);
@@ -97,7 +97,7 @@ export default function AlbumPage() {
       <ul className="flex flex-col space-y-2">
         {songs.length > 0 &&
           songs.map((song, index) => (
-            <SongCard
+            <SongRow
               key={index}
               song={song}
               menuActions={[addToPlaylist(song), addToQueue(song)]}

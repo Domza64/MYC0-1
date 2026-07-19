@@ -2,7 +2,7 @@ import { useModal } from "../contexts/ModalContext";
 import { usePlayer } from "../contexts/PlayerContext";
 import AddToPlaylistForm from "../components/ui/modals/AddToPlaylistForm";
 import type { Song } from "../types/Song";
-import type { MenuAction } from "../components/ui/cards/SongCard";
+import type { MenuAction } from "../components/ui/cards/SongDropdownMenu";
 
 export const useSongMenuActions = () => {
   const { addModal, closeModal } = useModal();
