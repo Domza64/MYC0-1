@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session, select, func
 from app.db.sqlite import get_session
 from app.models.song import Song, SongRead
-from app.models.song_play_history import SongPlayHistory
+from app.models.song_play_history import SongPlayRecord
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from app.session.session_data import SessionData
@@ -26,11 +26,11 @@ def recently_played_unique(
     # Subquery: get latest play per song
     subq = (
         select(
-            SongPlayHistory.song_id,
-            func.max(SongPlayHistory.played_at).label("last_played")
+            SongPlayRecord.song_id,
+            func.max(SongPlayRecord.played_at).label("last_played")
         )
-        .where(SongPlayHistory.user_id == session_data.user_id)
-        .group_by(SongPlayHistory.song_id)
+        .where(SongPlayRecord.user_id == session_data.user_id)
+        .group_by(SongPlayRecord.song_id)
         .subquery()
     )
 

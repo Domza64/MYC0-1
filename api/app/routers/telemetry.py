@@ -1,37 +1,26 @@
-from sqlalchemy.exc import IntegrityError
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends
 from sqlmodel import Session
 from app.db.sqlite import get_session
-from app.models.song_play_history import SongPlayHistory
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from app.session.session_data import SessionData
-from datetime import datetime, timezone
-
+from app.schemas.success import SuccessResponse
+from app.services import telemetry_service
 
 router = APIRouter(prefix="/api/telemetry")
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
-# TODO: Maybe replace with middleware on song file route in future, or maybe not?
-@router.post("/play-song", dependencies=[Depends(cookie)])
-def get_album(song_id: int, session: Session = Depends(get_session), session_data: SessionData = Depends(verifier)):
+@router.post("/play-song", response_model=SuccessResponse, dependencies=[Depends(cookie)])
+def create_play_record(
+        song_id: int,
+        session: Session = Depends(get_session),
+        session_data: SessionData = Depends(verifier)
+) -> SuccessResponse:
     """
-    Insert song play history record
+    Add song play history record
     """
-    
-    play = SongPlayHistory(
-        user_id=session_data.user_id,
-        song_id=song_id,
-        played_at=datetime.now(timezone.utc).isoformat(),
-    )
+    telemetry_service.add_play_record(session, song_id, session_data)
 
-    try:
-        session.add(play)
-        session.commit()
-    except IntegrityError:
-        session.rollback()
-        raise HTTPException(status_code=404, detail="Song or user not found")
-
-    return Response(status_code=200)
+    return SuccessResponse(message="Play recorded")
