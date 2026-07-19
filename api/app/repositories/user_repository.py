@@ -28,9 +28,3 @@ def get_user(session: Session, user_id: int) -> User | None:
 def delete_user(session: Session, user: User):
     session.delete(user)
     session.commit()
-
-
-def save_user(session: Session, user) -> User:
-    session.commit()
-    session.refresh(user)
-    return user

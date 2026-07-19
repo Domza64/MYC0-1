@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response, status
 from sqlmodel import Session
 from app.session.cookie import cookie
 from app.session.session_data import SessionData
@@ -7,7 +7,6 @@ from app.db.sqlite import get_session
 from app.session.session_verifier import verifier
 from app.schemas.user import UserCreateRequest, UserUpdateRequest, BasicUserResponse
 from app.services import user_service
-from app.schemas.success import SuccessResponse
 
 router = APIRouter(prefix="/api/users")
 SessionDep = Annotated[Session, Depends(get_session)]
@@ -55,14 +54,14 @@ def update_user(
     return BasicUserResponse.model_validate(user)
 
 
-@router.delete("/{user_id}", response_model=SuccessResponse, dependencies=[Depends(cookie)])
+@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(cookie)])
 def delete_user(
         user_id: int,
         session: SessionDep,
         session_data: SessionData = Depends(verifier)
-) -> SuccessResponse:
+) -> Response:
     """
     Delete a user by id.
     """
     user_service.delete_user(session, session_data, user_id)
-    return SuccessResponse(message="User deleted successfully")
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

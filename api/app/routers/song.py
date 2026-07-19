@@ -1,62 +1,51 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, Response, status
-from sqlmodel import Session, select
-from app.models.song import Song, SongRead
+from fastapi import APIRouter, Depends, Response, status
+from sqlmodel import Session
 from app.db.sqlite import get_session
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from app.session.session_data import SessionData
-
+from app.services import song_service
+from app.schemas.song import SongResponse, SongRateRequest
 
 router = APIRouter(prefix="/api/songs")
 SessionDep = Annotated[Session, Depends(get_session)]
 
-# TODO: Getting songs for albuims, playlists or authors should be in their respective routers, not here.
-@router.get("", response_model=list[SongRead], dependencies=[Depends(cookie)])
-def get_all_songs(session: SessionDep, offset: int = 0, limit: int = 10, session_data: SessionData = Depends(verifier)) -> list[SongRead]:
+
+@router.get("", response_model=list[SongResponse], dependencies=[Depends(cookie)])
+def get_all_songs(
+        session: SessionDep,
+        offset: int = 0,
+        limit: int = 10,
+        session_data: SessionData = Depends(verifier)
+) -> list[SongResponse]:
     """
     Get all songs.
     """
-    songs = session.exec(select(Song).offset(offset).limit(limit)).all()
-
-    return [SongRead.model_validate(song) for song in songs]
+    return song_service.get_songs(session, session_data.user_id, offset, limit)
 
 
-@router.get("/{song_id}", response_model=SongRead, dependencies=[Depends(cookie)])
-def read_song(song_id: int, session: SessionDep, session_data: SessionData = Depends(verifier)) -> SongRead:
+@router.get("/{song_id}", response_model=SongResponse, dependencies=[Depends(cookie)])
+def read_song(
+        song_id: int,
+        session: SessionDep,
+        session_data: SessionData = Depends(verifier)
+) -> SongResponse:
     """
     Get a song by its ID.
     """
-    song = session.get(Song, song_id)
-    if not song:
-        raise HTTPException(status_code=404, detail="Song not found")
-    
-    return SongRead.model_validate(song)
+    return song_service.get_song(session, session_data.user_id, song_id)
 
 
-@router.get("/folder/{folder_id}", response_model=list[SongRead], dependencies=[Depends(cookie)])
-def get_songs_in_folder(
-    folder_id: int,
-    session: Session = Depends(get_session),
-    session_data: SessionData = Depends(verifier)
-) -> list[SongRead]:
-    """
-    Return all songs that belong directly to the given folder.
-    """
-    print(folder_id)
-    songs = session.exec(select(Song).where(Song.folder_id == folder_id)).all()
-
-    return [SongRead.model_validate(song) for song in songs]
-
-
-@router.get("/{song_id}/{rate}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(cookie)])
-def read_song(song_id: int, rate: int, session: SessionDep, session_data: SessionData = Depends(verifier)) -> Response:
+@router.put("/{song_id}/rating", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(cookie)])
+def rate_song(
+        song_id: int,
+        rate_request: SongRateRequest,
+        session: SessionDep,
+        session_data: SessionData = Depends(verifier)
+) -> Response:
     """
     Set a rate for a song.
     """
-    song = session.get(Song, song_id)
-    if not song:
-        raise HTTPException(status_code=404, detail="Song not found")
-
-    # TODO IMPLEMENT
+    song_service.rate_song(session, session_data.user_id, song_id, rate_request.rate)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

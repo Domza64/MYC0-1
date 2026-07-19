@@ -65,7 +65,7 @@ export const songsApi = {
    * const songs = await songsApi.getByFolder(1);
    */
   getByFolder: (folderId: number): Promise<Song[]> =>
-    apiRequest<Song[]>(`/songs/folder/${folderId}`, {
+    apiRequest<Song[]>(`/folders/songs/${folderId}`, {
       converter: (data) => data.map((songData) => new Song(songData)),
     }),
 };

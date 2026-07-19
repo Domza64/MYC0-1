@@ -78,7 +78,9 @@ def update_user(
             raise NotAllowedException("You can't change your own role.")
         existing_user.role = new_user_data.role
 
-    return user_repository.save_user(session, existing_user)
+    session.commit()
+    session.refresh(existing_user)
+    return existing_user
 
 
 def delete_user(session: Session, current_user: SessionData, user_id: int) -> None:
