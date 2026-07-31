@@ -1,38 +1,22 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends
-from sqlmodel import Session, text
+from sqlmodel import Session
 from app.db.sqlite import get_session
-from app.models.song import SongRead
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from app.session.session_data import SessionData
-
+from app.schemas.search import SearchResponse
+from app.services import search_service
 
 router = APIRouter(prefix="/api")
 SessionDep = Annotated[Session, Depends(get_session)]
 
-# TODO: In future also search albums, playlists, authors... returns {albums: [Album], "songs": [Song]...}
-@router.get("/search", dependencies=[Depends(cookie)])
-def search(query: str, page: int = 0, session: Session = Depends(get_session), session_data: SessionData = Depends(verifier)) -> list[SongRead]:
-    if not query.strip():
-        return []
-    
-    fts_query = f"{query}*"
-    limit = 15
-    offset = page * limit
-    
-    stmt = text(f"""
-        SELECT song.*
-        FROM song
-        JOIN song_fts ON song.id = song_fts.rowid
-        WHERE song_fts MATCH :query
-        ORDER BY bm25(song_fts)
-        LIMIT {limit} OFFSET {offset}
-    """)
-    
-    results = session.exec(stmt, params={"query": fts_query}).all()
 
-    print(results)
-
-    return [SongRead.model_validate(song) for song in results]
-
+@router.get("/search", response_model=SearchResponse, dependencies=[Depends(cookie)])
+def search(
+        query: str,
+        page: int = 0,
+        session: Session = Depends(get_session),
+        session_data: SessionData = Depends(verifier)
+) -> SearchResponse:
+    return search_service.search(session, session_data.user_id, query, page)

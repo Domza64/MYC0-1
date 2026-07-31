@@ -5,9 +5,15 @@ import { searchApi } from "../../lib/api/search";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useSongMenuActions } from "../../hooks/useSongMenuActions";
 import SongRow from "./cards/SongRow";
+import type { SearchResult } from "../../types/search";
 
+/** ! Search temp patch fixed to only show songs returned by backend !
+  TODO: SearchResult should maybe be class with method like empty, also implement 
+  display logic for albus and authors. Lastly Loading and not found / error searching 
+  states should be handeled better than right now. Current logic is just a temp thing.
+ */
 export default function SearchBar() {
-  const [results, setResults] = useState<Song[]>([]);
+  const [results, setResults] = useState<SearchResult | null>(null);
   const [showResults, setShowResults] = useState(false);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
@@ -18,7 +24,7 @@ export default function SearchBar() {
 
   useEffect(() => {
     if (!search) {
-      setResults([]);
+      setResults(null);
       setShowResults(false);
       return;
     }
@@ -27,7 +33,7 @@ export default function SearchBar() {
 
     const timeoutId = setTimeout(() => {
       searchApi
-        .getSongs(search)
+        .search(search)
         .then(setResults)
         .finally(() => setLoading(false));
     }, 400); // debounce delay
@@ -70,13 +76,13 @@ export default function SearchBar() {
       </div>
       {showResults && search && (
         <div className="bg-stone-950 shadow shadow-stone-950 border-stone-700 border mt-2 p-2 rounded-2xl w-full absolute">
-          {loading ? (
+          {loading || results == null ? (
             <div>
               <AiOutlineLoading3Quarters className="animate-spin mx-auto" />
             </div>
-          ) : results.length > 0 ? (
+          ) : results.songs.length > 0 ? (
             <div className="flex flex-col space-y-2">
-              {results.map((song: Song, index) => (
+              {results.songs.map((song: Song, index) => (
                 <SongRow
                   song={song}
                   key={index}
