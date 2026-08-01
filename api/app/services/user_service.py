@@ -4,7 +4,7 @@ from app.schemas.user import UserCreateRequest, UserUpdateRequest
 from app.utils.passwd import hash_password
 from app.models.user import User
 from app.exceptions.domain.user import UsernameAlreadyExistsException, CannotDeleteSelfException, UserNotFoundException
-from app.exceptions.domain.admin import NotAllowedException
+from app.exceptions.domain.permissions import NotAllowedException
 from app.session.session_data import SessionData
 from app.session.roles import ADMIN_ROLE
 

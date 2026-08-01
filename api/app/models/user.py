@@ -9,4 +9,4 @@ class User(SQLModel, table=True):
     password: str = Field(index=False)
     user_image: Optional[str] = Field(default=None)
 
-    playlists: list["Playlist"] = Relationship(back_populates="user", cascade_delete=True)
+    playlists: list["Playlist"] = Relationship(back_populates="creator", cascade_delete=True)

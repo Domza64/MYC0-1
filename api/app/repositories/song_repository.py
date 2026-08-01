@@ -3,6 +3,7 @@ from sqlalchemy import and_, text, func
 from app.models.song import Song
 from app.models.song_rating import SongRating
 from app.models.song_play_record import SongPlayRecord
+from app.models.playlist_songs import PlaylistSongs
 
 
 def get_songs(session: Session, user_id: int, offset: int, limit: int) -> list[tuple[Song, int | None]]:
@@ -113,4 +114,20 @@ def recently_played_songs(session: Session, user_id: int, page: int, page_size: 
         .limit(page_size)
     )
 
+    return list(session.exec(statement).all())
+
+
+def get_songs_from_playlist(session: Session, user_id: int, playlist_id: int) -> list[tuple[Song, int | None]]:
+    statement = (
+        select(Song, SongRating.rating)
+        .join(PlaylistSongs, PlaylistSongs.song_id == Song.id)
+        .outerjoin(
+            SongRating,
+            and_(
+                SongRating.song_id == Song.id,
+                SongRating.user_id == user_id,
+            )
+        )
+        .where(PlaylistSongs.playlist_id == playlist_id)
+    )
     return list(session.exec(statement).all())

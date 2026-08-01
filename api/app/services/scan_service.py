@@ -2,7 +2,7 @@ from fastapi import BackgroundTasks
 from app.session.session_data import SessionData
 from app.tasks.scan import library_scan
 from app.session.roles import ADMIN_ROLE
-from app.exceptions.domain.admin import NotAllowedException
+from app.exceptions.domain.permissions import NotAllowedException
 
 
 def scan_library(session_data: SessionData, background_tasks: BackgroundTasks) -> None:

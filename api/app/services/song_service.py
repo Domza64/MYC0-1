@@ -13,6 +13,7 @@ def get_songs(session: Session, user_id: int, offset: int, limit: int) -> List[S
 
     # Map to DTO here because the query returns user-specific data (rating),
     # which is not part of the Song ORM model and cannot be handled by generic router mapping.
+    # TODO: Move this rating mapping logic to some common mapper as it's repeated in many parts of the application
     return [
         SongResponse.model_validate(song).model_copy(
             update={"rating": rating}

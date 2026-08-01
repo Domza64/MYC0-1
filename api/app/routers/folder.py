@@ -33,7 +33,6 @@ def get_songs_in_folder(
     """
     Return all songs that belong directly to the given folder.
     """
-    print(folder_id)
     songs = session.exec(select(Song).where(Song.folder_id == folder_id)).all()
 
     return [SongResponse.model_validate(song) for song in songs]
