@@ -13,7 +13,7 @@ export default function SongGridCard({ song, menuActions }: SongGridCardProps) {
   const isActive = state.currentSong?.id === song.id;
 
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex md:w-60 w-36 flex-col">
       <div
         onClick={() => dispatch({ type: "PLAY_SONG", payload: song })}
         className="aspect-square w-full cursor-pointer select-none overflow-hidden rounded-2xl bg-stone-900/75 transition-colors hover:bg-stone-900"

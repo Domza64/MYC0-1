@@ -5,7 +5,9 @@ from sqlalchemy import Index
 
 
 class SongPlayRecord(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+    __tablename__ = "song_play_record"
+
+    record_id: Optional[int] = Field(default=None, primary_key=True)
 
     user_id: int = Field(foreign_key="user.id")
     song_id: int = Field(foreign_key="song.id")

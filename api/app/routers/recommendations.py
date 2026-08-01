@@ -1,48 +1,24 @@
 from typing import Annotated, List
 from fastapi import APIRouter, Depends
-from sqlmodel import Session, select, func
+from sqlmodel import Session
 from app.db.sqlite import get_session
-from app.models.song import Song, SongRead
-from app.models.song_play_history import SongPlayRecord
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from app.session.session_data import SessionData
-
+from app.schemas.song import SongResponse
+from app.services import song_service
 
 router = APIRouter(prefix="/api/recommendations")
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
-@router.get("/recently-played", dependencies=[Depends(cookie)])
+@router.get("/recently-played", response_model=list[SongResponse], dependencies=[Depends(cookie)])
 def recently_played_unique(
     session: Session = Depends(get_session),
     session_data: SessionData = Depends(verifier),
-    limit: int = 15,
-) -> List[SongRead]:
+    page: int = 0,
+) -> List[SongResponse]:
     """
     Return the list of recently played unique songs for the current user
     """
-
-    # Subquery: get latest play per song
-    subq = (
-        select(
-            SongPlayRecord.song_id,
-            func.max(SongPlayRecord.played_at).label("last_played")
-        )
-        .where(SongPlayRecord.user_id == session_data.user_id)
-        .group_by(SongPlayRecord.song_id)
-        .subquery()
-    )
-
-    # Join with Song to fetch full song info
-    stmt = (
-        select(Song)
-        .join(subq, subq.c.song_id == Song.id)
-        .order_by(subq.c.last_played.desc())
-        .limit(limit)
-    )
-
-    songs = session.exec(stmt).all()
-
-    # Convert to Pydantic models
-    return [SongRead.model_validate(song) for song in songs]
+    return song_service.recently_played_songs(session, session_data.user_id, page)

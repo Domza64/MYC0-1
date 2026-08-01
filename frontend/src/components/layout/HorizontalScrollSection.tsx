@@ -89,7 +89,7 @@ export default function HorizontalScrollSection({
           className="flex w-full min-w-0 gap-4 overflow-x-auto scroll-smooth snap-x snap-proximity scrollbar-hide select-none"
         >
           {React.Children.toArray(children).map((child, index) => (
-            <li key={index} className="max-w-60 shrink-0 snap-start">
+            <li key={index} className="shrink-0 snap-start">
               {child}
             </li>
           ))}

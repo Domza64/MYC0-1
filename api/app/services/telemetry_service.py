@@ -1,7 +1,7 @@
 from sqlmodel import Session
 from datetime import datetime, timezone
 from sqlalchemy.exc import IntegrityError
-from app.models.song_play_history import SongPlayRecord
+from app.models.song_play_record import SongPlayRecord
 from app.repositories import telemetry_repository
 from app.session.session_data import SessionData
 

@@ -15,7 +15,7 @@ SessionDep = Annotated[Session, Depends(get_session)]
 @router.get("", response_model=list[SongResponse], dependencies=[Depends(cookie)])
 def get_all_songs(
         session: SessionDep,
-        offset: int = 0,
+        offset: int = 0, # TODO: Refactor to be page instead of offset, to aligned with rest of the application
         limit: int = 10,
         session_data: SessionData = Depends(verifier)
 ) -> list[SongResponse]:

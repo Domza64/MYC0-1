@@ -36,9 +36,23 @@ def get_song(session: Session, user_id: int, song_id: int) -> SongResponse:
 def rate_song(session: Session, user_id: int, song_id: int, rate: int) -> None:
     existing_rating: SongRating | None = song_rating_repository.get_rating(session, user_id, song_id)
     if not existing_rating:
-        get_song(session, user_id, song_id) # Just call get_song, in case song doesn't exist, it will throw SongNotFoundException.
+        # Check if song exists by calling get_song which throws SongNotFoundException if song doesn't exist.
+        get_song(session, user_id, song_id)
         new_rating = SongRating(song_id=song_id, user_id=user_id, rating=rate)
         song_rating_repository.add_rating(session, new_rating)
     else:
         existing_rating.rating = rate
         session.commit()
+
+
+def recently_played_songs(session: Session, user_id: int, page: int) -> List[SongResponse]:
+    rows: list[tuple[Song, int | None]] = song_repository.recently_played_songs(session, user_id, page)
+
+    # Map to DTO here because the query returns user-specific data (rating),
+    # which is not part of the Song ORM model and cannot be handled by generic router mapping.
+    return [
+        SongResponse.model_validate(song).model_copy(
+            update={"rating": rating}
+        )
+        for song, rating in rows
+    ]
