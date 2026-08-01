@@ -1,25 +1,21 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks, Response
+from fastapi import APIRouter, Depends, status, BackgroundTasks, Response
 from sqlmodel import Session
 from app.db.sqlite import get_session
 from app.session.cookie import cookie
 from app.session.session_verifier import verifier
 from app.session.session_data import SessionData
-from app.tasks.scan import library_scan
-from app.session.roles import ADMIN_ROLE
+from app.services import scan_service
 
 router = APIRouter(prefix="/api")
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
-# TODO: Make this async background task cause this is not a good now but works for testing
 @router.post("/scan-library", status_code=status.HTTP_202_ACCEPTED, dependencies=[Depends(cookie)])
-def scan_files(background_tasks: BackgroundTasks, session_data: SessionData = Depends(verifier)) -> Response:
-    if session_data.role != ADMIN_ROLE:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Admin privileges required"
-        )
-
-    background_tasks.add_task(library_scan)
+def scan_files(
+        background_tasks: BackgroundTasks,
+        session_data: SessionData = Depends(verifier)
+) -> Response:
+    """Initiate a library scan"""
+    scan_service.scan_library(session_data, background_tasks)
     return Response(status_code=status.HTTP_202_ACCEPTED)

@@ -12,9 +12,6 @@ def search(session: Session, user_id: int, query: str, page: int) -> SearchRespo
     limit = 15
     offset = page * limit
 
-    data = song_repository.search(session, user_id, query, limit, offset)
-    print(data)
-
     songs: List[SongResponse] = [
         SongResponse.model_validate(song).model_copy(
             update={"rating": rating}
@@ -22,7 +19,8 @@ def search(session: Session, user_id: int, query: str, page: int) -> SearchRespo
         for song, rating in song_repository.search(session, user_id, query, limit, offset)
     ]
 
-    # TODO: Implement search for albums and authors.
+    # TODO: Implement search for albums and authors. Also how does limit, page and
+    #  offset apply to these, especially on dedicated future search page...
     albums: List[AlbumResponse] = []
     authors: List[AuthorResponse] = []
 

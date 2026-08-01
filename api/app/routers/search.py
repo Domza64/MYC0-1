@@ -19,4 +19,5 @@ def search(
         session: Session = Depends(get_session),
         session_data: SessionData = Depends(verifier)
 ) -> SearchResponse:
+    """Returns list of songs, authors and albums that match the search query"""
     return search_service.search(session, session_data.user_id, query, page)

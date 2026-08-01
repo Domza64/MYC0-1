@@ -19,15 +19,6 @@ class CannotDeleteSelfException(ApiException):
         )
 
 
-class NotAllowedException(ApiException):
-    def __init__(self, message: str = "You are not allowed to perform this action."):
-        super().__init__(
-            code="FORBIDDEN",
-            message=message,
-            status_code=403,
-        )
-
-
 class UserNotFoundException(ApiException):
     def __init__(self, message: str):
         super().__init__(
