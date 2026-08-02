@@ -1,4 +1,4 @@
-from typing import List, Literal
+from typing import Literal
 from sqlmodel import Session
 from datetime import datetime, timezone
 from app.models.playlist import Playlist
@@ -13,7 +13,7 @@ from app.models.playlist_songs import PlaylistSongs
 from app.schemas.playlist import AddSongsRequest
 
 
-def get_playlists(session: Session, user_id: int) -> List[Playlist]:
+def get_playlists(session: Session, user_id: int) -> list[Playlist]:
     """
     Returns all playlists created by and shared with the user.
     """
@@ -35,7 +35,7 @@ def create_playlist(session: Session, user_id: int, playlist_data: PlaylistCreat
     return playlist_repository.persist_playlist(session, new_playlist)
 
 
-def get_songs(session: Session, user_id: int, playlist_id: int):
+def get_songs(session: Session, user_id: int, playlist_id: int) -> list[SongResponse]:
     """
     Returns a list of songs from a playlist.
     """
@@ -101,8 +101,8 @@ def add_songs(session: Session, user_id: int, playlist_id: int, data: AddSongsRe
     playlist: Playlist = _check_and_get_playlist(session, user_id, playlist_id, "edit")
 
     current_max_position: int = playlist_repository.get_last_song_position(session, playlist_id)
-    existing_song_ids: List[int] = playlist_repository.get_songs_ids_from_playlist(session, playlist_id)
-    songs_to_add: List[PlaylistSongs] = []
+    existing_song_ids: list[int] = playlist_repository.get_songs_ids_from_playlist(session, playlist_id)
+    songs_to_add: list[PlaylistSongs] = []
 
     for song_id in data.song_ids:
         if song_id in existing_song_ids:

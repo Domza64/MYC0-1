@@ -131,3 +131,18 @@ def get_songs_from_playlist(session: Session, user_id: int, playlist_id: int) ->
         .where(PlaylistSongs.playlist_id == playlist_id)
     )
     return list(session.exec(statement).all())
+
+
+def get_songs_from_album(session: Session, user_id: int, album_id: int) -> list[tuple[Song, int | None]]:
+    statement = (
+        select(Song, SongRating.rating)
+        .where(Song.album_id == album_id)
+        .outerjoin(
+            SongRating,
+            and_(
+                SongRating.song_id == Song.id,
+                SongRating.user_id == user_id,
+            )
+        )
+    )
+    return list(session.exec(statement).all())
