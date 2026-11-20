@@ -1,8 +1,0 @@
-.venv/
-__pycache__/
-Dockerfile.dev
-.dockerignore
-.gitignore
-README.md
-data/
-music/
