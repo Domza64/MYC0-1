@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.myco-1</groupId>
 	<artifactId>player</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}</version>
 	<name/>
 	<description/>
 	<url/>
@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>25</java.version>
+		<revision>devbuild</revision>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -94,6 +95,24 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.5.2</version>
+				<configuration>
+					<from>
+						<image>eclipse-temurin:25-jre</image>
+					</from>
+
+					<to>
+						<image>ghcr.io/domza64/myco</image>
+						<tags>
+							<tag>latest</tag>
+							<tag>${project.version}</tag>
+						</tags>
+					</to>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

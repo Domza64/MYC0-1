@@ -1,5 +1,13 @@
+logging:
+  level:
+    org.myco_1.player: DEBUG
+
 spring:
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/myco}
     username: ${DATABASE_USER:user}
     password: ${DATABASE_PASSWORD:password}
+
+app:
+  music:
+    directory: "./music"

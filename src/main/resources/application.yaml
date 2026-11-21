@@ -6,7 +6,7 @@ spring:
     import: optional:file:.env[.properties]
 
   profiles:
-    active: ${PROFILE:dev}
+    active: ${PROFILE:prod}
 
   jpa:
     hibernate:
