@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "scan", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "api/scan", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class SongScanController {
     private final SongScanService songScanService;

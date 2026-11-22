@@ -11,6 +11,7 @@
 ---
 
 > TODO: Docs, like quickstart, links, dev setup...
+> For now, basically, start docker-compose.yaml, then start backend (./mvnw spring-boot:run) and then start frontend (npm run dev), more detailed instructions soon...
 
 ---
 

@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "song")
+@Table(name = "songs")
 @Getter
 @NoArgsConstructor
 public class SongEntity {

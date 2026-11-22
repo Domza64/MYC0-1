@@ -20,7 +20,7 @@ export const authApi = {
    * const user = await authApi.getUserData();
    */
   getUserData: (): Promise<User> =>
-    apiRequest<User>("/auth/user", {
+    apiRequest<User>("/user/me", {
       showToastError: false,
     }),
 
@@ -35,7 +35,14 @@ export const authApi = {
   login: (username: string, password: string): Promise<User> =>
     apiRequest<User>("/auth/login", {
       method: "POST",
-      body: JSON.stringify({ username, password }),
+      headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+          username,
+          password,
+      }).toString(),
+      credentials: "include",
       showToastError: false,
     }),
 };
