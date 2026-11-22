@@ -221,7 +221,7 @@ export default function AudioPlayer({ playerOpen }: { playerOpen: boolean }) {
       <audio
         ref={audioRef}
         src={
-          currentSong ? `/music/${encodeURI(currentSong.file_path)}` : undefined
+          currentSong ? `/music/${encodeURI(currentSong.filePath)}` : undefined
         }
         preload="metadata"
       />

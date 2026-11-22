@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -29,11 +30,13 @@ public class UserEntity {
     @Column(nullable = false)
     private String password;
 
+    @Nullable
     private String profilePicture;
 
     public UserEntity(String username, Set<Role> roles, String password) {
         this.username = username;
         this.roles = roles;
         this.password = password;
+        profilePicture = null;
     }
 }

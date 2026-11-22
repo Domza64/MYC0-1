@@ -3,6 +3,7 @@ package org.myco_1.player.feature.song;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jspecify.annotations.Nullable;
 
 @Entity
 @Table(name = "songs")
@@ -23,9 +24,13 @@ public class SongEntity {
     @Column(nullable = false)
     private Long fileSize;
 
-    public SongEntity(String filePath, String fileName, Long fileSize) {
+    @Nullable
+    private Long folderId;
+
+    public SongEntity(String filePath, String fileName, Long fileSize, @Nullable Long folderId) {
         this.filePath = filePath;
         this.fileName = fileName;
         this.fileSize = fileSize;
+        this.folderId = folderId;
     }
 }

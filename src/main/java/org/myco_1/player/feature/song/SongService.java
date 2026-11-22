@@ -14,7 +14,7 @@ public class SongService {
     public List<SongResponse> getSongs() {
         return songRepository.findAll()
                 .stream()
-                .map(SongResponse::fromEntity)
+                .map(SongResponse::from)
                 .toList();
     }
 }

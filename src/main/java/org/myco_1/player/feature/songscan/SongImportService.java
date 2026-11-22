@@ -47,7 +47,8 @@ public class SongImportService {
             songs.add(new SongEntity(
                     relativePath,
                     file.getName(),
-                    file.length()
+                    file.length(),
+                    null
             ));
         }
 

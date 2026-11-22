@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: "{{host}}/scan"
+  url: "{{host}}/api/scan"
   auth: inherit
 
 settings:

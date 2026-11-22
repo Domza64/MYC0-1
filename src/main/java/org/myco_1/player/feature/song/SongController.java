@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/song", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "api/songs", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class SongController {
     private final SongService songService;
 
+    // TODO: Pagination
     @GetMapping("")
     public ResponseEntity<List<SongResponse>> getSongs() {
         List<SongResponse> data = songService.getSongs();

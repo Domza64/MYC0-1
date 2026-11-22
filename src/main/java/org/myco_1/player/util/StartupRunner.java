@@ -1,6 +1,7 @@
 package org.myco_1.player.util;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.myco_1.player.feature.user.Role;
 import org.myco_1.player.feature.user.UserEntity;
 import org.myco_1.player.feature.user.UserRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class StartupRunner {
@@ -28,6 +30,7 @@ public class StartupRunner {
             );
 
             userRepository.save(admin);
+            log.info("Default admin user created");
         }
     }
 }

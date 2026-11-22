@@ -20,7 +20,7 @@ export const authApi = {
    * const user = await authApi.getUserData();
    */
   getUserData: (): Promise<User> =>
-    apiRequest<User>("/user/me", {
+    apiRequest<User>("/users/me", {
       showToastError: false,
     }),
 

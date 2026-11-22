@@ -8,7 +8,7 @@ public record SongResponse(
     String fileName,
     Long fileSize
 ) {
-    public static SongResponse fromEntity(SongEntity songEntity) {
+    public static SongResponse from(SongEntity songEntity) {
         return new SongResponse(
                 songEntity.getId(),
                 songEntity.getFilePath(),
