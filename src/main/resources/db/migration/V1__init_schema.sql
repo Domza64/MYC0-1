@@ -27,6 +27,31 @@ CREATE TABLE songs
             ON DELETE SET DEFAULT
 );
 
+CREATE TABLE authors
+(
+    id   BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+CREATE TABLE authors_songs
+(
+    author_id BIGINT NOT NULL,
+    song_id   BIGINT NOT NULL,
+
+    CONSTRAINT pk_authors_songs
+        PRIMARY KEY (author_id, song_id),
+
+    CONSTRAINT fk_author_song
+        FOREIGN KEY (author_id)
+            REFERENCES authors (id)
+            ON DELETE CASCADE,
+
+    CONSTRAINT fk_song_author
+        FOREIGN KEY (song_id)
+            REFERENCES songs (id)
+            ON DELETE CASCADE
+);
+
 CREATE TABLE users
 (
     id              BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
