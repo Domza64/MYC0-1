@@ -30,6 +30,6 @@ export interface Author {
 export interface Album {
   id: number;
   title: string;
-  author: Author;
-  album_art?: string;
+  authors: Author[];
+  cover?: string;
 }

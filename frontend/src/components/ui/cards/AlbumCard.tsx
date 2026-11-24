@@ -6,9 +6,9 @@ export default function AlbumCard({ album }: { album: Album }) {
   return (
     <Link to={`/albums/${album.id}`} className="flex flex-col w-full">
       <div className="w-full aspect-square rounded-2xl overflow-hidden">
-        {album.album_art ? (
+        {album.cover ? (
           <img
-            src={"images/" + album.album_art}
+            src={"images/" + album.cover}
             alt={album.title}
             className="w-full h-full object-cover"
             draggable={false}
@@ -21,7 +21,7 @@ export default function AlbumCard({ album }: { album: Album }) {
       </div>
       <span className="pl-0.5 pt-1 w-full truncate">{album.title}</span>
       <span className="pl-0.5 text-sm text-stone-400 truncate">
-        {album.author.name}
+        {album.authors[0].name}
       </span>
     </Link>
   );

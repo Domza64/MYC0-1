@@ -16,4 +16,12 @@ public interface SongRepository extends JpaRepository<SongEntity, Long> {
             WHERE aus.author_id = :authorId
             """, nativeQuery = true)
     List<SongEntity> findByAuthor(Long authorId);
+
+    @Query(value = """
+            SELECT s.*
+            FROM songs s
+            JOIN albums_songs als ON s.id = als.song_id
+            WHERE als.album_id = :albumId
+            """, nativeQuery = true)
+    List<SongEntity> findByAlbum(Long albumId);
 }

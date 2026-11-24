@@ -53,10 +53,10 @@ export default function AlbumPage() {
           <div>
             <h1>{album.title}</h1>
             <Link
-              to={"/authors/" + album.author.id}
+              to={"/authors/" + album.authors[0].id}
               className="text-md text-stone-400 hover:text-white transition-colors duration-300"
             >
-              {album.author.name}
+              {album.authors[0].name}
             </Link>
           </div>
         </div>

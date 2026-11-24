@@ -13,7 +13,7 @@ export default function Library() {
 
     // Replace with web sockets in future for realtime progress updates...
     try {
-      const response = await fetch("/api/scan-library", {
+      const response = await fetch("/api/scan", {
         method: "POST",
       });
 

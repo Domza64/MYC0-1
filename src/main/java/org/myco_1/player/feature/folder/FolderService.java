@@ -22,7 +22,7 @@ public class FolderService {
      * @return the list of folders belonging to the specified parent
      */
     public List<FolderResponse> getFolders(@Nullable Long parentId) {
-        getFolderEntity(parentId); // Throws error if author doesn't exist
+        if (parentId != null) getFolderEntity(parentId); // Throws error if author doesn't exist
 
         return folderRepository.findByParentId(parentId)
                 .stream()
@@ -37,7 +37,7 @@ public class FolderService {
      * @return the list of songs belonging to the specified folder
      */
     public List<SongResponse> getSongs(@Nullable Long folderId) {
-        getFolderEntity(folderId); // Throws error if author doesn't exist
+        if (folderId != null) getFolderEntity(folderId); // Throws error if author doesn't exist
 
         return songRepository.findByFolderId(folderId)
                 .stream()

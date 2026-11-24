@@ -52,6 +52,51 @@ CREATE TABLE authors_songs
             ON DELETE CASCADE
 );
 
+CREATE TABLE albums
+(
+    id    BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    title TEXT NOT NULL,
+    cover TEXT
+);
+
+CREATE TABLE albums_songs
+(
+    album_id BIGINT NOT NULL,
+    song_id  BIGINT NOT NULL,
+
+    CONSTRAINT pk_albums_songs
+        PRIMARY KEY (album_id, song_id),
+
+    CONSTRAINT fk_album_song
+        FOREIGN KEY (album_id)
+            REFERENCES albums (id)
+            ON DELETE CASCADE,
+
+    CONSTRAINT fk_song_album
+        FOREIGN KEY (song_id)
+            REFERENCES songs (id)
+            ON DELETE CASCADE
+);
+
+CREATE TABLE authors_albums
+(
+    author_id BIGINT NOT NULL,
+    album_id  BIGINT NOT NULL,
+
+    CONSTRAINT pk_authors_albums
+        PRIMARY KEY (author_id, album_id),
+
+    CONSTRAINT fk_author_album
+        FOREIGN KEY (author_id)
+            REFERENCES authors (id)
+            ON DELETE CASCADE,
+
+    CONSTRAINT fk_album_author
+        FOREIGN KEY (album_id)
+            REFERENCES albums (id)
+            ON DELETE CASCADE
+);
+
 CREATE TABLE users
 (
     id              BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

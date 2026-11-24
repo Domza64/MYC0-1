@@ -26,7 +26,7 @@ export class Song {
     this.album = data.album || {
       id: 0,
       title: "Unknown Album",
-      author: { id: -1, name: "Unknown Author" },
+      authors: [{ id: -1, name: "Unknown Author" }],
     };
     this.genre = data.genre ?? null;
     this.year = data.year ?? null;
