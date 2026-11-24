@@ -105,3 +105,46 @@ CREATE TABLE users
     password        TEXT        NOT NULL,
     profile_picture TEXT
 );
+
+CREATE TABLE playlists
+(
+    id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name        VARCHAR(64) NOT NULL,
+    description VARCHAR(256),
+    shared      BOOLEAN     NOT NULL DEFAULT FALSE,
+    user_id     BIGINT      NOT NULL,
+    image       TEXT,
+    created_at  TIMESTAMPTZ NOT NULL,
+    updated_at  TIMESTAMPTZ NOT NULL,
+
+    CONSTRAINT fk_playlist_user
+        FOREIGN KEY (user_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE
+);
+
+CREATE TABLE playlists_songs -- Create Indexes?
+(
+    playlist_id BIGINT  NOT NULL,
+    song_id     BIGINT  NOT NULL,
+    position    INTEGER NOT NULL,
+
+    CONSTRAINT pk_playlists_songs
+        PRIMARY KEY (playlist_id, song_id),
+
+    CONSTRAINT uk_playlist_song_position
+        UNIQUE (playlist_id, position),
+
+    CONSTRAINT fk_playlist_song
+        FOREIGN KEY (playlist_id)
+            REFERENCES playlists (id)
+            ON DELETE CASCADE,
+
+    CONSTRAINT fk_song_playlist
+        FOREIGN KEY (song_id)
+            REFERENCES songs (id)
+            ON DELETE CASCADE,
+
+    CONSTRAINT chk_playlist_song_position
+        CHECK (position >= 0)
+);

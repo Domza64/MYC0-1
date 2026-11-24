@@ -58,7 +58,7 @@ export default function AddToPlaylistForm({
         songs.map((s) => s.id),
       )
       .then((data) => {
-        if (data.added_count !== 0) {
+        if (data.addedCount !== 0) {
           onSuccess?.();
         }
       })

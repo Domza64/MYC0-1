@@ -19,4 +19,13 @@ public record UserResponse(
                 user.getProfilePicture()
         );
     }
+
+    public static UserResponse from(UserEntity user) {
+        return new UserResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getRoles().stream().toList(),
+                user.getProfilePicture()
+        );
+    }
 }

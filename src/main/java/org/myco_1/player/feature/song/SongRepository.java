@@ -24,4 +24,12 @@ public interface SongRepository extends JpaRepository<SongEntity, Long> {
             WHERE als.album_id = :albumId
             """, nativeQuery = true)
     List<SongEntity> findByAlbum(Long albumId);
+
+    @Query(value = """
+            SELECT s.*
+            FROM songs s
+            JOIN playlists_songs pls ON s.id = pls.song_id
+            WHERE pls.playlist_id = :playlistId
+            """, nativeQuery = true)
+    List<SongEntity> findByPlaylist(Long playlistId);
 }

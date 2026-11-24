@@ -79,20 +79,20 @@ export const playlistsApi = {
    * Shows a success toast with the number of songs added, or an error toast if songs already exist.
    * @param {number} playlistId - The playlist ID.
    * @param {number[]} songIds - Array of song IDs to add.
-   * @returns {Promise<{ added_count: number }>} - Number of songs successfully added.
+   * @returns {Promise<{ addedCount: number }>} - Number of songs successfully added.
    * @example
    * const result = await playlistsApi.addSongs(1, [101, 102]);
-   * console.log(result.added_count);
+   * console.log(result.addedCount);
    */
   addSongs: (
     playlistId: number,
     songIds: number[],
-  ): Promise<{ added_count: number }> =>
-    apiRequest<{ added_count: number }>(`/playlists/songs/${playlistId}`, {
+  ): Promise<{ addedCount: number }> =>
+    apiRequest<{ addedCount: number }>(`/playlists/songs/${playlistId}`, {
       method: "POST",
-      body: JSON.stringify({ song_ids: songIds }),
+      body: JSON.stringify({ songIds: songIds }),
       onSuccess: (data) => {
-        const addedCount = data.added_count;
+        const addedCount = data.addedCount;
         if (addedCount > 0) {
           toast.success(`Added ${addedCount} song(s) to playlist`);
         } else {

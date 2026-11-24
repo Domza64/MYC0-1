@@ -1,0 +1,23 @@
+info:
+  name: create playlist
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{host}}/api/playlists"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "My first playlist",
+        "shared": false
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
