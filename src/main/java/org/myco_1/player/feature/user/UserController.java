@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "api/users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
-    @GetMapping("me")
+    @GetMapping("/me")
     public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal MycoUserDetails user) {
         return ResponseEntity.ok(UserResponse.from(user));
     }

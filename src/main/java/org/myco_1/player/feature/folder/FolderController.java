@@ -17,8 +17,6 @@ import java.util.List;
 public class FolderController {
     private final FolderService folderService;
 
-    // Return 404 if folder with provided ID doesn't exist?
-
     @GetMapping({"/", "/{parentId}"})
     public ResponseEntity<List<FolderResponse>> getFolders(
             @PathVariable(required = false) Long parentId

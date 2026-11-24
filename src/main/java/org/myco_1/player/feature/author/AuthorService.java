@@ -1,6 +1,7 @@
 package org.myco_1.player.feature.author;
 
 import lombok.RequiredArgsConstructor;
+import org.myco_1.player.exception.ResourceNotFoundException;
 import org.myco_1.player.feature.song.SongRepository;
 import org.myco_1.player.feature.song.dto.SongResponse;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,6 @@ public class AuthorService {
 
     private AuthorEntity getAuthorEntity(Long authorId) {
         return authorRepository.findById(authorId)
-                .orElseThrow(() -> new RuntimeException("TODO: Throw some generic 404 error"));
+                .orElseThrow(() -> new ResourceNotFoundException("Author %s not found.".formatted(authorId)));
     }
 }

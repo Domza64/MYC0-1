@@ -37,8 +37,9 @@ public class SongImportService {
         try {
             files = getMusicFiles();
         } catch (IOException ex) {
+            // When import status is saved to db, in that case mark it as failed
             log.error("Error scanning music library", ex);
-            throw new RuntimeException("Error reading files. TODO: throw some appropriate error and implement global error handler.");
+            return;
         }
 
         log.debug("Processing {} files", files.size());

@@ -2,6 +2,7 @@ package org.myco_1.player.feature.folder;
 
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
+import org.myco_1.player.exception.ResourceNotFoundException;
 import org.myco_1.player.feature.song.SongRepository;
 import org.myco_1.player.feature.song.dto.SongResponse;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,8 @@ public class FolderService {
      * @return the list of folders belonging to the specified parent
      */
     public List<FolderResponse> getFolders(@Nullable Long parentId) {
+        getFolderEntity(parentId); // Throws error if author doesn't exist
+
         return folderRepository.findByParentId(parentId)
                 .stream()
                 .map(FolderResponse::from)
@@ -34,9 +37,16 @@ public class FolderService {
      * @return the list of songs belonging to the specified folder
      */
     public List<SongResponse> getSongs(@Nullable Long folderId) {
+        getFolderEntity(folderId); // Throws error if author doesn't exist
+
         return songRepository.findByFolderId(folderId)
                 .stream()
                 .map(SongResponse::from)
                 .toList();
+    }
+
+    private FolderEntity getFolderEntity(Long folderId) {
+        return folderRepository.findById(folderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Folder %s not found.".formatted(folderId)));
     }
 }
