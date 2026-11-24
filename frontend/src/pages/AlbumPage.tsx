@@ -52,12 +52,18 @@ export default function AlbumPage() {
           />
           <div>
             <h1>{album.title}</h1>
-            <Link
-              to={"/authors/" + album.authors[0].id}
-              className="text-md text-stone-400 hover:text-white transition-colors duration-300"
-            >
-              {album.authors[0].name}
-            </Link>
+
+            <div className="flex flex-wrap gap-2">
+              {album.authors.map((author, index) => (
+                  <Link
+                      key={author.id}
+                      to={`/authors/${author.id}`}
+                      className="text-md text-stone-400 hover:text-white transition-colors duration-300"
+                  >
+                    {author.name}{index < album.authors.length - 1 ? "," : ""}
+                  </Link>
+              ))}
+            </div>
           </div>
         </div>
         <div className="flex gap-2">

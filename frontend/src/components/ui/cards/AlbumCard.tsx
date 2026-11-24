@@ -20,9 +20,14 @@ export default function AlbumCard({ album }: { album: Album }) {
         )}
       </div>
       <span className="pl-0.5 pt-1 w-full truncate">{album.title}</span>
-      <span className="pl-0.5 text-sm text-stone-400 truncate">
-        {album.authors[0].name}
-      </span>
+        <span className="pl-0.5 text-sm text-stone-400 truncate">
+            {album.authors.map((author, index) => (
+                <div key={author.id}>
+                    {index > 0 && ", "}
+                    {author.name}
+                </div>
+            ))}
+        </span>
     </Link>
   );
 }

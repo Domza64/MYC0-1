@@ -30,4 +30,8 @@ public class AlbumEntity {
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     private List<AuthorEntity> authors = new ArrayList<>();
+
+    public AlbumEntity(String title) {
+        this.title = title;
+    }
 }

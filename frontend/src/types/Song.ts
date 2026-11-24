@@ -5,7 +5,7 @@ export class Song {
   _title: string;
   author: Author;
   album: Album;
-  genre?: string | null;
+  genres: string[];
   year?: number | null;
   filePath: string;
   fileName: string;
@@ -28,7 +28,7 @@ export class Song {
       title: "Unknown Album",
       authors: [{ id: -1, name: "Unknown Author" }],
     };
-    this.genre = data.genre ?? null;
+    this.genres = data.genres ?? [];
     this.year = data.year ?? null;
     this.filePath = data.filePath ?? "";
     this.fileName = data.fileName ?? "";

@@ -14,13 +14,19 @@ CREATE TABLE folders
 CREATE TABLE songs
 (
     id        BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    file_path TEXT   NOT NULL,
-    file_name TEXT   NOT NULL,
-    file_size BIGINT NOT NULL,
+    title     TEXT,
+    genres    TEXT[] NOT NULL DEFAULT '{}',
+    image     TEXT,
+    year      INTEGER,
+    duration  INTEGER,
+    file_path TEXT    NOT NULL,
+    file_name TEXT    NOT NULL,
+    file_size BIGINT  NOT NULL,
     folder_id BIGINT DEFAULT NULL,
 
-    CONSTRAINT filesize
+    CONSTRAINT chk_song_filesize
         CHECK (file_size > 0),
+
     CONSTRAINT fk_song_folder
         FOREIGN KEY (folder_id)
             REFERENCES folders (id)
