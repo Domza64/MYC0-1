@@ -1,4 +1,6 @@
 -- I'll be editing this file until I get some stable first release, from then I'll be creating actual migration versions
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 CREATE TABLE folders
 (
     id        BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -13,17 +15,23 @@ CREATE TABLE folders
 
 CREATE TABLE songs
 (
-    id        BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    title     TEXT,
-    genres    TEXT[] NOT NULL DEFAULT '{}',
-    image     TEXT,
-    year      INTEGER,
-    duration  INTEGER,
-    file_path TEXT   NOT NULL,
-    file_name TEXT   NOT NULL,
-    file_size BIGINT NOT NULL,
-    folder_id BIGINT DEFAULT NULL,
-    created_at TIMESTAMPTZ NOT NULL,
+    id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    title       TEXT,
+    genres      TEXT[] NOT NULL DEFAULT '{}',
+    image       TEXT,
+    year        INTEGER,
+    duration    INTEGER,
+    file_path   TEXT        NOT NULL,
+    file_name   TEXT        NOT NULL,
+    file_size   BIGINT      NOT NULL,
+    folder_id   BIGINT DEFAULT NULL,
+    created_at  TIMESTAMPTZ NOT NULL,
+    search_text TEXT
+        GENERATED ALWAYS AS (
+            lower(
+                    coalesce(title, file_name, '')
+            )
+            ) STORED,
 
     CONSTRAINT chk_song_filesize
         CHECK (file_size > 0),
@@ -34,11 +42,19 @@ CREATE TABLE songs
             ON DELETE SET DEFAULT
 );
 
+CREATE INDEX idx_songs_search_text_trgm
+    ON songs
+    USING GIN (search_text gin_trgm_ops);
+
 CREATE TABLE authors
 (
     id   BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name TEXT NOT NULL
 );
+
+CREATE INDEX idx_authors_search_text_trgm
+    ON authors
+    USING GIN (name gin_trgm_ops);
 
 CREATE TABLE authors_songs
 (
@@ -65,6 +81,10 @@ CREATE TABLE albums
     title TEXT NOT NULL,
     cover TEXT
 );
+
+CREATE INDEX idx_albums_search_text_trgm
+    ON albums
+    USING GIN (title gin_trgm_ops);
 
 CREATE TABLE albums_songs
 (

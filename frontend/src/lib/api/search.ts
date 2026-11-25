@@ -6,15 +6,14 @@ export const searchApi = {
   /**
    * Perform a full text search for songs (title, album, author).
    * @param {string} query - Search query.
-   * @param {number} page - Page number for pagination.
    * @returns {Promise<SearchResult>} - Search results.
    */
-  search: (query: string, page: number = 0): Promise<SearchResult> =>
-    apiRequest<SearchResult>(`/search?query=${query}&page=${page}`, {
+  search: (query: string): Promise<SearchResult> =>
+    apiRequest<SearchResult>(`/search?query=${query}`, {
       converter: (data): SearchResult => ({
-        songs: data.songs.map((songData) => new Song(songData)),
-        albums: data.albums,
-        authors: data.authors,
+        matchedSongs: data.matchedSongs.map((songData) => new Song(songData)), // TODO: Update to match new backend response
+        matchedAlbums: data.matchedAlbums, // TODO: Display this data
+        matchedAuthors: data.matchedAuthors, // TODO: Display this data
       }),
     }),
 };

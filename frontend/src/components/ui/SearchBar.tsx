@@ -80,9 +80,9 @@ export default function SearchBar() {
             <div>
               <AiOutlineLoading3Quarters className="animate-spin mx-auto" />
             </div>
-          ) : results.songs.length > 0 ? (
+          ) : results.matchedSongs.length > 0 ? (
             <div className="flex flex-col space-y-2">
-              {results.songs.map((song: Song, index) => (
+              {results.matchedSongs.map((song: Song, index) => (
                 <SongRow
                   song={song}
                   key={index}
