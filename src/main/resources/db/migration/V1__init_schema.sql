@@ -131,7 +131,7 @@ CREATE TABLE playlists
             ON DELETE CASCADE
 );
 
-CREATE TABLE playlists_songs -- Create Indexes?
+CREATE TABLE playlists_songs -- TODO: Create Indexes?
 (
     playlist_id BIGINT  NOT NULL,
     song_id     BIGINT  NOT NULL,
@@ -155,4 +155,22 @@ CREATE TABLE playlists_songs -- Create Indexes?
 
     CONSTRAINT chk_playlist_song_position
         CHECK (position >= 0)
+);
+
+CREATE TABLE song_play_record -- TODO: Create Indexes?
+(
+    id         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id    BIGINT      NOT NULL,
+    song_id    BIGINT      NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL,
+
+    CONSTRAINT fk_user_play_record
+        FOREIGN KEY (song_id)
+            REFERENCES songs (id)
+            ON DELETE CASCADE,
+
+    CONSTRAINT fk_song_play_record
+        FOREIGN KEY (user_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE
 );

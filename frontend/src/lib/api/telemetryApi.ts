@@ -4,12 +4,12 @@ import { Song } from "../../types/Song";
 export const telemetryApi = {
   /**
    * Update backend that a song is being played
-   * @param {number} song_id - song_id
+   * @param {number} songId - songId
    * @example
-   * await telemetryApi.playSong(song_id);
+   * await telemetryApi.playSong(songId);
    */
-  playSong: (song_id: number): Promise<Song[]> =>
-    apiRequest<Song[]>(`/telemetry/play-song?song_id=${song_id}`, {
+  playSong: (songId: number): Promise<Song[]> =>
+    apiRequest<Song[]>(`/telemetry/play-song/${songId}`, {
       method: "POST",
       showToastError: false,
     }),
