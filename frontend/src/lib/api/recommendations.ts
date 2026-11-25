@@ -9,8 +9,8 @@ export const recommendationsApi = {
    * @example
    * const songs = await recommendationsApi.getRecentlyPlayed(10);
    */
-  getRecentlyPlayed: (limit: number = 10): Promise<Song[]> =>
-    apiRequest<Song[]>(`/recommendations/recently-played?limit=${limit}`, {
+  getRecentlyPlayed: (limit: number = 16): Promise<Song[]> =>
+    apiRequest<Song[]>(`/songs/history?limit=${limit}`, {
       converter: (data) => data.map((songData: any) => new Song(songData)),
     }),
 };

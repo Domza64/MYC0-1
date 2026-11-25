@@ -2,11 +2,12 @@ package org.myco_1.player.feature.song;
 
 import lombok.RequiredArgsConstructor;
 import org.myco_1.player.feature.song.dto.SongResponse;
+import org.myco_1.player.security.MycoUserDetails;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,10 +17,18 @@ import java.util.List;
 public class SongController {
     private final SongService songService;
 
-    // TODO: Pagination
     @GetMapping("")
-    public ResponseEntity<List<SongResponse>> getSongs() {
-        List<SongResponse> data = songService.getSongs();
+    public ResponseEntity<List<SongResponse>> getSongs(Pageable pageable) {
+        List<SongResponse> data = songService.getSongs(pageable);
+        return ResponseEntity.ok(data);
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<List<SongResponse>> getPlayHistory(
+            @AuthenticationPrincipal MycoUserDetails user,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        List<SongResponse> data = songService.getPlayHistory(user.getUserId(), limit);
         return ResponseEntity.ok(data);
     }
 }

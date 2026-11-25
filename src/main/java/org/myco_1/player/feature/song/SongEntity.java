@@ -5,6 +5,7 @@ import lombok.*;
 import org.jspecify.annotations.Nullable;
 import org.myco_1.player.feature.songscan.dto.SongInfo;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,11 +46,15 @@ public class SongEntity {
     @Nullable
     private Long folderId;
 
-    public SongEntity(String filePath, String fileName, Long fileSize, @Nullable String image, @Nullable Long folderId, @Nullable SongInfo songInfo) {
+    @Column(nullable = false)
+    private Instant createdAt;
+
+    public SongEntity(String filePath, String fileName, Long fileSize, Instant createdAt, @Nullable String image, @Nullable Long folderId, @Nullable SongInfo songInfo) {
         this.filePath = filePath;
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.folderId = folderId;
+        this.createdAt = createdAt;
         if (songInfo != null) {
             this.title = songInfo.title();
             this.genres = songInfo.genres();

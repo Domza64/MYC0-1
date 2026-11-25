@@ -11,7 +11,7 @@ export default function LibraryPage() {
   const [songs, setSongs] = useState<Song[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadedAll, setLoadedAll] = useState(false);
-  const [offset, setOffset] = useState(0);
+  const [page, setPage] = useState(0);
 
   const hasFetchedInitial = useRef(false);
   const { ref, inView } = useInView();
@@ -21,14 +21,14 @@ export default function LibraryPage() {
   const fetchSongs = async () => {
     setIsLoading(true);
     songsApi
-      .getSongs(offset, LIMIT)
+      .getSongs(page, LIMIT)
       .then((data) => {
         if (data.length === 0) {
           setLoadedAll(true);
           return;
         }
         setSongs((prevSongs) => [...prevSongs, ...data]);
-        setOffset((prevOffset) => prevOffset + LIMIT);
+        setPage((prevOffset) => prevOffset + 1);
       })
       .finally(() => {
         setIsLoading(false);

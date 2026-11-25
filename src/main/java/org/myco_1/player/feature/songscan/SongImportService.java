@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -47,6 +48,7 @@ public class SongImportService {
     @Transactional
     // Of course, this is just mock for testing. Real import needs to be much more complicated, compare what exists, what needs to be updated or created...
     protected void startImport() {
+        Instant now = Instant.now();
         List<SongEntity> songs = new ArrayList<>();
         Set<String> authors = new HashSet<>();
         Set<String> albums = new HashSet<>();
@@ -73,6 +75,7 @@ public class SongImportService {
                     relativePath,
                     file.getName(),
                     file.length(),
+                    now,
                     null,
                     null,
                     songInfo

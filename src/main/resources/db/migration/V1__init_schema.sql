@@ -23,6 +23,7 @@ CREATE TABLE songs
     file_name TEXT   NOT NULL,
     file_size BIGINT NOT NULL,
     folder_id BIGINT DEFAULT NULL,
+    created_at TIMESTAMPTZ NOT NULL,
 
     CONSTRAINT chk_song_filesize
         CHECK (file_size > 0),

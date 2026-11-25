@@ -12,7 +12,7 @@ export const songsApi = {
    * const songs = await songsApi.getSongs(0, 10);
    */
   getSongs: (offset: number, limit: number): Promise<Song[]> =>
-    apiRequest<Song[]>(`/songs?offset=${offset}&limit=${limit}`, {
+    apiRequest<Song[]>(`/songs?page=${offset}&size=${limit}`, {
       converter: (data) => data.map((songData) => new Song(songData)),
     }),
 
