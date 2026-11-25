@@ -19,9 +19,9 @@ CREATE TABLE songs
     image     TEXT,
     year      INTEGER,
     duration  INTEGER,
-    file_path TEXT    NOT NULL,
-    file_name TEXT    NOT NULL,
-    file_size BIGINT  NOT NULL,
+    file_path TEXT   NOT NULL,
+    file_name TEXT   NOT NULL,
+    file_size BIGINT NOT NULL,
     folder_id BIGINT DEFAULT NULL,
 
     CONSTRAINT chk_song_filesize
@@ -106,22 +106,24 @@ CREATE TABLE authors_albums
 CREATE TABLE users
 (
     id              BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    username        VARCHAR(24) NOT NULL,
-    roles           TEXT[]      NOT NULL,
+    username        VARCHAR(30) NOT NULL,
+    role            VARCHAR(20) NOT NULL,
     password        TEXT        NOT NULL,
-    profile_picture TEXT
+    profile_picture TEXT,
+
+    CONSTRAINT uk_username UNIQUE (username)
 );
 
 CREATE TABLE playlists
 (
     id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    name        VARCHAR(64) NOT NULL,
-    description VARCHAR(256),
-    shared      BOOLEAN     NOT NULL DEFAULT FALSE,
-    user_id     BIGINT      NOT NULL,
+    name        VARCHAR(100) NOT NULL,
+    description VARCHAR(1000),
+    shared      BOOLEAN      NOT NULL DEFAULT FALSE,
+    user_id     BIGINT       NOT NULL,
     image       TEXT,
-    created_at  TIMESTAMPTZ NOT NULL,
-    updated_at  TIMESTAMPTZ NOT NULL,
+    created_at  TIMESTAMPTZ  NOT NULL,
+    updated_at  TIMESTAMPTZ  NOT NULL,
 
     CONSTRAINT fk_playlist_user
         FOREIGN KEY (user_id)

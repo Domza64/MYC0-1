@@ -1,3 +1,4 @@
+import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ModalProvider } from "./contexts/ModalContext";
 import { PlayerProvider } from "./contexts/PlayerContext";
@@ -8,7 +9,9 @@ export default function App() {
     <ModalProvider>
       <AuthProvider>
         <PlayerProvider>
-          <AppRouter />
+          <BrowserRouter>
+            <AppRouter />
+          </BrowserRouter>
         </PlayerProvider>
       </AuthProvider>
     </ModalProvider>

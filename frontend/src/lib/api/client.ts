@@ -56,7 +56,7 @@ export async function apiRequest<T = any, R = T>(
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
       const message =
-        errorData.detail || res.statusText || `Error ${res.status}`;
+        errorData.message || `Error ${res.status}`;
 
       if (showToastError) {
         toast.error(

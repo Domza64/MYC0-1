@@ -1,0 +1,22 @@
+info:
+  name: update user
+  type: http
+  seq: 7
+
+http:
+  method: PATCH
+  url: "{{host}}/api/users/3"
+  body:
+    type: json
+    data: |-
+      {
+        "username": "newUsername"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

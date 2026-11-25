@@ -3,11 +3,8 @@ package org.myco_1.player.feature.user;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import lombok.Setter;
 import org.jspecify.annotations.Nullable;
-
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -20,22 +17,24 @@ public class UserEntity {
     private Long id;
 
     @Column(nullable = false)
+    @Setter
     private String username;
 
     @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(columnDefinition = "text[]", nullable = false)
-    private Set<Role> roles;
+    @Column(nullable = false)
+    @Setter
+    private Role role;
 
     @Column(nullable = false)
+    @Setter
     private String password;
 
     @Nullable
     private String profilePicture;
 
-    public UserEntity(String username, Set<Role> roles, String password) {
+    public UserEntity(String username, Role role, String password) {
         this.username = username;
-        this.roles = roles;
+        this.role = role;
         this.password = password;
         profilePicture = null;
     }

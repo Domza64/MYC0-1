@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.myco_1.player.feature.playlist.dto.AddSongsRequest;
 import org.myco_1.player.feature.playlist.dto.AddSongsResponse;
 import org.myco_1.player.feature.playlist.dto.PlaylistCreateRequest;
+import org.myco_1.player.feature.playlist.dto.PlaylistUpdateRequest;
 import org.myco_1.player.feature.song.dto.SongResponse;
 import org.myco_1.player.security.MycoUserDetails;
 import org.springframework.http.MediaType;
@@ -69,7 +70,7 @@ public class PlaylistController {
     public ResponseEntity<PlaylistResponse> updatePlaylist(
             @AuthenticationPrincipal MycoUserDetails user,
             @PathVariable Long playlistId,
-            @RequestBody @Valid PlaylistCreateRequest request
+            @RequestBody @Valid PlaylistUpdateRequest request
     ) {
         PlaylistResponse data = playlistService.updatePlaylist(user, playlistId, request);
         return ResponseEntity.ok(data);

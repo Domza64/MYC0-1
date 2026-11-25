@@ -10,8 +10,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -25,7 +23,7 @@ public class StartupRunner {
         if (userRepository.findAll().isEmpty()) {
             UserEntity admin = new UserEntity(
                     "admin",
-                    Set.of(Role.ADMIN),
+                    Role.ADMIN,
                     passwordEncoder.encode("admin")
             );
 

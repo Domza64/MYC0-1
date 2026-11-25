@@ -41,15 +41,15 @@ export default function ProfilePage() {
     <div className="space-y-8 max-w-2xl">
       <div className="flex gap-4 items-center">
         <div className="rounded-full overflow-hidden">
-          {auth?.user_image ? (
+          {auth?.userImage ? (
             <img
-              src={"/images/" + auth.user_image}
+              src={"/images/" + auth.userImage}
               alt=""
               className="w-24 h-24 object-cover"
             />
           ) : (
             <div className="w-24 h-24 bg-stone-500 text-black font-semibold flex justify-center items-center text-6xl">
-              {auth?.username.charAt(0).toUpperCase()}
+              {auth?.username?.charAt(0).toUpperCase() || "?"}
             </div>
           )}
         </div>

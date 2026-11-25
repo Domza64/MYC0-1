@@ -10,7 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 public class MycoUserDetails implements UserDetails {
@@ -18,21 +18,31 @@ public class MycoUserDetails implements UserDetails {
     private final String username;
     private final String password;
     private final @Nullable String profilePicture;
-    private final Set<Role> roles;
+    private final Role role;
 
     public MycoUserDetails(UserEntity user) {
         this.userId = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.profilePicture = user.getProfilePicture();
-        this.roles = user.getRoles();
+        this.role = user.getRole();
     }
 
     @Override
     @NullMarked
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.name()))
-                .toList();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof MycoUserDetails other)) return false;
+        return userId.equals(other.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return userId.hashCode();
     }
 }

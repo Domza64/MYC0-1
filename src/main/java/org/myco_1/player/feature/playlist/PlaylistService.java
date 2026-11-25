@@ -6,6 +6,7 @@ import org.myco_1.player.exception.ResourceNotFoundException;
 import org.myco_1.player.feature.playlist.dto.AddSongsRequest;
 import org.myco_1.player.feature.playlist.dto.AddSongsResponse;
 import org.myco_1.player.feature.playlist.dto.PlaylistCreateRequest;
+import org.myco_1.player.feature.playlist.dto.PlaylistUpdateRequest;
 import org.myco_1.player.feature.song.SongRepository;
 import org.myco_1.player.feature.song.dto.SongResponse;
 import org.myco_1.player.feature.user.UserEntity;
@@ -70,7 +71,7 @@ public class PlaylistService {
         return PlaylistResponse.from(playlist);
     }
 
-    public PlaylistResponse updatePlaylist(MycoUserDetails user, Long playlistId, PlaylistCreateRequest request) {
+    public PlaylistResponse updatePlaylist(MycoUserDetails user, Long playlistId, PlaylistUpdateRequest request) {
         PlaylistEntity playlist = getPlaylistEntity(playlistId);
         checkPlaylistAccess(user, playlist);
 

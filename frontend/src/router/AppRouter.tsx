@@ -1,5 +1,5 @@
 import { Suspense, useEffect } from "react";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { routes } from "./routes";
 import Layout from "../components/layout/Layout";
 import { usePlayer } from "../contexts/PlayerContext";
@@ -32,20 +32,18 @@ export default function AppRouter() {
   if (auth == null) return <Login />;
 
   return (
-    <BrowserRouter>
-      <Layout>
-        <Suspense fallback={<Loading />}>
-          <Routes>
-            {routes.map((route) => (
-              <Route
-                key={route.path}
-                path={route.path}
-                element={route.element}
-              />
-            ))}
-          </Routes>
-        </Suspense>
-      </Layout>
-    </BrowserRouter>
+    <Layout>
+      <Suspense fallback={<Loading />}>
+        <Routes>
+          {routes.map((route) => (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={route.element}
+            />
+          ))}
+        </Routes>
+      </Suspense>
+    </Layout>
   );
 }

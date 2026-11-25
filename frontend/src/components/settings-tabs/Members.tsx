@@ -97,7 +97,7 @@ export default function Members() {
                         <div className="flex justify-end space-x-2">
                           <button
                             onClick={() =>
-                              auth.username === member.username
+                              auth?.username === member.username
                                 ? navigate("/profile")
                                 : addModal(
                                     <UserModal
@@ -119,7 +119,7 @@ export default function Members() {
                           >
                             <FiEdit2 className="text-lg" />
                           </button>
-                          {auth.username !== member.username && (
+                          {auth?.username !== member.username && (
                             <button
                               onClick={() =>
                                 addModal(

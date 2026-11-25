@@ -4,7 +4,7 @@ import type { User } from "../types/user";
 
 interface AuthContextType {
   auth: User | null;
-  login: (username: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   setAuth: (user: User | null) => void;
   loading: boolean;
@@ -28,23 +28,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
-  const login = async (username: string, password: string): Promise<void> => {
+  const login = async (
+    username: string,
+    password: string,
+  ): Promise<boolean> => {
     setLoading(true);
     setError(null);
 
-    authApi
-      .login(username, password)
-      .then((data) => {
-        setAuth(data);
-        setError(null);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setAuth(null);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const data = await authApi.login(username, password);
+
+      setAuth(data);
+      return true;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Login failed");
+      setAuth(null);
+      return false;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getAuth = async (): Promise<void> => {
